@@ -1,0 +1,125 @@
+window.onload = function () {
+    google.accounts.id.initialize({
+        client_id: $_ENV['GOOGLE_CLIENT_ID'],
+        callback: handleCredentialResponse
+    });
+    google.accounts.id.renderButton(
+        document.getElementById("googleBtn"),
+        {
+            theme: "outline",
+            size: "large",
+            text: "continue_with"
+        }
+    );
+};
+
+function handleCredentialResponse(response) {
+    const user = parseJwt(response.credential);
+    console.log(user);
+
+    sessionStorage.setItem('email', user.email);
+    sessionStorage.setItem('nombre', user.name ?? '');
+
+    document.getElementById('nombre').value = user.name ?? '';
+    
+    goToStep(2);
+    
+    fetch('auth.php?action=google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            token: response.credential
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success) {
+            console.log('Usuario validado en backend');
+        }
+    });
+}
+
+function parseJwt(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+        atob(base64)
+        .split('')
+        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+}
+
+function enviarCodigo() {
+
+    const email = document.getElementById('emailLogin').value;
+
+    fetch('auth.php?action=enviarCodigo', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `email=${email}`
+    })
+
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            // 👇 MOSTRAR BLOQUE DEL CÓDIGO
+            document.getElementById('bloqueCodigo').classList.remove('d-none');
+            document.getElementById('btnValidarCodigo').classList.remove('d-none');
+        } else {
+            alert('Error al enviar el código');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Error de conexión');
+    });
+}
+
+function validarCodigo() {
+
+    const codigo = document.getElementById('codigo').value.trim();
+    const email = document.getElementById('emailLogin').value.trim();
+
+    if (!codigo) {
+        alert('Ingresa el código');
+        return;
+    }
+
+    fetch('auth.php?action=validarCodigo', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `codigo=${encodeURIComponent(codigo)}&email=${encodeURIComponent(email)}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            sessionStorage.setItem('email', email);
+
+            // Si el backend devuelve datos del cliente
+            if (data.cliente) {
+                sessionStorage.setItem('nombre', data.cliente.nombre ?? '');
+                sessionStorage.setItem('telefono', data.cliente.telefono ?? '');
+            }
+
+            goToStep(2);
+        } else {
+            alert(data.message ?? 'Código incorrecto');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Error de conexión');
+    });
+}
+
+function loginExitoso(cliente) {
+    document.getElementById('nombre').value = cliente?.nombre ?? '';
+    document.getElementById('telefono').value = cliente?.telefono ?? '';
+
+    sessionStorage.setItem('nombre', cliente?.nombre ?? '');
+    sessionStorage.setItem('email', cliente?.email ?? '');
+    sessionStorage.setItem('telefono', cliente?.telefono ?? '');
+    goToStep(2);
+}

@@ -1,0 +1,170 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Inter", sans-serif;
+    overflow-x: hidden;
+}
+
+h1 {
+    font-family: "Rye", serif;
+}
+
+h2, h3 {
+    font-family: "Poppins", sans-serif;
+    font-style: normal;
+}
+
+section {
+    scroll-margin-top: 62px;
+}
+
+.hero-section {
+    position: relative;
+    background-image:
+    linear-gradient(
+        to bottom,
+        rgba(32,13,2,0.9) 0%,
+        rgba(32,13,2,0.6) 30%,
+        rgba(32,13,2,0.6) 70%,
+        rgba(32,13,2,0.9) 100%),
+    url('/public/images/hero.jpg');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 80px;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-title {
+    font-size: 5rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.btn-reservar {
+    font-weight: 500;
+    background-color: #E2B80E;
+    color: #200D02;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-reservar:hover {
+    font-weight: 600;
+    background-color: #200D02;
+    color: #E2B80E;
+}
+
+.promocion-section {
+    background-color: #F5E9D8;
+}
+
+.promocion-section h1 {
+    font-weight: 500;
+}
+
+.promocion-section h2 {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+}
+
+.promocion-section img {
+    width:350px;
+    height:250px;
+    object-fit:cover;
+}
+
+.promocion-card {
+    background-color: #fff;
+}
+.evento-section {
+    background-image:
+    linear-gradient(
+        to bottom,
+        rgba(32,13,2,1) 0%,
+        rgba(32,13,2,0.7) 30%,
+        rgba(32,13,2,0.7) 70%,
+        rgba(32,13,2,1) 100%),
+    url('/public/images/fondo.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.evento-card {
+    background: rgba(133,69,7,0.7);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.evento-card h2 {
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.footer-top {
+    background-color: #F5E9D8;
+}
+
+.footer-top h2 {
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.social-icons .social-icon {
+    color: #854507;
+    margin: 0 0.5rem;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.social-icons .social-icon:hover {
+    color: #200D02;
+} 
+
+.footer-bottom {
+    background-image:
+    linear-gradient(
+        to bottom,
+        rgba(32,13,2,1) 0%,
+        rgba(32,13,2,0.8) 30%,
+        rgba(32,13,2,0.6) 70%,
+        rgba(32,13,2,0.4) 100%),
+    url('/public/images/fondo.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.footer-logo {
+    max-width: 200px;
+}
+.navbar {
+    background-color: transparent;
+    transition: background-color 0.4s ease;
+    z-index: 1000;
+}
+
+.navbar-nav .nav-link {
+    color: #fff;
+    font-weight: 500;
+    margin: 0 0.8rem;
+    padding: 0.5rem 0;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #854507;
+    font-weight: 600;
+}

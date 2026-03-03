@@ -1,0 +1,148 @@
+<div class="container-fluid">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-tags me-2"></i>
+                Gestión de Promociones
+            </h2>
+            <p class="text-muted mb-0">
+                Gestiona las ofertas y promociones disponibles
+            </p>
+        </div>
+
+        <button id="btn-create-promocion" class="btn btn-primary d-flex align-items-center gap-2 shadow-sm">
+            <i class="bi bi-plus-circle"></i>
+            Crear promoción
+        </button>
+
+    </div>
+
+    <!-- Filtros -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+
+            <div class="btn-group" role="group">
+
+                <button type="button"
+                        class="btn btn-outline-secondary active"
+                        data-filter="todas">
+                    <i class="bi bi-list-ul me-1"></i>
+                    Todas
+                </button>
+
+                <button type="button"
+                        class="btn btn-outline-success"
+                        data-filter="activas">
+                    <i class="bi bi-check-circle-fill me-1"></i>
+                    Activas
+                </button>
+
+                <button type="button"
+                        class="btn btn-outline-danger"
+                        data-filter="inactivas">
+                    <i class="bi bi-x-circle-fill me-1"></i>
+                    Inactivas
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+
+            <div class="table-responsive rounded">
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>Título</th>
+                            <th>Vigencia</th>
+                            <th>Estado</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <?php $promocion = $promocion ?? []; ?>
+
+                        <?php if (!empty($promocion)): ?>
+                            <?php foreach ($promocion as $pr): ?>
+
+                                <tr data-estado="<?= strtolower($pr['estado']) ?>">
+
+                                    <td>
+                                        <div class="fw-semibold">
+                                            <?= htmlspecialchars($pr['titulo']) ?>
+                                        </div>
+                                        <small class="text-muted">
+                                            <?= htmlspecialchars($pr['descripcion']) ?>
+                                        </small>
+                                    </td>
+
+                                    <td>
+                                        <span class="d-block">
+                                            <?= htmlspecialchars($pr['fecha_inicio']) ?>
+                                        </span>
+                                        <small class="text-muted">
+                                            hasta <?= htmlspecialchars($pr['fecha_fin']) ?>
+                                        </small>
+                                    </td>
+
+                                    <td>
+                                        <span class="badge 
+                                            <?= $pr['estado'] === 'Activa'
+                                                ? 'bg-success'
+                                                : ($pr['estado'] === 'No disponible'
+                                                    ? 'bg-danger'
+                                                    : 'bg-secondary') ?>">
+                                            <?= htmlspecialchars($pr['estado']) ?>
+                                        </span>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-sm">
+
+                                            <button class="btn btn-outline-primary btn-update"
+                                                    data-id="<?= $pr['id_promocion'] ?>"
+                                                    data-controller="Promocion">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+
+                                            <button class="btn btn-outline-danger btn-delete"
+                                                    data-id="<?= $pr['id_promocion'] ?>"
+                                                    data-controller="Promocion">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+
+                                        </div>
+                                    </td>
+
+                                </tr>
+
+                            <?php endforeach; ?>
+
+                        <?php else: ?>
+
+                            <tr>
+                                <td colspan="4" class="text-center py-5 text-muted">
+                                    <i class="bi bi-inbox-fill fs-3 d-block mb-2"></i>
+                                    No hay promociones registradas
+                                </td>
+                            </tr>
+
+                        <?php endif; ?>
+
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</div>

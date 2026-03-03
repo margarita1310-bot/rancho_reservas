@@ -1,0 +1,81 @@
+:root {
+    --color-dark: #200D02;
+    --color-primary: #854507;
+    --color-success: #11422A;
+    --color-danger: #9A4530;
+}
+
+body {
+    font-family: "Cabin", sans-serif;
+    background-color: #F5E9D8;
+}
+
+.sidebar {
+    background-color: var(--color-dark) !important;
+}
+
+/* Links del sidebar */
+.sidebar .nav-link {
+    color: #ffffff;
+    border-radius: 8px;
+    margin-bottom: 4px;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Activo personalizado */
+.nav-pills .nav-link.active {
+    background-color: var(--color-primary) !important;
+}
+
+.card-dark {
+    background-color: var(--color-primary);
+    color: #fff;
+}
+
+.table thead {
+    background-color: var(--color-dark);
+    color: #fff;
+}
+
+.form-control:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.2rem rgba(133, 69, 7, 0.25);
+}
+
+/* Fondo oscuro que cubre toda la pantalla */
+.modal-overlay {
+    position: fixed;
+    inset: 0; /* top:0 right:0 bottom:0 left:0 */
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050; /* por encima de todo */
+}
+
+/* Contenedor del modal */
+.modal-content {
+    background: #ffffff;
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    border-radius: 8px;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+/* Título */
+#modal-title {
+    margin-bottom: 15px;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+/* Ocultar modal */
+.d-none {
+    display: none !important;
+}
