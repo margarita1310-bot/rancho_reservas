@@ -1,40 +1,66 @@
 <?php if (!empty($eventos)): ?>
    <section id="evento-section" class="evento-section py-5">
-      <div class="container text-center text-white">
-         <h1 class="">PROXIMO EVENTO</h1>
+      <div class="container">
+
+         <h1 class="text-center text-white mb-5">PROXIMO EVENTO</h1>
 
          <div class="row justify-content-center">
+
          <?php foreach ($eventos as $evento): ?>
-               <div class="evento-card col-md-8 p-3 rounded">
-                  <div class="row g-0 align-items-center">
-                     <div class="col-md-5">
-                        <img class="img-fluid rounded"
-                           src="../images/evento/<?= $evento['imagen'] ?>" alt="Evento <?= $evento['id_evento'] ?>">
-                     </div>
+
+               <div class="col-lg-8 mb-4">
+
+                  <div class="evento-card">
+                     
+                     <div class="row g-0 align-items-center">
+                     
+                        <div class="col-md-5">
+                           <img
+                              src="../images/evento/<?= $evento['imagen'] ?>"
+                              class="evento-img"
+                              alt="Evento <?= $evento['id_evento'] ?>">
+                        </div>
                         
-                     <div class="col-md-7 d-flex align-items-center">
-                        <div class="card-body text-start w-100 p-3">
-                           <h2><?= $evento['nombre'] ?></h2>
-                           <p><?= $evento['descripcion'] ?></p>
-                           <p><strong>Fecha: </strong><?= $evento['fecha'] ?></p>
-                           <p><strong>Hora: </strong><?= $evento['hora'] ?></p>
-                           <p><strong>Precio Mesa: </strong><?= $evento['precio_mesa'] ?></p>
-                           <button 
-                              class="btn btn-reservar"
-                              data-id="<?= $evento['id_evento'] ?>"
-                              data-nombre="<?= $evento['nombre'] ?>"
-                              data-fecha="<?= $evento['fecha'] ?>"
-                              data-precio="<?= $evento['precio_mesa'] ?>"
-                              data-bs-toggle="modal" 
-                              data-bs-target="#reservaModal">
-                              Reservar
-                           </button>
+                        <div class="col-md-7">
+                           
+                           <div class="evento-info">
+                              <h2><?= $evento['nombre'] ?></h2>
+                              <p class="evento-descripcion">
+                                 <?= $evento['descripcion'] ?>
+                              </p>
+                              
+                              <div class="evento-detalles">
+                                 <span>
+                                    <i class="bi bi-calendar"></i>
+                                    <?= $evento['fecha'] ?>
+                                 </span>
+                                 <span>
+                                    <i class="bi bi-clock"></i>
+                                    <?= $evento['hora'] ?>
+                                 </span>
+                                 <span class="evento-precio">
+                                    <i class="bi bi-currency-dollar"></i>
+                                    <?= $evento['precio_mesa'] ?>
+                                 </span>
+                              </div>
+                              
+                              <button 
+                                 class="btn btn-reservar mt-3"
+                                 data-id="<?= $evento['id_evento'] ?>"
+                                 data-nombre="<?= $evento['nombre'] ?>"
+                                 data-fecha="<?= $evento['fecha'] ?>"
+                                 data-precio="<?= $evento['precio_mesa'] ?>"
+                                 data-bs-toggle="modal" 
+                                 data-bs-target="#reservaModal">
+                                 Reservar Mesa
+                              </button>
+                           </div>
                         </div>
                      </div>
                   </div>
                </div>
-            </div>
-         <?php endforeach; ?>
+            <?php endforeach; ?>
+         </div>
       </div>
    </section>
 <?php else: ?>

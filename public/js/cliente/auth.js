@@ -64,7 +64,6 @@ function enviarCodigo() {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            // 👇 MOSTRAR BLOQUE DEL CÓDIGO
             document.getElementById('bloqueCodigo').classList.remove('d-none');
             document.getElementById('btnValidarCodigo').classList.remove('d-none');
         } else {
@@ -96,8 +95,7 @@ function validarCodigo() {
     .then(data => {
         if (data.success) {
             sessionStorage.setItem('email', email);
-
-            // Si el backend devuelve datos del cliente
+            
             if (data.cliente) {
                 sessionStorage.setItem('nombre', data.cliente.nombre ?? '');
                 sessionStorage.setItem('telefono', data.cliente.telefono ?? '');

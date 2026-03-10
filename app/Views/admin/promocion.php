@@ -4,7 +4,7 @@
 
         <div>
             <h2 class="fw-bold mb-1">
-                <i class="bi bi-tags me-2"></i>
+                <i class="bi bi-tag me-2"></i>
                 Gestión de Promociones
             </h2>
             <p class="text-muted mb-0">
@@ -18,8 +18,7 @@
         </button>
 
     </div>
-
-    <!-- Filtros -->
+    
     <div class="card shadow-sm mb-4">
         <div class="card-body">
 
@@ -34,24 +33,21 @@
 
                 <button type="button"
                         class="btn btn-outline-success"
-                        data-filter="activas">
+                        data-filter="activa">
                     <i class="bi bi-check-circle-fill me-1"></i>
                     Activas
                 </button>
 
                 <button type="button"
                         class="btn btn-outline-danger"
-                        data-filter="inactivas">
+                        data-filter="inactiva">
                     <i class="bi bi-x-circle-fill me-1"></i>
                     Inactivas
                 </button>
-
             </div>
-
         </div>
     </div>
 
-    <!-- Tabla -->
     <div class="card shadow-sm">
         <div class="card-body p-0">
 
@@ -95,9 +91,9 @@
 
                                     <td>
                                         <span class="badge 
-                                            <?= $pr['estado'] === 'Activa'
+                                            <?= $pr['estado'] === 'activa'
                                                 ? 'bg-success'
-                                                : ($pr['estado'] === 'No disponible'
+                                                : ($pr['estado'] === 'inactiva'
                                                     ? 'bg-danger'
                                                     : 'bg-secondary') ?>">
                                             <?= htmlspecialchars($pr['estado']) ?>
@@ -118,31 +114,21 @@
                                                     data-controller="Promocion">
                                                 <i class="bi bi-trash"></i>
                                             </button>
-
                                         </div>
                                     </td>
-
                                 </tr>
-
                             <?php endforeach; ?>
-
                         <?php else: ?>
-
                             <tr>
                                 <td colspan="4" class="text-center py-5 text-muted">
                                     <i class="bi bi-inbox-fill fs-3 d-block mb-2"></i>
                                     No hay promociones registradas
                                 </td>
                             </tr>
-
                         <?php endif; ?>
-
                     </tbody>
-
                 </table>
             </div>
-
         </div>
     </div>
-
 </div>

@@ -1,22 +1,36 @@
-:root {
-    --color-dark: #200D02;
-    --color-primary: #854507;
-    --color-success: #11422A;
-    --color-danger: #9A4530;
-}
 
 body {
-    font-family: "Cabin", sans-serif;
     background-color: #F5E9D8;
+    font-family: "Zain", sans-serif;
+    font-weight: 400;
 }
 
-.sidebar {
-    background-color: var(--color-dark) !important;
+h1 {
+    font-family: "Rye", serif;
+    font-weight: 400;
+    font-size: 1.3rem;
 }
 
-/* Links del sidebar */
+h2, h3 {
+    font-family: "Playfair Display", serif;
+    font-weight: 400;
+}
+
+.sidebar, .sidebarMovil, #toggleSidebarBtn {
+    background-color: #200D02 !important;
+}
+
+.sidebar-logo {
+    width: 24px;
+    height: 24px;
+}
+
+#toggleSidebarBtn i {
+    transition: transform 0.2s ease;
+}
+
 .sidebar .nav-link {
-    color: #ffffff;
+    color: #fff;
     border-radius: 8px;
     margin-bottom: 4px;
 }
@@ -25,40 +39,38 @@ body {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Activo personalizado */
 .nav-pills .nav-link.active {
-    background-color: var(--color-primary) !important;
+    background-color: #854507 !important;
 }
 
 .card-dark {
-    background-color: var(--color-primary);
+    background-color: #854507;
     color: #fff;
 }
 
 .table thead {
-    background-color: var(--color-dark);
+    background-color: #200D02;
     color: #fff;
 }
 
 .form-control:focus {
-    border-color: var(--color-primary);
+    border-color: #200D02;
     box-shadow: 0 0 0 0.2rem rgba(133, 69, 7, 0.25);
 }
 
-/* Fondo oscuro que cubre toda la pantalla */
 .modal-overlay {
     position: fixed;
-    inset: 0; /* top:0 right:0 bottom:0 left:0 */
+    inset: 0;
     background: rgba(0, 0, 0, 0.55);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1050; /* por encima de todo */
+    z-index: 1050;
 }
 
-/* Contenedor del modal */
 .modal-content {
-    background: #ffffff;
+    background: #200D02;
+    color: #fff;
     width: 100%;
     max-width: 700px;
     max-height: 90vh;
@@ -68,14 +80,18 @@ body {
     box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
-/* Título */
 #modal-title {
     margin-bottom: 15px;
     font-size: 1.25rem;
     font-weight: 600;
 }
 
-/* Ocultar modal */
 .d-none {
     display: none !important;
+}
+
+@media (max-width: 767px) {
+    .sidebar-header {
+        display: none;
+    }
 }

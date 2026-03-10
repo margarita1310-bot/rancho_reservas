@@ -14,7 +14,7 @@ document.getElementById('btn-create-evento')?.addEventListener('click', () => {
                 <textarea id="descripcion" class="form-control" rows="3"></textarea>
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div class="col-md-12 mb-3">
                 <label class="form-label">Fecha</label>
                 <input type="date" id="fecha" class="form-control">
             </div>
@@ -54,6 +54,8 @@ document.getElementById('btn-create-evento')?.addEventListener('click', () => {
         `,
         onSubmit: crearEvento
     });
+
+    setTimeout(configurarFechaEvento, 50);
 });
 
 function crearEvento () {
@@ -97,8 +99,6 @@ function crearEvento () {
     .catch(() => alert('Error en la petición'));
 }
 
-/*Accion del boton editar evento*/
-
 document.addEventListener('click', async e => {
     const btn = e.target.closest('.btn-update');
     if (!btn || btn.dataset.controller !== 'Evento') return;
@@ -128,7 +128,7 @@ document.addEventListener('click', async e => {
                 <textarea id="descripcion" class="form-control" rows="3">${ev.descripcion}</textarea>
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div class="col-md-12 mb-3">
                 <label class="form-label">Fecha</label>
                 <input type="date" id="fecha" class="form-control" value="${ev.fecha}">
             </div>
@@ -168,6 +168,8 @@ document.addEventListener('click', async e => {
         `,
         onSubmit: actualizarEvento
     });
+
+    setTimeout(configurarFechaEvento, 50);
 });
 
 function actualizarEvento() {
@@ -199,8 +201,6 @@ function actualizarEvento() {
         else alert('Error al actualizar');
     });
 }
-
-/*Accion del boton eliminar evento*/
 
 document.addEventListener('click', e => {
     const btn = e.target.closest('.btn-delete');

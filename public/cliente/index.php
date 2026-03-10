@@ -1,11 +1,10 @@
 <?php
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/../../app/Controllers/ClienteController.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
 $dotenv->load();
-
-require_once '../../app/Controllers/ClienteController.php';
 
 $action = $_GET['action'] ?? 'index';
 

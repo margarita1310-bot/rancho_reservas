@@ -39,6 +39,8 @@ document.getElementById('btn-create-promocion')?.addEventListener('click', () =>
         `,
         onSubmit: crearPromocion
     });
+
+    setTimeout(configurarFechasPromocion, 50);
 });
 
 function crearPromocion () {
@@ -130,6 +132,8 @@ document.addEventListener('click', async e => {
         `,
         onSubmit: actualizarPromocion
     });
+
+    setTimeout(configurarFechasPromocion, 50);
 });
 
 function actualizarPromocion () {

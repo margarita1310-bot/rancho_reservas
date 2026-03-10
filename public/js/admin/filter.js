@@ -1,33 +1,38 @@
-document.addEventListener('click', (e) => {
+document.addEventListener('click', function (e) {
+
     const btn = e.target.closest('[data-filter]');
     if (!btn) return;
 
     const filtro = btn.dataset.filter;
 
-    const modulo = btn.closest('[id]');
-    if (!modulo) return;
+    const contenedor = btn.closest('.filtros-container') || btn.parentElement;
+    const tabla = document.querySelector('table'); // si solo tienes una tabla
 
-    const table = modulo.querySelector('table');
-    if (!table) return;
+    if (!tabla) return;
 
-    btn.parentElement.querySelectorAll('button').forEach(b =>
-        b.classList.remove('btn-active', 'filter-btn-active')
-    );
+    // Quitar clase active de todos los botones del grupo
+    contenedor.querySelectorAll('[data-filter]')
+        .forEach(b => b.classList.remove('active'));
 
-    btn.classList.add('btn-active', 'filter-btn-active');
+    // Activar el botón actual
+    btn.classList.add('active');
 
-    table.querySelectorAll('tbody tr').forEach(row => {
-        if (filtro === 'todas' || filtro === 'todos') {
+    // Filtrar filas
+    tabla.querySelectorAll('tbody tr').forEach(row => {
+
+        const estadoFila = row.dataset.estado;
+
+        if (filtro === 'todos') {
             row.classList.remove('d-none');
-            return;
+        } else {
+            row.classList.toggle('d-none', estadoFila !== filtro);
         }
 
-        row.classList.toggle('d-none', row.dataset.estado !== filtro.slice(0, -1));
     });
+
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('[data-filter="todas"]').forEach(btn => {
-        btn.click();
-    });
+document.addEventListener('DOMContentLoaded', function () {
+    const btnTodos = document.querySelector('[data-filter="todos"]');
+    if (btnTodos) btnTodos.click();
 });

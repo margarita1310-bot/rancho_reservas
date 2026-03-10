@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../../app/Controllers/PromocionController.php';
 
 $controller = new PromocionController();

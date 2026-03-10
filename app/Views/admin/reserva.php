@@ -5,8 +5,8 @@
 
         <div>
             <h2 class="fw-bold mb-1">
-                <i class="bi bi-bookmark-check-fill me-2 text-primary"></i>
-                Reservas
+                <i class="bi bi-journal-check me-2"></i>
+                Panel de Reservas
             </h2>
             <p class="text-muted mb-0">
                 Consulta y administra las reservaciones

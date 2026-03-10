@@ -23,7 +23,8 @@ class LoginController
             header("Location: index.php?action=dashboard");
             exit;
         }
-            $error = "Usuario o contraseña incorrectos.";
-            require_once __DIR__ . '/../Views/admin/login.php';
+        
+        $error = "Usuario o contraseña incorrectos.";
+        require_once __DIR__ . '/../Views/admin/login.php';
     }
 }

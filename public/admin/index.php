@@ -1,12 +1,13 @@
 <?php
-require_once __DIR__ . '/vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 session_start();
 
-require_once '../../app/Controllers/LoginController.php';
-require_once '../../app/Controllers/AdminController.php';
+require_once __DIR__ . '/../../app/Controllers/LoginController.php';
+require_once __DIR__ . '/../../app/Controllers/AdminController.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
+$dotenv->load();
 
 $action = $_GET['action'] ?? 'login';
 

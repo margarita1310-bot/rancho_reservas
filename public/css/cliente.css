@@ -11,6 +11,7 @@ body {
 
 h1 {
     font-family: "Rye", serif;
+    font-weight: 600;
 }
 
 h2, h3 {
@@ -28,8 +29,8 @@ section {
     linear-gradient(
         to bottom,
         rgba(32,13,2,0.9) 0%,
-        rgba(32,13,2,0.6) 30%,
-        rgba(32,13,2,0.6) 70%,
+        rgba(32,13,2,0.6) 40%,
+        rgba(32,13,2,0.6) 60%,
         rgba(32,13,2,0.9) 100%),
     url('/public/images/hero.jpg');
     background-size: cover;
@@ -39,30 +40,29 @@ section {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding-top: 80px;
 }
 
 .hero-content {
-    position: relative;
-    z-index: 1;
+    max-width: 800px;
 }
 
 .hero-title {
-    font-size: 5rem;
-    font-weight: 500;
-    line-height: 1.2;
+    font-size: 4rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
 }
 
 .btn-reservar {
-    font-weight: 500;
-    background-color: #E2B80E;
+    background: #E2B80E;
+    border: none;
     color: #200D02;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
+    padding: 8px 18px;
+    border-radius: 6px;
+    transition: .3s;
 }
 
 .btn-reservar:hover {
-    font-weight: 600;
     background-color: #200D02;
     color: #E2B80E;
 }
@@ -71,23 +71,32 @@ section {
     background-color: #F5E9D8;
 }
 
-.promocion-section h1 {
-    font-weight: 500;
-}
-
-.promocion-section h2 {
-    font-size: 1.5rem;
-    margin-top: 1rem;
-}
-
-.promocion-section img {
-    width:350px;
-    height:250px;
-    object-fit:cover;
-}
-
 .promocion-card {
-    background-color: #fff;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.promocion-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-top {
+    height: 220px;
+    object-fit: cover;
+}
+
+.card-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.promocion-fechas {
+    margin-top: 10px;
+    font-size: .9rem;
+    color: #777;
 }
 .evento-section {
     background-image:
@@ -103,33 +112,83 @@ section {
 }
 
 .evento-card {
-    background: rgba(133,69,7,0.7);
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    background: rgba(133,69,7,0.75);
+    border-radius: 12px;
+    overflow: hidden;
+    backdrop-filter: blur(3px);
+    transition: transform .3s ease, box-shadow .3s ease;
 }
 
-.evento-card h2 {
+.evento-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.evento-img {
+    width: 100%;
+    height: 100%;
+    min-height: 260px;
+    object-fit: cover;
+}
+
+.evento-info {
+    padding: 2rem;
+    color: #fff;
+}
+
+.evento-info h2 {
     font-weight: 600;
     margin-bottom: 1rem;
+}
+
+.evento-descripcion {
+    color: #f1e6d5;
+    margin-bottom: 1rem;
+}
+
+.evento-detalles {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: .95rem;
+}
+
+.evento-precio {
+    font-weight: 600;
+    color: #ffd27f;
 }
 
 .footer-top {
     background-color: #F5E9D8;
 }
 
-.footer-top h2 {
-    font-weight: 500;
+.footer-top h4 {
+    font-weight: 600;
     margin-bottom: 1rem;
 }
 
-.social-icons .social-icon {
-    color: #854507;
-    margin: 0 0.5rem;
-    font-size: 1.2rem;
-    transition: color 0.3s ease;
+.footer-horarios {
+    list-style: none;
+    padding: 0;
 }
 
-.social-icons .social-icon:hover {
+.footer-horarios li {
+    margin-bottom: 8px;
+    color: #854507;
+}
+
+.social-icons {
+    margin-top: 10px;
+}
+
+.social-icon {
+    font-size: 1.4rem;
+    margin: 0 10px;
+    color: #854507;
+    transition: .3s;
+}
+
+.social-icon:hover {
     color: #200D02;
 } 
 
@@ -138,17 +197,17 @@ section {
     linear-gradient(
         to bottom,
         rgba(32,13,2,1) 0%,
-        rgba(32,13,2,0.8) 30%,
-        rgba(32,13,2,0.6) 70%,
-        rgba(32,13,2,0.4) 100%),
+        rgba(32,13,2,0.8) 40%,
+        rgba(32,13,2,0.6) 100%),
     url('/public/images/fondo.jpg');
     background-size: cover;
     background-position: center;
 }
 
 .footer-logo {
-    max-width: 200px;
+    max-width: 120px;
 }
+
 .navbar {
     background-color: transparent;
     transition: background-color 0.4s ease;

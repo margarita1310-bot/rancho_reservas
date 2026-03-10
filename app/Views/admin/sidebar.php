@@ -2,24 +2,20 @@
 $action = $_GET['action'] ?? 'inicio';
 ?>
 <nav id="sidebarMenu"
-    class="col-md-3 col-lg-2 order-md-1 d-md-block sidebar offcanvas-md offcanvas-start
-           text-white bg-dark min-vh-100">
+    class="col-md-3 col-lg-2 vh-100 sidebar collapse d-md-block
+            text-white bg-dark">
 
-    <div class="offcanvas-header d-md-none border-bottom border-secondary">
-        <h5 class="offcanvas-title">
-            <i class="bi bi-house me-2"></i>
-            Rancho La Joya
-        </h5>
-        <button type="button" class="btn-close btn-close-white"
-                data-bs-dismiss="offcanvas"></button>
-    </div>
+    <div class="d-flex flex-column p-3">
+        <div class="sidebar-header">
+            <h1 class="text-center mb-1 d-flex flex-column align-items-center">
+                <i class="bi bi-house fs-1 mb-3"></i>
+                Rancho La Joya
+            </h1>
 
-    <div class="offcanvas-body d-flex flex-column p-3">
+            <p class="text-center">Panel de Administración</p>
 
-        <h4 class="text-center d-md-block mb-3">
-            <i class="bi bi-house mb-2"></i>
-            Rancho La Joya
-        </h4>
+            <hr class="border-secondary">
+        </div>
         
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
@@ -33,7 +29,7 @@ $action = $_GET['action'] ?? 'inicio';
             <li class="nav-item">
                 <a href="index.php?action=promocion"
                     class="nav-link text-white <?= $action === 'promocion' ? 'active bg-primary' : '' ?>">
-                    <i class="bi bi-megaphone me-2"></i>
+                    <i class="bi bi-tag me-2"></i>
                     Promociones
                 </a>
             </li>
@@ -41,7 +37,7 @@ $action = $_GET['action'] ?? 'inicio';
             <li class="nav-item">
                 <a href="index.php?action=evento"
                     class="nav-link text-white <?= $action === 'evento' ? 'active bg-primary' : '' ?>">
-                    <i class="bi bi-calendar-week me-2"></i>
+                    <i class="bi bi-calendar2-week me-2"></i>
                     Eventos
                 </a>
             </li>
@@ -49,7 +45,7 @@ $action = $_GET['action'] ?? 'inicio';
             <li class="nav-item">
                 <a href="index.php?action=reserva"
                     class="nav-link text-white <?= $action === 'reserva' ? 'active bg-primary' : '' ?>">
-                    <i class="bi bi-people me-2"></i>
+                    <i class="bi bi-journal-check me-2"></i>
                     Reservas
                 </a>
             </li>

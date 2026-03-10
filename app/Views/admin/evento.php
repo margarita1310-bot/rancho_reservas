@@ -4,7 +4,7 @@
 
         <div>
             <h2 class="fw-bold mb-1">
-                <i class="bi bi-calendar-event me-2"></i>
+                <i class="bi bi-calendar2-week me-2"></i>
                 Agenda de Eventos
             </h2>
             <p class="text-muted mb-0">
@@ -19,7 +19,6 @@
 
     </div>
 
-    <!-- Filtros -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
 
@@ -45,13 +44,10 @@
                     <i class="bi bi-x-circle-fill me-1"></i>
                     Canceladas
                 </button>
-
             </div>
-
         </div>
     </div>
-
-    <!-- Tabla -->
+    
     <div class="card shadow-sm">
         <div class="card-body p-0">
 
@@ -130,31 +126,21 @@
                                                     data-controller="Evento">
                                                 <i class="bi bi-trash"></i>
                                             </button>
-
                                         </div>
                                     </td>
-
                                 </tr>
-
                             <?php endforeach; ?>
-
                         <?php else: ?>
-
                             <tr>
                                 <td colspan="7" class="text-center py-5 text-muted">
                                     <i class="bi bi-inbox-fill fs-3 d-block mb-2"></i>
                                     No hay eventos registrados
                                 </td>
                             </tr>
-
                         <?php endif; ?>
-
                     </tbody>
-
                 </table>
             </div>
-
         </div>
     </div>
-
 </div>
