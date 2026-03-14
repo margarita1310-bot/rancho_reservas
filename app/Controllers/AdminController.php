@@ -1,57 +1,64 @@
 <?php
 
-class AdminController
-{
-    public function dashboard()
-    {
-        require_once __DIR__ . '/../Models/Promocion.php';
-        require_once __DIR__ . '/../Models/Evento.php';
-        require_once __DIR__ . '/../Models/Reserva.php';
+require_once __DIR__ . '/../Models/Promocion.php';
+require_once __DIR__ . '/../Models/Evento.php';
+require_once __DIR__ . '/../Models/Reserva.php';
 
-        $promocion = (new Promocion())->getAll();
-        $evento = (new Evento())->getAll();
-        //$reserva = (new Reserva())->getAll();
+class AdminController {
 
-        $vista = __DIR__ . '/../Views/admin/inicio.php';
+    private $promocionModel;
+    private $eventoModel;
+    private $reservaModel;
+
+    public function __construct() {
+        $this->promocionModel = new Promocion();
+        $this->eventoModel = new Evento();
+        $this->reservaModel = new Reserva();
+    }
+
+    private function render($vista) {
         require_once __DIR__ . '/../Views/admin/dashboard.php';
     }
 
-    public function inicio()
-    {
+    public function dashboard() {
+        $promociones = $this->promocionModel->getAll();
+        $eventos = $this->eventoModel->getAll();
+        $reservas = $this->reservaModel->getAll();
+
         $vista = __DIR__ . '/../Views/admin/inicio.php';
-        require_once __DIR__ . '/../Views/admin/dashboard.php';
+        $this->render($vista);
+    }
+
+    public function inicio() {
+        $vista = __DIR__ . '/../Views/admin/inicio.php';
+        $this->render($vista);
     }
     
-    public function promocion()
-    {
-        require_once __DIR__ . '/../Models/Promocion.php';
-        $promocion = (new Promocion())->getAll();
+    public function promocion() {
+        $promociones = $this->promocionModel->getAll();
 
         $vista =  __DIR__ . '/../Views/admin/promocion.php';
-        require_once __DIR__ . '/../Views/admin/dashboard.php';
+        $this->render($vista);
     }
     
-    public function evento()
-    {
-        require_once __DIR__ . '/../Models/Evento.php';
-        $evento = (new Evento())->getAll();
+    public function evento() {
+        $eventos = $this->eventoModel->getAll();
 
         $vista = __DIR__ . '/../Views/admin/evento.php';
-        require_once __DIR__ . '/../Views/admin/dashboard.php';
+        $this->render($vista);
     }
 
-    public function reserva()
-    {
-        require_once __DIR__ . '/../Models/reserva.php';
-        //$reserva = (new Reserva())->getAll();
+    public function reserva() {
+        $reservas = $this->reservaModel->getAll();
 
         $vista = __DIR__ . '/../Views/admin/reserva.php';
-        require_once __DIR__ . '/../Views/admin/dashboard.php';
+        $this->render($vista);
     }
 
-    public function logout()
-    {
+    public function logout() {
+        session_unset();
         session_destroy();
+        
         header("Location: index.php?action=login");
         exit;
     }

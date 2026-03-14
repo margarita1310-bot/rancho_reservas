@@ -2,13 +2,15 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Reserva tu evento</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h2 class="modal-title">Reserva tu evento</h2>
+                <button type="button" class="btn text-black ms-auto" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg fs-3"></i>
+                </button>
             </div>
             
             <div class="modal-body">
                 <div id="step1" class="step">
-                    <h6>Inicia sesión</h6>
+                    <h4>Inicia sesión</h4>
 
                     <div class="mb-3">
                         <label class="form-label">Correo electronico</label>
@@ -17,7 +19,7 @@
 
                     <hr>
 
-                    <div id="googleBtn" class="google-custom"></div>
+                    <div id="google-button" class="mb-3"></div>
 
                     <button class="btn btn-warning mb-3" onclick="enviarCodigo()">Enviar código</button>
                     
@@ -30,7 +32,7 @@
                 </div>
 
                 <div id="step2" class="step d-none">
-                    <h6>Datos personales</h6>
+                    <h4>Datos personales</h4>
                     <form>
                         <div class="mb-3">
                             <label class="form-label">Nombre</label>
@@ -49,7 +51,7 @@
                 </div>
         
                 <div id="step3" class="step d-none">
-                    <h6>Detalles de tu reserva</h6>
+                    <h4>Detalles de tu reserva</h4>
 
                     <div class="mb-3">
                         <label class="form-label">Evento</label>
@@ -78,7 +80,7 @@
                 </div>
         
                 <div id="step4" class="step d-none">
-                    <h6>Confirma tu información</h6>
+                    <h4>Confirma tu información</h4>
                     <p><strong>Nombre:</strong> <span id="confirmarNombre"></span></p>
                     <p><strong>Correo:</strong> <span id="confirmarEmail"></span></p>
                     <p><strong>Teléfono:</strong> <span id="confirmarTelefono"></span></p>
@@ -89,12 +91,13 @@
                     <p><strong>Personas:</strong> <span id="confirmarPersonas"></span></p>
 
                     <button type="button" class="btn btn-secondary" onclick="goToStep(3)">Atrás</button>
-                    <button type="button" class="btn btn-warning" onclick="goToStep(5)">Proceder al pago</button>
+                    <button type="button" class="btn btn-warning" onclick="crearReserva()">Proceder al pago</button>
                 </div>
         
                 <div id="step5" class="step d-none">
-                    <h6>Pago con PayPal</h6>
-                    <div id="paypal-button-container"></div>
+                    <h4>Pago con PayPal</h4>
+                    <div id="paypal-button"
+                        data-reserva="<"></div>
                     <button type="button" class="btn btn-secondary" onclick="goToStep(4)">Atrás</button>
                 </div>
             </div>

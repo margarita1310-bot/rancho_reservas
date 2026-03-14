@@ -1,10 +1,10 @@
 window.onload = function () {
     google.accounts.id.initialize({
-        client_id: $_ENV['GOOGLE_CLIENT_ID'],
+        client_id: GOOGLE_CLIENT_ID,
         callback: handleCredentialResponse
     });
     google.accounts.id.renderButton(
-        document.getElementById("googleBtn"),
+        document.getElementById("google-button"),
         {
             theme: "outline",
             size: "large",
@@ -34,7 +34,10 @@ function handleCredentialResponse(response) {
     .then(res => res.json())
     .then(data => {
         if(data.success) {
-            console.log('Usuario validado en backend');
+
+            sessionStorage.setItem("id_cliente", data.cliente.id_cliente);
+
+            loginExitoso(data.cliente);
         }
     });
 }
@@ -97,6 +100,7 @@ function validarCodigo() {
             sessionStorage.setItem('email', email);
             
             if (data.cliente) {
+                sessionStorage.setItem('id_cliente', data.cliente.id_cliente);
                 sessionStorage.setItem('nombre', data.cliente.nombre ?? '');
                 sessionStorage.setItem('telefono', data.cliente.telefono ?? '');
             }
@@ -113,11 +117,14 @@ function validarCodigo() {
 }
 
 function loginExitoso(cliente) {
+
     document.getElementById('nombre').value = cliente?.nombre ?? '';
     document.getElementById('telefono').value = cliente?.telefono ?? '';
 
+    sessionStorage.setItem('id_cliente', cliente.id_cliente);
     sessionStorage.setItem('nombre', cliente?.nombre ?? '');
     sessionStorage.setItem('email', cliente?.email ?? '');
     sessionStorage.setItem('telefono', cliente?.telefono ?? '');
+    
     goToStep(2);
 }

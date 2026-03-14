@@ -4,18 +4,27 @@ function goToStep(step) {
 }
 
 function reservar(idEvento) {
-    fetch(`evento.php?action=obtener&id=${idEvento}`)
-    .then(res => res.json())
-    .then(data => {
-        if(data.success){
-            document.getElementById('evento-nombre').value = data.evento.nombre;
-            document.getElementById('evento-fecha').value = data.evento.fecha;
+    const formData = new FormData();
+    formData.append('id', idEvento);
+
+    fetch('evento.php?action=obtener', {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.json())
+    .then(r => {
+        if(r){
+            document.getElementById('evento-nombre').value = r.evento.nombre;
+            document.getElementById('evento-fecha').value = r.evento.fecha;
+
             sessionStorage.setItem('id_evento', idEvento);
-            sessionStorage.setItem('nombre', data.evento.nombre);
-            sessionStorage.setItem('fecha', data.evento.fecha);
-            nextStep(1);
+            sessionStorage.setItem('nombre', r.evento.nombre);
+            sessionStorage.setItem('fecha', r.evento.fecha);
+
+            goToStep(1);
         }
-    });
+    })
+    .catch(() => alert('Error en la petición'));
 }
 
 document.querySelectorAll('[data-bs-target="#reservaModal"]').forEach(btn => {
@@ -36,6 +45,7 @@ function cargarDatosEvento() {
 }
 
 function guardarDatosCliente() {
+
     const nombre = document.getElementById('nombre').value.trim();
     const telefono = document.getElementById('telefono').value.trim();
 
@@ -44,22 +54,29 @@ function guardarDatosCliente() {
         return;
     }
 
+    const formData = new FormData();
+
+    formData.append('nombre', nombre);
+    formData.append('telefono', telefono);
+
     fetch('auth.php?action=guardarDatosCliente', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `nombre=${nombre}&telefono=${telefono}`
+        body: formData
     })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
+    .then(r => r.json())
+    .then(r => {
+        if (r.success) {
+
             sessionStorage.setItem('nombre', nombre);
             sessionStorage.setItem('telefono', telefono);
+
             cargarDatosEvento();
             goToStep(3);
         } else {
             alert('Error al guardar datos');
         }
-    });
+    })
+    .catch(() => alert('Error en la petición'));
 }
 
 function guardarDatosReserva() {
@@ -104,6 +121,102 @@ function cargarConfirmacion() {
         sessionStorage.getItem('personas') ?? '';
 }
 
+let reservaID = null;
+
+function crearReserva() {
+    const formData =  new FormData();
+
+    const id_cliente = sessionStorage.getItem('id_cliente');
+    const id_evento = sessionStorage.getItem('id_evento');
+    const mesas_reservadas = 1;
+    const personas = sessionStorage.getItem('personas');
+    const precio = sessionStorage.getItem('precio_evento');
+
+    formData.append('id_cliente', id_cliente);
+    formData.append('id_evento', id_evento);
+    formData.append('mesas_reservadas', mesas_reservadas);
+    formData.append('personas', personas);
+    formData.append('total', precio);
+    formData.append('estado', 'pendiente');
+
+
+    fetch("reserva.php?action=guardar", {
+        method:"POST",
+        body: formData
+    })
+
+    .then(r => r.json())
+    .then(r => {
+        if(r.status === "ok") {
+            reservaID = r.id_reserva;
+            iniciarPayPal();
+            goToStep(5);
+        } else {
+            alert("Error al crear la reserva")
+        }
+    })
+    .catch(() => alert('Error en la petición'));
+}
+
+function iniciarPayPal() {
+
+    paypal.Buttons ({
+        
+        createOrder: function() {
+
+            const total = sessionStorage.getItem('precio_evento');
+
+            const formData = new FormData();
+
+            formData.append('id_reserva', reservaID);
+            formData.append('monto', total);
+            
+            return fetch("pago.php?action=crearOrden", {
+                method:"POST",
+                body: formData
+            })
+    
+            .then(r => r.json())
+            .then(r => {
+
+                if (r.status !== "ok") {
+                    alert("Error creando orden");
+                    throw new Error("orden invalida");
+                }
+
+                return r.orderID;
+            });
+        },
+        
+        onApprove: function (data) {
+
+            const formData = new FormData();
+            formData.append('orderID', data.orderID);
+            formData.append('id_reserva', reservaID);
+            
+            return fetch("pago.php?action=capturar", {
+                method:"POST",
+                body: formData
+            })
+
+            .then(r => r.json())
+            .then(r => {
+
+                if (r.status === "ok") {
+
+                    alert("Pago realizado correctamente");
+    
+                    location.reload();
+
+                } else {
+                    alert("Error al capturar pago");
+                }
+            });
+        }
+    }).render('#paypal-button');
+}
+
+/*
 function resetReservaModal() {
     document.querySelectorAll('#reservaModal input').forEach(input => {
         if (input.type !== 'hidden') {
@@ -132,3 +245,4 @@ const reservaModal = document.getElementById('reservaModal');
 reservaModal.addEventListener('hidden.bs.modal', () => {
     resetReservaModal();
 });
+*/

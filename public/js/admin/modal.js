@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+
     function abrirModal ({
         titulo,
         contenido,
@@ -10,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const modal = document.getElementById('modal-global');
             const modalTitulo = document.getElementById('modal-title');
             const modalBody = document.getElementById('modal-body');
-            const modalForm = document.getElementById('modal-form');
             const btnSave = document.getElementById('modal-btn-save');
             const btnCancel = document.getElementById('modal-btn-cancel');
             
@@ -23,7 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.classList.remove('d-none');
         
             btnSave.onclick = () => {
-                if (onSubmit) onSubmit();
+                if (onSubmit) {
+                    onSubmit();
+                }
+
+                modal.classList.add('d-none');
             };
 
             btnCancel.onclick = () => {

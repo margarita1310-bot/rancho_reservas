@@ -1,4 +1,7 @@
+const EVENTO_URL = 'evento.php';
+
 document.getElementById('btn-create-evento')?.addEventListener('click', () => {
+
     abrirModal({
         titulo: 'Nuevo Evento',
         textoBoton: 'Crear',
@@ -59,38 +62,40 @@ document.getElementById('btn-create-evento')?.addEventListener('click', () => {
 });
 
 function crearEvento () {
-    const formData = new FormData();
 
     const nombre = document.getElementById('nombre');
-    const descripcion = document.getElementById('descripcion');
     const fecha = document.getElementById('fecha');
     const hora = document.getElementById('hora');
-    const hora_fin = document.getElementById('hora_fin');
-    const mesas_disponibles = document.getElementById('mesas_disponibles');
-    const precio_mesa = document.getElementById('precio_mesa');
-    const estado = document.getElementById('estado');
+
+    if(!nombre.value.trim() || !fecha.value || !hora.value) {
+        alert('Completa los campos obligatorios');
+        return;
+    }
+
+    const formData = new FormData();
+    
+    formData.append('nombre', nombre.value.trim());
+    formData.append('descripcion', document.getElementById('descripcion').value.trim());
+    formData.append('fecha', fecha.value);
+    formData.append('hora', hora.value);
+    formData.append('hora_fin', document.getElementById('hora_fin').value);
+    formData.append('mesas_disponibles', document.getElementById('mesas_disponibles').value);
+    formData.append('precio_mesa', document.getElementById('precio_mesa').value);
+    formData.append('estado', document.getElementById('estado').value);
+    
     const imagen = document.getElementById('imagen').files[0];
-            
+    
     if (!imagen) {
         alert('Selecciona una imagen');
         return;
     }
-            
-    formData.append('nombre', nombre.value);
-    formData.append('descripcion', descripcion.value);
-    formData.append('fecha', fecha.value);
-    formData.append('hora', hora.value);
-    formData.append('hora_fin', hora_fin.value);
-    formData.append('mesas_disponibles', mesas_disponibles.value);
-    formData.append('precio_mesa', precio_mesa.value);
-    formData.append('estado', estado.value);
+    
     formData.append('imagen', imagen);
 
-    fetch('evento.php?action=guardar', {
+    fetch(`${EVENTO_URL}?action=guardar`, {
         method: 'POST',
         body: formData
     })
-
     .then(r => r.json())
     .then(r => {
         if (r.status === 'ok') location.reload();
@@ -100,12 +105,14 @@ function crearEvento () {
 }
 
 document.addEventListener('click', async e => {
+
     const btn = e.target.closest('.btn-update');
+
     if (!btn || btn.dataset.controller !== 'Evento') return;
 
     const id = btn.dataset.id;
     
-    const res = await fetch(`evento.php?action=obtener`, {
+    const res = await fetch(`${EVENTO_URL}?action=obtener`, {
         method: 'POST',
         body: new URLSearchParams({ id })
     });
@@ -173,8 +180,10 @@ document.addEventListener('click', async e => {
 });
 
 function actualizarEvento() {
-    const data = new FormData();
+    
     const body = document.getElementById('modal-body');
+    
+    const data = new FormData();
 
     data.append('id', body.querySelector('#id_evento').value);
     data.append('nombre', body.querySelector('#nombre').value.trim());
@@ -187,11 +196,12 @@ function actualizarEvento() {
     data.append('estado', body.querySelector('#estado').value);
 
     const imagen = body.querySelector('#imagen').files[0];
+
     if (imagen) {
         data.append('imagen', imagen);
     }
 
-    fetch('evento.php?action=actualizar', {
+    fetch(`${EVENTO_URL}?action=actualizar`, {
         method: 'POST',
         body: data
     })
@@ -199,11 +209,14 @@ function actualizarEvento() {
     .then(r => {
         if (r.status === 'ok') location.reload();
         else alert('Error al actualizar');
-    });
+    })
+    .catch(() => alert('Error en la petición'));
 }
 
 document.addEventListener('click', e => {
+
     const btn = e.target.closest('.btn-delete');
+
     if (!btn || btn.dataset.controller !== 'Evento') return;
 
     abrirModal({
@@ -216,16 +229,22 @@ document.addEventListener('click', e => {
 });
 
 function eliminarEvento(btn) {
+
     const data = new FormData();
+    
     data.append('id', btn.dataset.id);
 
-    fetch('evento.php?action=eliminar', {
+    fetch(`${EVENTO_URL}?action=eliminar`, {
         method: 'POST',
         body: data
     })
     .then(r => r.json())
     .then(r => {
-        if (r.status === 'ok') btn.closest('tr').remove();
+        if (r.status === 'ok') {
+            btn.closest('tr').remove();
+        }
+
         document.getElementById('modal-global').classList.add('d-none');
-    });
+    })
+    .catch(() => alert('Error en la petición'));
 }

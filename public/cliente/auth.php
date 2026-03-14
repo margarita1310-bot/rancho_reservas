@@ -2,9 +2,9 @@
 
 require_once __DIR__ . '/../../app/Controllers/AuthController.php';
 
-$action = $_GET['action'] ?? '';
-
 $controller = new AuthController();
+
+$action = $_GET['action'] ?? '';
 
 switch ($action) {
 

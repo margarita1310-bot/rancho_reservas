@@ -2,18 +2,27 @@
 
 require_once __DIR__ . '/../Models/Admin.php';
 
-class LoginController
-{
-    public function login()
-    {
+class LoginController {
+
+    public function login() {
         $error = '';
         require_once __DIR__ . '/../Views/admin/login.php';
     }
 
-    public function autenticar()
-    {
-        $email = $_POST['email'] ?? '';
+    public function autenticar() {
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
         $password = $_POST['password'] ?? '';
+
+        if (!$email || !$password) {
+            $error = "Debes ingresar email y contraseña.";
+            require_once __DIR__ . '/../Views/admin/login.php';
+            return;
+        }
 
         $admin = Admin::verificar($email, $password);
 

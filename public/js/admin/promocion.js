@@ -1,4 +1,7 @@
+const PROMOCION_URL = 'promocion.php';
+
 document.getElementById('btn-create-promocion')?.addEventListener('click', () => {
+
     abrirModal({
         titulo: 'Nueva Promoción',
         textoBoton: 'Crear',
@@ -44,32 +47,36 @@ document.getElementById('btn-create-promocion')?.addEventListener('click', () =>
 });
 
 function crearPromocion () {
-    const formData = new FormData();
-    
+
     const titulo = document.getElementById('titulo');
-    const descripcion = document.getElementById('descripcion');
     const fecha_inicio = document.getElementById('fecha_inicio');
     const fecha_fin = document.getElementById('fecha_fin');
-    const estado = document.getElementById('estado');
+    
+    if (!titulo.value.trim() || !fecha_inicio.value || !fecha_fin.value) {
+        alert('Completa los campos obligatorios');
+        return;
+    }
+    
+    const formData = new FormData();
+    
+    formData.append('titulo', titulo.value.trim());
+    formData.append('descripcion', document.getElementById('descripcion').value.trim());
+    formData.append('fecha_inicio', fecha_inicio.value);
+    formData.append('fecha_fin', fecha_fin.value);
+    formData.append('estado', document.getElementById('estado').value);
+    formData.append('imagen', imagen);
+    
     const imagen = document.getElementById('imagen').files[0];
-
+    
     if (!imagen) {
         alert('Selecciona una imagen');
         return;
     }
     
-    formData.append('titulo', titulo.value);
-    formData.append('descripcion', descripcion.value);
-    formData.append('fecha_inicio', fecha_inicio.value);
-    formData.append('fecha_fin', fecha_fin.value);
-    formData.append('estado', estado.value);
-    formData.append('imagen', imagen);
-    
-    fetch('promocion.php?action=guardar', {
+    fetch(`${PROMOCION_URL}?action=guardar`, {
         method: 'POST',
         body: formData
     })
-
     .then(r => r.json())
     .then(r => {
         if (r.status === 'ok') location.reload();
@@ -79,12 +86,14 @@ function crearPromocion () {
 }
 
 document.addEventListener('click', async e => {
+
     const btn = e.target.closest('.btn-update');
+
     if (!btn || btn.dataset.controller !== 'Promocion') return;
 
     const id = btn.dataset.id;
 
-    const res = await fetch(`promocion.php?action=obtener`, {
+    const res = await fetch(`${PROMOCION_URL}?action=obtener`, {
         method: 'POST',
         body: new URLSearchParams({ id })
     });
@@ -137,9 +146,10 @@ document.addEventListener('click', async e => {
 });
 
 function actualizarPromocion () {
-    const data = new FormData();
 
     const body = document.getElementById('modal-body');
+    
+    const data = new FormData();
 
     data.append('id', body.querySelector('#id_promocion').value);
     data.append('titulo', body.querySelector('#titulo').value.trim());
@@ -149,11 +159,12 @@ function actualizarPromocion () {
     data.append('estado', body.querySelector('#estado').value);
 
     const imagen = body.querySelector('#imagen').files[0];
+
     if (imagen) {
         data.append('imagen', imagen);
     }
 
-    fetch('promocion.php?action=actualizar', {
+    fetch(`${PROMOCION_URL}?action=actualizar`, {
         method: 'POST',
         body: data
     })
@@ -161,11 +172,14 @@ function actualizarPromocion () {
     .then(r => {
         if (r.status === 'ok') location.reload();
         else alert('Error al actualizar');
-    });
+    })
+    .catch(() => alert('Error en la petición'));
 }
 
 document.addEventListener('click', e => {
+
     const btn = e.target.closest('.btn-delete');
+
     if (!btn || btn.dataset.controller !== 'Promocion') return;
 
     abrirModal({
@@ -173,20 +187,27 @@ document.addEventListener('click', e => {
         textoBoton: 'Eliminar',
         claseBoton: 'btn-danger',
         contenido: `<p>¿Estás seguro de eliminar esta promoción?</p>`,
-        onSubmit: () => eliminarPromocion(id, btn)
+        onSubmit: () => eliminarPromocion(btn)
     });
 });
 
 function eliminarPromocion(btn) {
+
     const data = new FormData();
+
     data.append('id', btn.dataset.id);
 
-    fetch('promocion.php?action=eliminar', {
+    fetch(`${PROMOCION_URL}?action=eliminar`, {
         method: 'POST',
         body: data
     })
     .then(r => r.json())
     .then(r => {
-        if (r.status === 'ok') btn.closest('tr').remove();
-    });
+        if (r.status === 'ok') {
+            btn.closest('tr').remove();
+        }
+
+        document.getElementById('modal-global').classList.add('d-none');
+    })
+    .catch(() => alert('Error en la petición'));
 }

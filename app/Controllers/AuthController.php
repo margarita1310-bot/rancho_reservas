@@ -5,38 +5,53 @@ session_start();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+require_once __DIR__ . '/../config/env.php';
 require_once __DIR__ . '/../Models/Cliente.php';
 require_once __DIR__ . '/../libraries/PHPMailer/src/Exception.php';
 require_once __DIR__ . '/../libraries/PHPMailer/src/PHPMailer.php';
 require_once __DIR__ . '/../libraries/PHPMailer/src/SMTP.php';
 
-class AuthController
-{
+class AuthController {
+
     private $model;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->model = new Cliente();
+
+        header('Content-Type: application/json; charset=utf-8');
     }
 
-    public function googleLogin()
-    {
+    private function json($data) {
+        echo json_encode($data);
+        exit;
+    }
+
+    public function googleLogin() {
+
         $data = json_decode(file_get_contents("php://input"), true);
+
+        if(!isset($data['token'])) {
+            $this->json(['success' => false]);
+        }
+
         $token = $data['token'];
 
         $response = file_get_contents(
             "https://oauth2.googleapis.com/tokeninfo?id_token=" . $token
         );
 
+        if (!$response) {
+            $this->json(['success' => false]);
+        }
+
         $user = json_decode($response);
 
         if (!isset($user->email)) {
-            echo json_encode(['success' => false]);
-            exit;
+            $this->json(['success' => false]);
         }
 
         $email = $user->email;
-        $nombre = $user->name;
+        $nombre = $user->name ?? null;
 
         $cliente = $this->model->buscarPorEmail($email);
 
@@ -48,20 +63,35 @@ class AuthController
 
         $_SESSION['cliente_id'] = $id;
 
-        echo json_encode(['success' => true]);
+        $this->json([
+            'success' => true,
+            'cliente' => [
+                'id_cliente' => $id,
+                'nombre' => $nombre,
+                'email' => $email
+            ]
+        ]);
     }
     
-    public function enviarCodigo()
-    {
-        header('Content-Type: application/json');
-        
-        if (!isset($_POST['email']) || empty($_POST['email'])) {
-            echo json_encode(['success' => false, 'message' => 'Email requerido']);
-            exit;
+    public function enviarCodigo() {
+
+        if (empty($_POST['email'])) {
+            $this->json([
+                'success' => false,
+                'message' => 'Email requerido'
+            ]);
+        }
+
+        $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+
+        if (!$email) {
+            $this->json([
+                'success' => false,
+                'message' => 'Email inválido'
+            ]);
         }
         
-        $email = $_POST['email'];
-        $codigo = rand(100000, 999999);
+        $codigo = random_int(100000, 999999);
         
         $_SESSION['codigo_verificacion'] = $codigo;
         $_SESSION['email_verificacion'] = $email;
@@ -70,6 +100,7 @@ class AuthController
         $mail = new PHPMailer(true);
         
         try {
+
             $mail->isSMTP();
             $mail->Host = $_ENV['MAIL_HOST'];
             $mail->SMTPAuth = true;
@@ -78,7 +109,7 @@ class AuthController
             $mail->SMTPSecure = $_ENV['MAIL_ENCRYPTION'];
             $mail->Port = $_ENV['MAIL_PORT'];
             
-            $mail->setFrom('teamerenmargarita@gmail.com', 'Rancho Gestión');
+            $mail->setFrom($_ENV['MAIL_USERNAME'], 'Rancho La Joya');
             $mail->addAddress($email);
             
             $mail->isHTML(true);
@@ -90,41 +121,49 @@ class AuthController
             
             $mail->send();
             
-            echo json_encode(['success' => true]);
-            exit;
-            
+            $this->json(['success' => false]);
+
         } catch (Exception $e) {
-            echo json_encode(['success' => false, 'message' => 'Error al enviar correo']);
-            exit;
+            
+            $this->json([
+                'success' => false,
+                'message' => 'Error al enviar correo'
+            ]);
         }
     }
     
-    public function validarCodigo()
-    {
-        header('Content-Type: application/json');
-        
+    public function validarCodigo() {
+
         $codigoIngresado = $_POST['codigo'] ?? '';
         
         if (!isset($_SESSION['codigo_verificacion'], $_SESSION['codigo_expira'])) {
-            echo json_encode(['success' => false, 'message' => 'No hay código activo']);
-            exit;
+            $this->json([
+                'success' => false,
+                'message' => 'No hay código activo'
+            ]);
         }
         
         if (time() > $_SESSION['codigo_expira']) {
-            echo json_encode(['success' => false, 'message' => 'Código expirado']);
-            exit;
+            $this->json([
+                'success' => false,
+                'message' => 'Código expirado'
+            ]);
         }
         
         if ($codigoIngresado != $_SESSION['codigo_verificacion']) {
-            echo json_encode(['success' => false, 'message' => 'Código incorrecto']);
-            exit;
+            $this->json([
+                'success' => false,
+                'message' => 'Código incorrecto'
+            ]);
         }
         
         $email = $_SESSION['email_verificacion'];
+
         $cliente = $this->model->buscarPorEmail($email);
         
         if (!$cliente) {
             $id = $this->model->create(null, $email);
+
             $cliente = [
                 'id_cliente' => $id,
                 'email' => $email,
@@ -136,25 +175,32 @@ class AuthController
         $_SESSION['cliente_id'] = $cliente['id_cliente'];
         $_SESSION['codigo_verificado'] = true;
         
-        unset($_SESSION['codigo_verificacion'], $_SESSION['codigo_expira']);
+        unset(
+            $_SESSION['codigo_verificacion'],
+            $_SESSION['codigo_expira'],
+            $_SESSION['email_verificacion']
+        );
         
-        echo json_encode(['success' => true, 'cliente' => $cliente]);
-        exit;
+        $this->json([
+            'success' => true,
+            'cliente' => $cliente
+        ]);
     }
    
-    public function guardarDatosCliente()
-    {
+    public function guardarDatosCliente() {
+
         if (!isset($_SESSION['cliente_id'])) {
-            echo json_encode(['success' => false, 'message' => 'Usuario no autenticado']);
-            return;
+            $this->json([
+                'success' => false,
+                'message' => 'Usuario no autenticado'
+            ]);
         }
     
         $nombre = $_POST['nombre'] ?? '';
         $telefono = $_POST['telefono'] ?? '';
     
         if (!$nombre || !$telefono) {
-            echo json_encode(['success' => false]);
-            return;
+            $this->json(['success' => false]);
         }
     
         $this->model->actualizarDatos(
@@ -162,7 +208,7 @@ class AuthController
             $nombre,
             $telefono
         );
-    
-        echo json_encode(['success' => true]);
+        
+        $this->json(['success' => true]);
     }
 }

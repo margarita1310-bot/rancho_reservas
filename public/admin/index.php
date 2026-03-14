@@ -4,10 +4,9 @@ session_start();
 
 require_once __DIR__ . '/../../app/Controllers/LoginController.php';
 require_once __DIR__ . '/../../app/Controllers/AdminController.php';
-require_once __DIR__ . '/../../vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
-$dotenv->load();
+$LoginController = new LoginController();
+$Admincontroller = new AdminController();
 
 $action = $_GET['action'] ?? 'login';
 
@@ -16,27 +15,24 @@ if (!isset($_SESSION['admin']) && !in_array($action, ['login', 'autenticar'])) {
 }
 
 switch ($action) {
+    
     case 'login':
-        $controller = new LoginController();
-        $controller->login();
+        $LoginController->login();
         break;
 
     case 'autenticar':
-        $controller = new LoginController();
-        $controller->autenticar();
+        $LoginController->autenticar();
         break;
         
     case 'logout':
-        $controller = new AdminController();
-        $controller->logout();
+        $AdminController->logout();
         break;
 
     default:
-        $controller = new AdminController();
-        if (method_exists($controller, $action)) {
-            $controller->$action();
+        if (method_exists($Admincontroller, $action)) {
+            $Admincontroller->$action();
         } else {
-            $controller->dashboard();
+            $Admincontroller->dashboard();
         }
         break;
 }

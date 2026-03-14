@@ -2,7 +2,7 @@
    <section id="evento-section" class="evento-section py-5">
       <div class="container">
 
-         <h1 class="text-center text-white mb-5">PROXIMO EVENTO</h1>
+         <h2 class="text-center text-white mb-5">PROXIMO EVENTO</h2>
 
          <div class="row justify-content-center">
 
@@ -31,15 +31,15 @@
                               
                               <div class="evento-detalles">
                                  <span>
-                                    <i class="bi bi-calendar"></i>
+                                    <i class="bi bi-calendar me-2"></i>
                                     <?= $evento['fecha'] ?>
                                  </span>
                                  <span>
-                                    <i class="bi bi-clock"></i>
+                                    <i class="bi bi-clock me-2"></i>
                                     <?= $evento['hora'] ?>
                                  </span>
                                  <span class="evento-precio">
-                                    <i class="bi bi-currency-dollar"></i>
+                                    <i class="bi bi-currency-dollar me-2"></i>
                                     <?= $evento['precio_mesa'] ?>
                                  </span>
                               </div>

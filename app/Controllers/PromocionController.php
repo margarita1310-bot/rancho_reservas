@@ -2,40 +2,45 @@
 
 require_once __DIR__ . '/../Models/Promocion.php';
 
-class PromocionController
-{
+class PromocionController {
+
     private $model;
     private $uploadDir;
+    private $allowedExtensions = ['jpg', 'png'];
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->model = new Promocion();
         $this->uploadDir = __DIR__ . '/../../public/images/promocion/';
+        header('Content-Type: application/json; charset=utf-8');
     }
 
-    public function index()
-    {
-        header('Content-Type: application/json; charset=utf-8');
+    private function json($data, $code = 200) {
+        http_response_code($code);
+        echo json_encode($data);
+        exit;
+    }
 
+    private function obtenerImagen($id) {
+        foreach ($this->allowedExtensions as $ext) {
+            if (is_file($this->uploadDir . $id . '.' . $ext)) {
+                return $id . '.' . $ext;
+            }
+        }
+        return null;
+    }
+
+    public function index() {
         $promocion = $this->model->getAll();
 
         foreach ($promocion as &$p) {
-            $p['imagen'] = null;
-            foreach (['jpg', 'png'] as $ext) {
-                if (is_file($this->uploadDir . $p['id_promocion'] . '.' . $ext)) {
-                    $p['imagen'] = $p['id_promocion'] . '.' . $ext;
-                    break;
-                }
-            }
+            $p['imagen'] = $this->obtenerImagen($p['id_promocion']);
         }
 
-        echo json_encode($promocion);
+        $this->json($promocion);
     }
 
-    public function guardar()
-    {
-        header('Content-Type: application/json; charset=utf-8');
-        
+    public function guardar() {
+
         $titulo = trim($_POST['titulo'] ?? '');
         $descripcion = trim($_POST['descripcion'] ?? '');
         $fecha_inicio = $_POST['fecha_inicio'] ?? '';
@@ -43,69 +48,52 @@ class PromocionController
         $estado = $_POST['estado'] ?? '';
 
         if (!$titulo || !$fecha_inicio || !$fecha_fin) {
-            http_response_code(400);
-            echo json_encode(['status' => 'error']);
-            exit;
+            $this->json(['status' => 'error', 'msg' => 'Faltan campos'], 400);
         }
 
         if (empty($_FILES['imagen']) || $_FILES['imagen']['error'] !== UPLOAD_ERR_OK) {
-            http_response_code(400);
-            echo json_encode([
-                'status' => 'error',
-                'msg' => 'Debes seleccionar una imagen para la promoción'
-            ]);
-            exit;
+            $this->json(['status' => 'error', 'msg' => 'Imagen requerida'], 400);
         }
 
         $id = $this->model->create($titulo, $descripcion, $fecha_inicio, $fecha_fin, $estado);
         
         if (!$id) {
-            http_response_code(500);
-            echo json_encode(['status' => 'error']);
-            exit;
+            $this->json(['status' => 'error'], 500);
         }
 
         $this->guardarImagen($id);
-        echo json_encode(['status' => 'ok', 'id_promocion' => $id]);
-        exit;
+        
+        $this->json([
+            'status' => 'ok',
+            'id_evento' => $id
+        ]);
     }
 
-    public function obtener()
-    {
-        header('Content-Type: application/json; charset=utf-8');
-        
+    public function obtener() {
+
         $id = $_POST['id'] ?? null;
+
         if (!$id) {
-            http_response_code(400);
-            return;
+            $this->json(['status' => 'error'], 400);
         }
         
         $promocion = $this->model->getById($id);
         
         if (!$promocion) {
-            http_response_code(404);
-            return;
+            $this->json(['status' => 'error'], 404);
         }
 
-        foreach (['jpg', 'png'] as $ext) {
-            if (is_file($this->uploadDir . $id . '.' . $ext)) {
-                $promocion['imagen'] = $id . '.' . $ext;
-                break;
-            }
-        }
+        $promocion['imagen'] = $this->obtenerImagen($id);
 
-        echo json_encode($promocion);
-        exit;
+        $this->json($promocion);
     }
 
-    public function actualizar()
-    {
-        header('Content-Type: application/json; charset=utf-8');
+    public function actualizar() {
 
         $id = $_POST['id'] ?? null;
+
         if (!$id) {
-            http_response_code(400);
-            return;
+            $this->json(['status' => 'error'], 400);
         }
 
         $ok = $this->model->update(
@@ -117,40 +105,32 @@ class PromocionController
             $_POST['estado']
         );
 
-        if ($ok) {
-            $this->guardarImagen($id);
-            echo json_encode(['status' => 'ok']);
-            exit;
+        if (!$ok) {
+            $this->json(['status' => 'error'], 500);
         }
 
-        http_response_code(500);
-        echo json_encode(['status' => 'error']);
-        exit;
-}
+        $this->guardarImagen($id);
+        
+        $this->json(['status' => 'ok']);
+    }
 
-    public function eliminar()
-    {
-        header('Content-Type: application/json; charset=utf-8');
+    public function eliminar() {
 
         $id = $_POST['id'] ?? null;
 
         if (!$id) {
-            http_response_code(400);
-            echo json_encode(['status' => 'error', 'msg' => 'ID no proporcionado']);
-            exit;
+            $this->json(['status' => 'error', 'msg' => 'ID requerido'], 400);
         }
 
-        if ($this->model->delete($id)) {
-            foreach (['jpg', 'png'] as $ext) {
-                @unlink($this->uploadDir . $id . '.' . $ext);
-            }
-            echo json_encode(['status' => 'ok']);
-            exit;
+        if (!$this->model->delete($id)) {
+            $this->json(['status' => 'error'], 500);
         }
-
-        http_response_code(500);
-        echo json_encode(['status' => 'error']);
-        exit;
+        
+        foreach ($this->allowedExtensions as $ext) {
+            @unlink($this->uploadDir . $id . '.' . $ext);
+        }
+        
+        $this->json(['status' => 'ok']);
     }
 
     private function guardarImagen($id) 
@@ -163,11 +143,14 @@ class PromocionController
             mkdir($this->uploadDir, 0755, true);
         }
 
-        $ext = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
-        if (!in_array(strtolower($ext), ['jpg', 'png'])) return;
+        $ext = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
 
-        foreach (['jpg', 'png'] as $ext) {
-            @unlink($this->uploadDir . $id . '.' . $ext);
+        if (!in_array($ext, $this->allowedExtensions)) {
+            return;
+        }
+
+        foreach ($this->allowedExtensions as $e) {
+            @unlink($this->uploadDir . $id . '.' . $e);
         }
 
         move_uploaded_file(
@@ -183,6 +166,5 @@ if (isset($_GET['action'])) {
 
     if (method_exists($controller, $action)) {
         $controller->$action();
-        exit;
     }
 }

@@ -2,40 +2,45 @@
 
 require_once __DIR__ . '/../Models/Evento.php';
 
-class EventoController
-{
+class EventoController {
+
     private $model;
     private $uploadDir;
+    private $allowedExtensions = ['jpg', 'png'];
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->model = new Evento();
         $this->uploadDir = __DIR__ . '/../../public/images/evento/';
+        header('Content-Type: application/json; charset=utf-8');
     }
 
-    public function index()
-    {
-        header('Content-Type: application/json; charset=utf-8');
-        
+    private function json($data, $code = 200) {
+        http_response_code($code);
+        echo json_encode($data);
+        exit;
+    }
+
+    private function obtenerImagen($id) {
+        foreach ($this->allowedExtensions as $ext) {
+            if (is_file($this->uploadDir . $id . '.' . $ext)) {
+                return $id . '.' . $ext;
+            }
+        }
+        return null;
+    }
+
+    public function index() {
         $evento = $this->model->getAll();
         
         foreach ($evento as &$e) {
-            $e['imagen'] = null;
-            foreach (['jpg', 'png'] as $ext) {
-                if (is_file($this->uploadDir . $e['id_evento'] . '.' . $ext)) {
-                    $e['imagen'] = $e['id_evento'] . '.' . $ext;
-                    break;
-                }
-            }
+            $e['imagen'] = $this->obtenerImagen($e['id_evento']);
         }
         
-        echo json_encode($evento);
+        $this->json($eventos);
     }
 
-    public function guardar()
-    {
-        header('Content-Type: application/json; charset=utf-8');
-
+    public function guardar() {
+        
         $nombre = trim($_POST['nombre'] ?? '');
         $descripcion = trim($_POST['descripcion'] ?? '');
         $fecha = $_POST['fecha'] ?? '';
@@ -46,69 +51,52 @@ class EventoController
         $estado = $_POST['estado'] ?? '';
 
         if (!$nombre || !$fecha || !$hora || !$hora_fin || !$estado) {
-            http_response_code(400);
-            echo json_encode(['status' => 'error', 'msg' => 'Faltan campos requeridos']);
-            exit;
+            $this->json(['status' => 'error', 'msg' => 'Faltan campos'], 400);
         }
 
         if (empty($_FILES['imagen']) || $_FILES['imagen']['error'] !== UPLOAD_ERR_OK) {
-            http_response_code(400);
-            echo json_encode([
-                'status' => 'error',
-                'msg' => 'Debes seleccionar una imagen para el evento'
-            ]);
-            exit;
+            $this->json(['status' => 'error', 'msg' => 'Imagen requerida'], 400);
         }
 
         $id = $this->model->create($nombre, $descripcion, $fecha, $hora, $hora_fin, $mesas_disponibles, $precio_mesa, $estado);
         
         if (!$id) {
-            http_response_code(500);
-            echo json_encode(['status' => 'error']);
-            exit;
+            $this->json(['status' => 'error'], 500);
         }
 
         $this->guardarImagen($id);
-        echo json_encode(['status' => 'ok', 'id_evento' => $id]);
-        exit;
+        
+        $this->json([
+            'status' => 'ok',
+            'id_evento' => $id
+        ]);
     }
 
-    public function obtener()
-    {
-        header('Content-Type: application/json; charset=utf-8');
-
+    public function obtener() {
+        
         $id = $_POST['id'] ?? null;
+
         if (!$id) {
-            http_response_code(400);
-            return;
+            $this->json(['status' => 'error'], 400);
         }
         
         $evento = $this->model->getById($id);
 
         if (!$evento) {
-            http_response_code(404);
-            return;
+            $this->json(['status' => 'error'], 404);
         }
 
-        foreach (['jpg', 'png'] as $ext) {
-            if (is_file($this->uploadDir . $id . '.' . $ext)) {
-                $evento['imagen'] = $id . '.' . $ext;
-                break;
-            }
-        }
+        $evento['imagen'] = $this->obtenerImagen($id);
 
-        echo json_encode($evento);
-        exit;
+        $this->json($evento);
     }
 
-    public function actualizar()
-    {
-        header('Content-Type: application/json; charset=utf-8');
-
+    public function actualizar() {
+        
         $id = $_POST['id'] ?? null;
+
         if (!$id) {
-            http_response_code(400);
-            return;
+            $this->json(['status' => 'error'], 400);
         }
 
         $ok = $this->model->update(
@@ -123,44 +111,36 @@ class EventoController
             $_POST['estado']
         );
 
-        if ($ok) {
-            $this->guardarImagen($id);
-            echo json_encode(['status' => 'ok']);
-            exit;
+        if (!$ok) {
+            $this->json(['status' => 'error'], 500);
         }
 
-        http_response_code(500);
-        echo json_encode(['status' => 'error']);
-        exit;
+        $this->guardarImagen($id);
+        
+        $this->json(['status' => 'ok']);
     }
 
-    public function eliminar()
-    {
-        header('Content-Type: application/json; charset=utf-8');
-
+    public function eliminar() {
+        
         $id = $_POST['id'] ?? null;
 
         if (!$id) {
-            http_response_code(400);
-            echo json_encode(['status' => 'error', 'msg' => 'ID no proporcionado']);
-            exit;
+            $this->json(['status' => 'error', 'msg' => 'ID requerido'], 400);
         }
 
-        if ($this->model->delete($id)) {
-            foreach (['jpg', 'png'] as $ext) {
-                @unlink($this->uploadDir . $id . '.' . $ext);
-            }
-            echo json_encode(['status' => 'ok']);
-            exit;
+        if (!$this->model->delete($id)) {
+            $this->json(['status' => 'error'], 500);
+        }
+
+        foreach ($this->allowedExtensions as $ext) {
+            @unlink($this->uploadDir . $id . '.' . $ext);
         }
         
-        http_response_code(500);
-        echo json_encode(['status' => 'error']);
-        exit;
+        $this->json(['status' => 'ok']);
     }
 
-    private function guardarImagen($id) 
-    {
+    private function guardarImagen($id) {
+
         if (empty($_FILES['imagen']) || $_FILES['imagen']['error'] !== UPLOAD_ERR_OK) {
             return;
         }
@@ -169,11 +149,14 @@ class EventoController
             mkdir($this->uploadDir, 0755, true);
         }
 
-        $ext = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
-        if (!in_array(strtolower($ext), ['jpg', 'png'])) return;
+        $ext = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
 
-        foreach (['jpg', 'png'] as $ext) {
-            @unlink($this->uploadDir . $id . '.' . $ext);
+        if (!in_array($ext, $this->allowedExtensions)) {
+            return;
+        }
+
+        foreach ($this->allowedExtensions as $e) {
+            @unlink($this->uploadDir . $id . '.' . $e);
         }
 
         move_uploaded_file(
@@ -183,12 +166,11 @@ class EventoController
     }
 }
 
-if(isset($_GET['action'])) {
+if (isset($_GET['action'])) {
     $controller = new EventoController();
     $action = $_GET['action'];
 
     if (method_exists($controller, $action)) {
         $controller->$action();
-        exit;
     }
 }
