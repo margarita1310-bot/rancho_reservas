@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    
+
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
 
         <div>
@@ -20,12 +20,13 @@
     </div>
 
     <div class="card shadow-sm mb-4">
+
         <div class="card-body">
 
             <div class="btn-group" role="group">
 
                 <button type="button"
-                        class="btn btn-outline-secondary active"
+                        class="btn btn-outline-dark active"
                         data-filter="todos">
                     <i class="bi bi-list-ul me-1"></i>
                     Todas
@@ -44,20 +45,31 @@
                     <i class="bi bi-x-circle-fill me-1"></i>
                     Canceladas
                 </button>
+
+                <button type="button"
+                        class="btn btn-outline-secondary"
+                        data-filter="finalizado">
+                    <i class="bi bi-flag-fill me-1"></i>
+                    Finalizados
+                </button>
+
             </div>
+
         </div>
+
     </div>
     
     <div class="card shadow-sm">
+
         <div class="card-body p-0">
 
             <div class="table-responsive rounded">
+
                 <table class="table table-hover align-middle mb-0">
 
                     <thead class="table-light">
                         <tr>
                             <th>Nombre</th>
-                            <th>Fecha</th>
                             <th>Horario</th>
                             <th>Mesas</th>
                             <th>Precio</th>
@@ -67,10 +79,14 @@
                     </thead>
 
                     <tbody>
-                        <?php $evento = $evento ?? []; ?>
 
-                        <?php if (!empty($evento)): ?>
-                            <?php foreach ($evento as $ev): ?>
+                        <?php require_once __DIR__ . '/../../helpers/format.php' ?>
+
+                        <?php $eventos = $eventos ?? []; ?>
+
+                        <?php if (!empty($eventos)): ?>
+
+                            <?php foreach ($eventos as $ev): ?>
 
                                 <tr data-estado="<?= strtolower($ev['estado']) ?>">
 
@@ -84,13 +100,14 @@
                                     </td>
 
                                     <td>
-                                        <?= htmlspecialchars($ev['fecha']) ?>
-                                    </td>
-
-                                    <td>
-                                        <?= htmlspecialchars($ev['hora']) ?>
-                                        -
-                                        <?= htmlspecialchars($ev['hora_fin']) ?>
+                                        <span class="d-block">
+                                            <?= htmlspecialchars(formatearFecha($ev['fecha'])) ?>
+                                        </span>
+                                        <small class="text-muted">
+                                            <?= htmlspecialchars(formatearHora($ev['hora'])) ?>
+                                            -
+                                            <?= htmlspecialchars(formatearHora($ev['hora_fin'])) ?>
+                                        </small>
                                     </td>
 
                                     <td>
@@ -107,12 +124,15 @@
                                                 ? 'bg-success'
                                                 : ($ev['estado'] === 'cancelado'
                                                     ? 'bg-danger'
-                                                    : 'bg-secondary') ?>">
+                                                    : ($ev['estado'] === 'finalizado'
+                                                        ? 'bg-secondary'
+                                                        : 'bg-dark')) ?>">
                                             <?= htmlspecialchars($ev['estado']) ?>
                                         </span>
                                     </td>
 
                                     <td class="text-center">
+
                                         <div class="btn-group btn-group-sm">
 
                                             <button class="btn btn-outline-primary btn-update"
@@ -126,17 +146,24 @@
                                                     data-controller="Evento">
                                                 <i class="bi bi-trash"></i>
                                             </button>
+
                                         </div>
+
                                     </td>
+
                                 </tr>
+
                             <?php endforeach; ?>
+
                         <?php else: ?>
+
                             <tr>
-                                <td colspan="7" class="text-center py-5 text-muted">
+                                <td colspan="6" class="text-center py-5 text-muted">
                                     <i class="bi bi-inbox-fill fs-3 d-block mb-2"></i>
                                     No hay eventos registrados
                                 </td>
                             </tr>
+
                         <?php endif; ?>
                     </tbody>
                 </table>

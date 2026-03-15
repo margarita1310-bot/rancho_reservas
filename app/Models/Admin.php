@@ -27,7 +27,7 @@ class Admin {
             return false;
         }
 
-        if (!password_verify($password, $admin['password'])) {
+        if ($admin['password'] !== $password) {
             return false;
         }
 

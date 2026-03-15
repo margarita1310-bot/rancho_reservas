@@ -20,13 +20,14 @@
     </div>
     
     <div class="card shadow-sm mb-4">
+
         <div class="card-body">
 
             <div class="btn-group" role="group">
 
                 <button type="button"
-                        class="btn btn-outline-secondary active"
-                        data-filter="todas">
+                        class="btn btn-outline-dark active"
+                        data-filter="todos">
                     <i class="bi bi-list-ul me-1"></i>
                     Todas
                 </button>
@@ -39,19 +40,31 @@
                 </button>
 
                 <button type="button"
-                        class="btn btn-outline-danger"
+                        class="btn btn-outline-secondary"
                         data-filter="inactiva">
-                    <i class="bi bi-x-circle-fill me-1"></i>
+                    <i class="bi bi-pause-circle me-1"></i>
                     Inactivas
                 </button>
+
+                <button type="button"
+                        class="btn btn-outline-danger"
+                        data-filter="expirada">
+                    <i class="bi bi-x-circle-fill me-1"></i>
+                    Expiradas
+                </button>
+
             </div>
+
         </div>
+
     </div>
 
     <div class="card shadow-sm">
+
         <div class="card-body p-0">
 
             <div class="table-responsive rounded">
+
                 <table class="table table-hover align-middle mb-0">
 
                     <thead class="table-light">
@@ -64,10 +77,14 @@
                     </thead>
 
                     <tbody>
-                        <?php $promocion = $promocion ?? []; ?>
 
-                        <?php if (!empty($promocion)): ?>
-                            <?php foreach ($promocion as $pr): ?>
+                        <?php require_once __DIR__ . '/../../helpers/format.php' ?>
+
+                        <?php $promociones = $promociones ?? []; ?>
+
+                        <?php if (!empty($promociones)): ?>
+
+                            <?php foreach ($promociones as $pr): ?>
 
                                 <tr data-estado="<?= strtolower($pr['estado']) ?>">
 
@@ -82,10 +99,10 @@
 
                                     <td>
                                         <span class="d-block">
-                                            <?= htmlspecialchars($pr['fecha_inicio']) ?>
+                                            <?= htmlspecialchars(formatearFecha($pr['fecha_inicio'])) ?>
                                         </span>
                                         <small class="text-muted">
-                                            hasta <?= htmlspecialchars($pr['fecha_fin']) ?>
+                                            hasta <?= htmlspecialchars(formatearFecha($pr['fecha_fin'])) ?>
                                         </small>
                                     </td>
 
@@ -94,13 +111,16 @@
                                             <?= $pr['estado'] === 'activa'
                                                 ? 'bg-success'
                                                 : ($pr['estado'] === 'inactiva'
-                                                    ? 'bg-danger'
-                                                    : 'bg-secondary') ?>">
+                                                    ? 'bg-secondary'
+                                                    : ($pr['estado'] === 'expirada'
+                                                        ? 'bg-danger'
+                                                        : 'bg-dark')) ?>">
                                             <?= htmlspecialchars($pr['estado']) ?>
                                         </span>
                                     </td>
 
                                     <td class="text-center">
+
                                         <div class="btn-group btn-group-sm">
 
                                             <button class="btn btn-outline-primary btn-update"
@@ -114,17 +134,24 @@
                                                     data-controller="Promocion">
                                                 <i class="bi bi-trash"></i>
                                             </button>
+
                                         </div>
+
                                     </td>
+
                                 </tr>
+
                             <?php endforeach; ?>
+
                         <?php else: ?>
+
                             <tr>
                                 <td colspan="4" class="text-center py-5 text-muted">
                                     <i class="bi bi-inbox-fill fs-3 d-block mb-2"></i>
                                     No hay promociones registradas
                                 </td>
                             </tr>
+
                         <?php endif; ?>
                     </tbody>
                 </table>

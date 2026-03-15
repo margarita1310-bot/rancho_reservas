@@ -17,12 +17,12 @@ document.getElementById('btn-create-promocion')?.addEventListener('click', () =>
                 <textarea id="descripcion" class="form-control" rows="3"></textarea>
             </div>
 
-            <div class="mb-3">
+            <div class="col-md-6 mb-3">
                 <label class="form-label">Fecha inicio</label>
                 <input type="date" id="fecha_inicio" class="form-control">
             </div>
 
-            <div class="mb-3">
+            <div class="col-md-6 mb-3">
                 <label class="form-label">Fecha fin</label>
                 <input type="date" id="fecha_fin" class="form-control">
             </div>
@@ -57,6 +57,13 @@ function crearPromocion () {
         return;
     }
     
+    const imagen = document.getElementById('imagen').files[0];
+    
+    if (!imagen) {
+        alert('Selecciona una imagen');
+        return;
+    }
+
     const formData = new FormData();
     
     formData.append('titulo', titulo.value.trim());
@@ -65,14 +72,7 @@ function crearPromocion () {
     formData.append('fecha_fin', fecha_fin.value);
     formData.append('estado', document.getElementById('estado').value);
     formData.append('imagen', imagen);
-    
-    const imagen = document.getElementById('imagen').files[0];
-    
-    if (!imagen) {
-        alert('Selecciona una imagen');
-        return;
-    }
-    
+
     fetch(`${PROMOCION_URL}?action=guardar`, {
         method: 'POST',
         body: formData
@@ -116,12 +116,12 @@ document.addEventListener('click', async e => {
                 <textarea id="descripcion" class="form-control" rows="3">${pr.descripcion}</textarea>
             </div>
 
-            <div class="mb-3">
+            <div class="col-md-6 mb-3">
                 <label class="form-label">Fecha inicio</label>
                 <input type="date" id="fecha_inicio" class="form-control" value="${pr.fecha_inicio}">
             </div>
 
-            <div class="mb-3">
+            <div class="col-md-6 mb-3">
                 <label class="form-label">Fecha fin</label>
                 <input type="date" id="fecha_fin" class="form-control" value="${pr.fecha_fin}">
             </div>

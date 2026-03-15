@@ -16,7 +16,9 @@ class AdminController {
         $this->reservaModel = new Reserva();
     }
 
-    private function render($vista) {
+    private function render($vista, $data = []) {
+        extract($data);
+
         require_once __DIR__ . '/../Views/admin/dashboard.php';
     }
 
@@ -38,21 +40,27 @@ class AdminController {
         $promociones = $this->promocionModel->getAll();
 
         $vista =  __DIR__ . '/../Views/admin/promocion.php';
-        $this->render($vista);
+        $this->render($vista, [
+            'promociones' => $promociones
+        ]);
     }
     
     public function evento() {
         $eventos = $this->eventoModel->getAll();
 
         $vista = __DIR__ . '/../Views/admin/evento.php';
-        $this->render($vista);
+        $this->render($vista, [
+            'eventos' => $eventos
+        ]);
     }
 
     public function reserva() {
         $reservas = $this->reservaModel->getAll();
 
         $vista = __DIR__ . '/../Views/admin/reserva.php';
-        $this->render($vista);
+        $this->render($vista, [
+            'reservas' => $reservas
+        ]);
     }
 
     public function logout() {

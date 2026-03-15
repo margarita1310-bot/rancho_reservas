@@ -1,6 +1,13 @@
+:root {
+    --color-primario: #200D02;
+    --color-secundario: #854507;
+    --color-fondo: #F5E9D8; 
+    --color-blanco: #FFFFFF;
+    --color-negro: #000000;
+}
 
 body {
-    background-color: #F5E9D8;
+    background-color: var(--color-fondo);
     font-family: "Zain", sans-serif;
     font-weight: 400;
 }
@@ -13,12 +20,12 @@ h1 {
 
 h2, h3 {
     font-family: "Playfair Display", serif;
-    color: #000;
     font-weight: 400;
+    color: var(--color-negro);
 }
 
 .sidebar, .sidebarMovil, #toggleSidebarBtn {
-    background-color: #200D02 !important;
+    background-color: var(--color-primario);
 }
 
 .sidebar-logo {
@@ -31,9 +38,9 @@ h2, h3 {
 }
 
 .sidebar .nav-link {
-    color: #fff;
     border-radius: 8px;
     margin-bottom: 4px;
+    color: var(--color-blanco);
 }
 
 .sidebar .nav-link:hover {
@@ -41,21 +48,11 @@ h2, h3 {
 }
 
 .nav-pills .nav-link.active {
-    background-color: #854507 !important;
-}
-
-.card-dark {
-    background-color: #854507;
-    color: #fff;
-}
-
-.table thead {
-    background-color: #200D02;
-    color: #fff;
+    background-color: var(--color-secundario);
 }
 
 .form-control:focus {
-    border-color: #200D02;
+    border-color: var(--color-primario);
     box-shadow: 0 0 0 0.2rem rgba(133, 69, 7, 0.25);
 }
 
@@ -70,8 +67,8 @@ h2, h3 {
 }
 
 .modal-content {
-    background: #200D02;
-    color: #fff;
+    background: var(--color-primario);
+    color: var(--color-blanco);
     width: 100%;
     max-width: 700px;
     max-height: 90vh;
@@ -83,12 +80,8 @@ h2, h3 {
 
 #modal-title {
     margin-bottom: 15px;
-    font-size: 1.25rem;
     font-weight: 600;
-}
-
-.d-none {
-    display: none !important;
+    color: var(--color-blanco);
 }
 
 @media (max-width: 767px) {

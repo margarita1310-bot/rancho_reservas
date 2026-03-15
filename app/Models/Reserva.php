@@ -86,4 +86,15 @@ class Reserva {
         }
         return (int) $this->db->lastInsertId();
     }
+
+    public function actualizarEstado($id_reserva, $estado) {
+
+        $sql = "UPDATE reservas
+                SET estado = ?
+                WHERE id_reserva = ?";
+        
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([$estado, $id_reserva]);
+    }
 }

@@ -30,6 +30,7 @@ class PromocionController {
     }
 
     public function index() {
+        $this->model->actualizarPromocionesVencidas();
         $promocion = $this->model->getAll();
 
         foreach ($promocion as &$p) {
@@ -65,7 +66,7 @@ class PromocionController {
         
         $this->json([
             'status' => 'ok',
-            'id_evento' => $id
+            'id_promocion' => $id
         ]);
     }
 

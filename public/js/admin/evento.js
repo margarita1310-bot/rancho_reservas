@@ -7,17 +7,17 @@ document.getElementById('btn-create-evento')?.addEventListener('click', () => {
         textoBoton: 'Crear',
         claseBoton: 'btn-success',
         contenido: `
-            <div class="col-12 mb-3">
+            <div class="mb-3">
                 <label class="form-label">Nombre</label>
                 <input type="text" id="nombre" class="form-control">
             </div>
 
-            <div class="col-12 mb-3">
+            <div class="mb-3">
                 <label class="form-label">Descripción</label>
                 <textarea id="descripcion" class="form-control" rows="3"></textarea>
             </div>
 
-            <div class="col-md-12 mb-3">
+            <div class="mb-3">
                 <label class="form-label">Fecha</label>
                 <input type="date" id="fecha" class="form-control">
             </div>
@@ -72,6 +72,13 @@ function crearEvento () {
         return;
     }
 
+    const imagen = document.getElementById('imagen').files[0];
+    
+    if (!imagen) {
+        alert('Selecciona una imagen');
+        return;
+    }
+
     const formData = new FormData();
     
     formData.append('nombre', nombre.value.trim());
@@ -82,14 +89,6 @@ function crearEvento () {
     formData.append('mesas_disponibles', document.getElementById('mesas_disponibles').value);
     formData.append('precio_mesa', document.getElementById('precio_mesa').value);
     formData.append('estado', document.getElementById('estado').value);
-    
-    const imagen = document.getElementById('imagen').files[0];
-    
-    if (!imagen) {
-        alert('Selecciona una imagen');
-        return;
-    }
-    
     formData.append('imagen', imagen);
 
     fetch(`${EVENTO_URL}?action=guardar`, {
@@ -125,17 +124,17 @@ document.addEventListener('click', async e => {
         claseBoton: 'btn-success',
         contenido: `
             <input type="hidden" id="id_evento" value="${ev.id_evento}">
-            <div class="col-12 mb-3">
+            <div class="mb-3">
                 <label class="form-label">Nombre</label>
                 <input type="text" id="nombre" class="form-control" value="${ev.nombre}">
             </div>
 
-            <div class="col-12 mb-3">
+            <div class="mb-3">
                 <label class="form-label">Descripcion</label>
                 <textarea id="descripcion" class="form-control" rows="3">${ev.descripcion}</textarea>
             </div>
 
-            <div class="col-md-12 mb-3">
+            <div class="mb-3">
                 <label class="form-label">Fecha</label>
                 <input type="date" id="fecha" class="form-control" value="${ev.fecha}">
             </div>

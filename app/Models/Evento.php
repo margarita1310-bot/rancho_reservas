@@ -38,7 +38,7 @@ class Evento {
 
         $stmt = $this->db->prepare($sql);
 
-        if ($stmt->execute([
+        if (!$stmt->execute([
             $nombre,
             $descripcion,
             $fecha,
@@ -82,5 +82,28 @@ class Evento {
         );
 
         return $stmt->execute([$id]);
+    }
+
+    public function actualizarEventosPasados() {
+
+        $sql = "UPDATE eventos
+                SET estado = 'finalizado'
+                WHERE fecha < CURDATE()
+                AND estado = 'activo'";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+    }
+
+    public function restarMesas($id_evento, $cantidad = 1) {
+
+        $sql = "UPDATE eventos
+                SET mesas_disponibles = mesas_disponibles - ?
+                WHERE id_evento = ?
+                AND mesas_disponibles <= ?";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([$cantidad, $id_evento, $cantidad]);
     }
 }

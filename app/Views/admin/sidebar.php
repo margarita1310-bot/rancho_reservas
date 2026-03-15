@@ -3,7 +3,7 @@ $action = $_GET['action'] ?? 'inicio';
 ?>
 <nav id="sidebarMenu"
     class="col-md-3 col-lg-2 vh-100 sidebar collapse d-md-block
-            text-white bg-dark">
+            text-white">
 
     <div class="d-flex flex-column p-3">
         <div class="sidebar-header">
@@ -20,7 +20,7 @@ $action = $_GET['action'] ?? 'inicio';
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
                 <a href="index.php?action=inicio"
-                    class="nav-link text-white <?= $action === 'inicio' ? 'active bg-primary' : '' ?>">
+                    class="nav-link text-white <?= $action === 'inicio' ? 'active' : '' ?>">
                     <i class="bi bi-grid me-2"></i>
                     Inicio
                 </a>
@@ -28,7 +28,7 @@ $action = $_GET['action'] ?? 'inicio';
 
             <li class="nav-item">
                 <a href="index.php?action=promocion"
-                    class="nav-link text-white <?= $action === 'promocion' ? 'active bg-primary' : '' ?>">
+                    class="nav-link text-white <?= $action === 'promocion' ? 'active' : '' ?>">
                     <i class="bi bi-tag me-2"></i>
                     Promociones
                 </a>
@@ -36,7 +36,7 @@ $action = $_GET['action'] ?? 'inicio';
 
             <li class="nav-item">
                 <a href="index.php?action=evento"
-                    class="nav-link text-white <?= $action === 'evento' ? 'active bg-primary' : '' ?>">
+                    class="nav-link text-white <?= $action === 'evento' ? 'active' : '' ?>">
                     <i class="bi bi-calendar2-week me-2"></i>
                     Eventos
                 </a>
@@ -44,7 +44,7 @@ $action = $_GET['action'] ?? 'inicio';
 
             <li class="nav-item">
                 <a href="index.php?action=reserva"
-                    class="nav-link text-white <?= $action === 'reserva' ? 'active bg-primary' : '' ?>">
+                    class="nav-link text-white <?= $action === 'reserva' ? 'active' : '' ?>">
                     <i class="bi bi-journal-check me-2"></i>
                     Reservas
                 </a>

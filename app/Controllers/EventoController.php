@@ -30,13 +30,14 @@ class EventoController {
     }
 
     public function index() {
+        $this->model->actualizarEventosPasados();
         $evento = $this->model->getAll();
         
         foreach ($evento as &$e) {
             $e['imagen'] = $this->obtenerImagen($e['id_evento']);
         }
         
-        $this->json($eventos);
+        $this->json($evento);
     }
 
     public function guardar() {

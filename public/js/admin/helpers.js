@@ -38,5 +38,4 @@ function configurarFechaEvento() {
             horaFin.min = horaInicio.value;
         });
     }
-
 }

@@ -38,7 +38,7 @@ class Promocion {
 
         $stmt = $this->db->prepare($sql);
 
-        if ($stmt->execute([
+        if (!$stmt->execute([
             $titulo,
             $descripcion,
             $fecha_inicio,
@@ -75,5 +75,16 @@ class Promocion {
         );
         
         return $stmt->execute([$id]);
+    }
+
+    public function actualizarPromocionesVencidas() {
+
+        $sql = "UPDATE promociones
+                SET estado = 'expirada'
+                WHERE fecha_fin < CURDATE()
+                AND estado = 'activo'";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
     }
 }
