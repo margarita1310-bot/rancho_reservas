@@ -166,8 +166,8 @@ class AuthController {
 
             $cliente = [
                 'id_cliente' => $id,
-                'email' => $email,
                 'nombre' => null,
+                'email' => $email,
                 'telefono' => null
             ];
         }

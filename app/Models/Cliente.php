@@ -28,7 +28,7 @@ class Cliente {
              VALUES (?, ?, NOW())"
         );
 
-        $stmt->execute([$nombre, $email]);
+        $stmt->execute([$email, $nombre]);
 
         return $this->db->lastInsertId();
     }

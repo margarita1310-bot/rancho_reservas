@@ -12,21 +12,26 @@
 
 </head>
 <body>
+
     <div class="sidebarMovil d-md-none text-white d-flex justify-content-between align-items-center px-3 py-2 shadow-sm">
+
         <h1 class="d-flex align-items-center mb-0 fs-5">
             <img src="/public/images/logo.jpg" alt="Rancho La Joya Logo" class="sidebar-logo rounded ms-2 me-2">
             Rancho La Joya
         </h1>
+
         <button id="toggleSidebarBtn"
             class="btn d-md-none text-white"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#sidebarMenu">
-            <i class="bi bi-list fs-4"></i>
+            <i class="bi bi-list ms-auto p-0 fs-5"></i>
         </button>
+
     </div>
     
     <div class="container-fluid">
+
         <div class="row">
             
             <?php include __DIR__ . '/sidebar.php'; ?>
@@ -40,15 +45,16 @@
             <?php include __DIR__ . '/modal.php'; ?>
         
         </div>
-    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/public/js/admin/filter.js"></script>
-<script src="/public/js/admin/helpers.js"></script>
-<script src="/public/js/admin/sidebar.js"></script>
-<script src="/public/js/admin/modal.js"></script>
-<script src="/public/js/admin/evento.js"></script>
-<script src="/public/js/admin/promocion.js"></script>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/js/admin/filter.js"></script>
+    <script src="/public/js/admin/helpers.js"></script>
+    <script src="/public/js/admin/sidebar.js"></script>
+    <script src="/public/js/admin/modal.js"></script>
+    <script src="/public/js/admin/evento.js"></script>
+    <script src="/public/js/admin/promocion.js"></script>
 
 </body>
 </html>

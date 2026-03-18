@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rancho la Joya</title>
@@ -12,13 +13,16 @@
     
 </head>
 <body>
+
     <?php include __DIR__ . '/navbar.php'; ?>
     
     <main>
+
         <?php include __DIR__ . '/hero.php'; ?>
         <?php include __DIR__ . '/promocion.php'; ?>
         <?php include __DIR__ . '/evento.php'; ?>
         <?php include __DIR__ . '/footer.php'; ?>
+    
     </main>
 
     <?php include __DIR__ . '/modal.php'; ?>
@@ -27,9 +31,9 @@
     <script src="https://www.paypal.com/sdk/js?client-id=<?php echo $_ENV['PAYPAL_CLIENT_ID']; ?>&currency=<?php echo $_ENV['PAYPAL_CURRENCY']; ?>"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    
     <script src="/public/js/cliente/navbar.js"></script>
     <script src="/public/js/cliente/auth.js"></script>
     <script src="/public/js/cliente/modal.js"></script>
+
 </body>
 </html>

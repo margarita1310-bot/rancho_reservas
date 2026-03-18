@@ -23,7 +23,7 @@
 
         <div class="card-body">
 
-            <div class="btn-group" role="group">
+            <div class="btn-group flex-wrap" role="group">
 
                 <button type="button"
                         class="btn btn-outline-dark active"

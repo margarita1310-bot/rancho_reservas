@@ -23,7 +23,7 @@
 
         <div class="card-body">
 
-            <div class="btn-group" role="group">
+            <div class="btn-group flex-wrap" role="group">
 
                 <button type="button"
                         class="btn btn-outline-dark active"
@@ -36,14 +36,14 @@
                         class="btn btn-outline-success"
                         data-filter="activo">
                     <i class="bi bi-check-circle-fill me-1"></i>
-                    Activas
+                    Activos
                 </button>
 
                 <button type="button"
                         class="btn btn-outline-danger"
                         data-filter="cancelado">
                     <i class="bi bi-x-circle-fill me-1"></i>
-                    Canceladas
+                    Cancelados
                 </button>
 
                 <button type="button"

@@ -1,12 +1,16 @@
+<?php require_once __DIR__ . '/../../helpers/format.php' ?>
+
 <?php if (!empty($eventos)): ?>
-   <section id="evento-section" class="evento-section py-5">
+
+   <section id="evento-section" class="evento-section py-4">
+
       <div class="container">
 
-         <h2 class="text-center text-white mb-5">PROXIMO EVENTO</h2>
+         <h2 class="text-center mb-4">Próximo Evento</h2>
 
          <div class="row justify-content-center">
 
-         <?php foreach ($eventos as $evento): ?>
+         <?php foreach ($eventos as $ev): ?>
 
                <div class="col-lg-8 mb-4">
 
@@ -15,63 +19,88 @@
                      <div class="row g-0 align-items-center">
                      
                         <div class="col-md-5">
+
                            <img
-                              src="../images/evento/<?= $evento['imagen'] ?>"
+                              src="../images/evento/<?= $ev['imagen'] ?>"
                               class="evento-img"
-                              alt="Evento <?= $evento['id_evento'] ?>">
+                              alt="Evento <?= $ev['id_evento'] ?>">
+
                         </div>
                         
                         <div class="col-md-7">
                            
                            <div class="evento-info">
-                              <h2><?= $evento['nombre'] ?></h2>
+
+                              <h4 class="card-title mb-1"><?= $ev['nombre'] ?></h4>
                               <p class="evento-descripcion">
-                                 <?= $evento['descripcion'] ?>
+                                 <?= $ev['descripcion'] ?>
                               </p>
                               
                               <div class="evento-detalles">
+
                                  <span>
                                     <i class="bi bi-calendar me-2"></i>
-                                    <?= $evento['fecha'] ?>
+                                    <?= formatearFecha($ev['fecha']) ?>
                                  </span>
+
                                  <span>
                                     <i class="bi bi-clock me-2"></i>
-                                    <?= $evento['hora'] ?>
+                                    <?= formatearHora($ev['hora']) ?>
                                  </span>
+
                                  <span class="evento-precio">
                                     <i class="bi bi-currency-dollar me-2"></i>
-                                    <?= $evento['precio_mesa'] ?>
+                                    <?= $ev['precio_mesa'] ?>
                                  </span>
+
                               </div>
                               
                               <button 
                                  class="btn btn-reservar mt-3"
-                                 data-id="<?= $evento['id_evento'] ?>"
-                                 data-nombre="<?= $evento['nombre'] ?>"
-                                 data-fecha="<?= $evento['fecha'] ?>"
-                                 data-precio="<?= $evento['precio_mesa'] ?>"
+                                 data-id="<?= $ev['id_evento'] ?>"
+                                 data-nombre="<?= $ev['nombre'] ?>"
+                                 data-fecha="<?= $ev['fecha'] ?>"
+                                 data-precio="<?= $ev['precio_mesa'] ?>"
                                  data-bs-toggle="modal" 
                                  data-bs-target="#reservaModal">
                                  Reservar Mesa
                               </button>
+
                            </div>
+
                         </div>
+
                      </div>
+
                   </div>
+
                </div>
+
             <?php endforeach; ?>
+            
          </div>
       </div>
    </section>
+
 <?php else: ?>
-<section id="evento-section" class="evento-section py-5">
-   <div class="container">
-      <div class="row justify-content-center">
-         <div class="col-md-6 text-center text-white">
-            <h2>No hay eventos disponibles</h2>
-            <p>Pronto tendremos nuevos eventos para ti. ¡Mantente atento!</p>
+
+   <section id="evento-section" class="evento-section py-4">
+
+      <div class="container">
+
+         <div class="row justify-content-center">
+
+            <div class="col-md-6 text-center text-white">
+
+               <h2>No hay eventos disponibles</h2>
+               <p>Pronto tendremos nuevos eventos para ti. ¡Mantente atento!</p>
+
+            </div>
+
          </div>
+
       </div>
-   </div>
-</section>
+
+   </section>
+
 <?php endif; ?>
