@@ -24,7 +24,7 @@ function handleCredentialResponse(response) {
     
     goToStep(2);
     
-    fetch('auth.php?action=google', {
+    fetch('index.php?action=google', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -42,23 +42,11 @@ function handleCredentialResponse(response) {
     });
 }
 
-function parseJwt(token) {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(
-        atob(base64)
-        .split('')
-        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join('')
-    );
-    return JSON.parse(jsonPayload);
-}
-
 function enviarCodigo() {
 
     const email = document.getElementById('emailLogin').value;
 
-    fetch('auth.php?action=enviarCodigo', {
+    fetch('index.php?action=enviarCodigo', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: `email=${email}`
@@ -89,7 +77,7 @@ function validarCodigo() {
         return;
     }
 
-    fetch('auth.php?action=validarCodigo', {
+    fetch('index.php?action=validarCodigo', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: `codigo=${encodeURIComponent(codigo)}&email=${encodeURIComponent(email)}`
@@ -116,15 +104,14 @@ function validarCodigo() {
     });
 }
 
-function loginExitoso(cliente) {
-
-    document.getElementById('nombre').value = cliente?.nombre ?? '';
-    document.getElementById('telefono').value = cliente?.telefono ?? '';
-
-    sessionStorage.setItem('id_cliente', cliente.id_cliente);
-    sessionStorage.setItem('nombre', cliente?.nombre ?? '');
-    sessionStorage.setItem('email', cliente?.email ?? '');
-    sessionStorage.setItem('telefono', cliente?.telefono ?? '');
-    
-    goToStep(2);
+function parseJwt(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+        atob(base64)
+        .split('')
+        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
 }

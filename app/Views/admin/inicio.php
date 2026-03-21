@@ -21,7 +21,9 @@
                 <div class="card-body">
 
                     <h5 class="card-title">Reservas Hoy</h5>
-                    <h2 class="text-primary"><!-- --></h2>
+                    <h2 class="text-primary">
+                        <?= $reservasHoy['total'] ?? 0 ?>
+                    </h2>
 
                 </div>
 
@@ -36,7 +38,9 @@
                 <div class="card-body">
 
                     <h5 class="card-title">Eventos Activos</h5>
-                    <h2 class="text-success"><!-- --></h2>
+                    <h2 class="text-success">
+                        <?= $eventosActivos['total'] ?? 0 ?>
+                    </h2>
 
                 </div>
 
@@ -51,7 +55,9 @@
                 <div class="card-body">
 
                     <h5 class="card-title">Promociones</h5>
-                    <h2 class="text-warning"><!-- --></h2>
+                    <h2 class="text-warning">
+                        <?= $promocionesActivas['total'] ?? 0 ?>
+                    </h2>
 
                 </div>
 
@@ -66,7 +72,9 @@
                 <div class="card-body">
 
                     <h5 class="card-title">Próximos Eventos</h5>
-                    <h2 class="text-danger"><!-- --></h2>
+                    <h2 class="text-danger">
+                        <?= $eventosProximos['total'] ?? 0 ?>
+                    </h2>
 
                 </div>
 
@@ -76,9 +84,74 @@
 
     </div>
 
-    <div class="row mt-4">
+    <div class="card shadow-sm mt-4">
+        
+        <div class="card-header">
+            Mesas disponibles por Evento
+        </div>
 
-        <div class="col-md-6">
+        <div class="card-body">
+
+            <table class="table table-sm">
+
+                <thead>
+                    <tr>
+                        <th>Evento</th>
+                        <th>Mesas</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+           
+                <tbody>
+
+                    <?php $mesasEventos = $mesasEventos ?? []; ?>
+
+                    <?php if (!empty($mesasEventos)): ?>
+
+                        <?php foreach ($mesasEventos as $ev): ?>
+
+                            <tr>
+
+                                <td><?= $ev['nombre'] ?></td>
+
+                                <td><?= $ev['mesas_disponibles'] ?></td>
+
+                                <td>
+
+                                    <?php if ($ev['mesas_disponibles'] <= 3): ?>
+
+                                        <span class="badge bg-danger">Casi lleno</span>
+
+                                    <?php else: ?>
+
+                                        <span class="badge bg-success">Disponible</span>
+
+                                    <?php endif; ?>
+
+                                </td>
+
+                            </tr>
+
+                        <?php endforeach; ?>
+
+                    <?php else: ?>
+
+                        <tr>
+                            <td colspan="3" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox-fill fs-3 d-block mb-2"></i>
+                                No hay eventos registrados
+                            </td>
+                        </tr>
+
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6 mt-4">
 
             <div class="card shadow-sm">
 
@@ -115,11 +188,11 @@
                                         </td>
 
                                         <td>
-                                            <?= htmlspecialchars($ev['fecha']) ?>
+                                            <?= htmlspecialchars(formatearFecha($ev['fecha'])) ?>
                                         </td>
 
                                         <td>
-                                            <?= htmlspecialchars($ev['hora']) ?>
+                                            <?= htmlspecialchars(formatearHora($ev['hora'])) ?>
                                         </td>
 
                                     </tr>
@@ -142,7 +215,7 @@
             </div>
         </div>
         
-        <div class="col-md-6">
+        <div class="col-md-6 mt-4">
 
             <div class="card shadow-sm">
 
@@ -177,7 +250,7 @@
                                         </td>
 
                                         <td>
-                                            <?= htmlspecialchars($re['fecha']) ?>
+                                            <?= htmlspecialchars(formatearFecha($re['fecha_reserva'])) ?>
                                         </td>
 
                                         <td>

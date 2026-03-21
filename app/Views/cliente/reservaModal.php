@@ -28,6 +28,7 @@
                     <div class="mb-3 d-none" id="bloqueCodigo">
                         <label class="form-label">Código de verificación</label>
                         <input type="text" class="form-control" id="codigo">
+                        <small class="text-muted mt-1">Este código vence en 10 minutos.</small>
                     </div>
                     
                     <button class="btn btn-success d-none mt-2" id="btnValidarCodigo" onclick="validarCodigo()">Validar código</button>
@@ -37,7 +38,7 @@
                     <h4>Datos personales</h4>
                     <form>
                         <div class="mb-3">
-                            <label class="form-label">Nombre</label>
+                            <label class="form-label">Nombre legal</label>
                             <input type="text" class="form-control" id="nombre">
                         </div>
                         <div class="mb-3">
@@ -69,7 +70,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Hora de llegada</label>
-                        <input type="time" class="form-control" id="eventoHora">
+                        <input type="time" class="form-control" id="eventoHora" min="18:00" max="23:00">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Número de personas</label>

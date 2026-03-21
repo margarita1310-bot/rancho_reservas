@@ -29,7 +29,7 @@ class LoginController {
         if ($admin) {
             $_SESSION['admin'] = $admin;
 
-            header("Location: index.php?action=dashboard");
+            header("Location: index.php?action=inicio");
             exit;
         }
         

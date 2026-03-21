@@ -11,10 +11,10 @@ class EventoController {
     public function __construct() {
         $this->model = new Evento();
         $this->uploadDir = __DIR__ . '/../../public/images/evento/';
-        header('Content-Type: application/json; charset=utf-8');
     }
-
+        
     private function json($data, $code = 200) {
+        header('Content-Type: application/json; charset=utf-8');
         http_response_code($code);
         echo json_encode($data);
         exit;
@@ -30,7 +30,6 @@ class EventoController {
     }
 
     public function index() {
-        $this->model->actualizarEventosPasados();
         $evento = $this->model->getAll();
         
         foreach ($evento as &$e) {
@@ -49,17 +48,27 @@ class EventoController {
         $hora_fin = $_POST['hora_fin'] ?? '';
         $mesas_disponibles = $_POST['mesas_disponibles'] ?? 0;
         $precio_mesa = $_POST['precio_mesa'] ?? 0;
-        $estado = $_POST['estado'] ?? '';
 
-        if (!$nombre || !$fecha || !$hora || !$hora_fin || !$estado) {
+        if (!$nombre || !$fecha || !$hora || !$hora_fin) {
             $this->json(['status' => 'error', 'msg' => 'Faltan campos'], 400);
+        }
+
+        $inicio = strtotime($hora);
+        $fin = strtotime($hora_fin);
+
+        if ($fin <= $inicio) {
+            $fin = strtotime($hora_fin) + 86400;
+
+            if ($fin <= $inicio) {
+                $this->json(['status' => 'error', 'msg' => 'La hora de fin no puede ser menor a la hora de inicio'], 400);
+            }
         }
 
         if (empty($_FILES['imagen']) || $_FILES['imagen']['error'] !== UPLOAD_ERR_OK) {
             $this->json(['status' => 'error', 'msg' => 'Imagen requerida'], 400);
         }
 
-        $id = $this->model->create($nombre, $descripcion, $fecha, $hora, $hora_fin, $mesas_disponibles, $precio_mesa, $estado);
+        $id = $this->model->create($nombre, $descripcion, $fecha, $hora, $hora_fin, $mesas_disponibles, $precio_mesa);
         
         if (!$id) {
             $this->json(['status' => 'error'], 500);
@@ -87,6 +96,8 @@ class EventoController {
             $this->json(['status' => 'error'], 404);
         }
 
+        $evento['tiene_reservas'] = $this->model->tieneReservas($id);
+
         $evento['imagen'] = $this->obtenerImagen($id);
 
         $this->json($evento);
@@ -100,6 +111,25 @@ class EventoController {
             $this->json(['status' => 'error'], 400);
         }
 
+        if ($this->model->tieneReservas($id)) {
+            $this->json(['status' => 'error', 'msg' => 'No se puede modificar, el evento ya tiene reservas'], 400);
+            return;
+        }
+
+        $hora = $_POST['hora'] ?? '';
+        $hora_fin = $_POST['hora_fin'] ?? '';
+
+        $inicio = strtotime($hora);
+        $fin = strtotime($hora_fin);
+
+        if ($fin <= $inicio) {
+            $fin = strtotime($hora_fin) + 86400;
+
+            if ($fin <= $inicio) {
+                $this->json(['status' => 'error', 'msg' => 'La hora de fin no puede ser menor a la hora de inicio'], 400);
+            }
+        }
+
         $ok = $this->model->update(
             $id,
             $_POST['nombre'],
@@ -108,8 +138,7 @@ class EventoController {
             $_POST['hora'],
             $_POST['hora_fin'],
             $_POST['mesas_disponibles'],
-            $_POST['precio_mesa'],
-            $_POST['estado']
+            $_POST['precio_mesa']
         );
 
         if (!$ok) {
@@ -139,7 +168,7 @@ class EventoController {
         
         $this->json(['status' => 'ok']);
     }
-
+    
     private function guardarImagen($id) {
 
         if (empty($_FILES['imagen']) || $_FILES['imagen']['error'] !== UPLOAD_ERR_OK) {
@@ -164,14 +193,5 @@ class EventoController {
             $_FILES['imagen']['tmp_name'],
             $this->uploadDir . $id . '.' . $ext
         );
-    }
-}
-
-if (isset($_GET['action'])) {
-    $controller = new EventoController();
-    $action = $_GET['action'];
-
-    if (method_exists($controller, $action)) {
-        $controller->$action();
     }
 }

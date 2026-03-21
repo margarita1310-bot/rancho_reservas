@@ -25,6 +25,8 @@ class Conexion {
                     PDO::ATTR_EMULATE_PREPARES => false
                 ]);
                 
+                self::$conexion->exec("SET time_zone = '-06:00'");
+                
             } catch (PDOException $e) {
 
                 die("Error de conexión: " . $e->getMessage());

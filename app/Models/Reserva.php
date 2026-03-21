@@ -67,6 +67,35 @@ class Reserva {
         return $stmt->fetch();
     }
 
+    public function getReservasInicio() {
+
+        $sql = "SELECT
+                    c.nombre AS cliente,
+                    r.fecha_reserva,
+                    r.personas
+                FROM reservas r
+                JOIN clientes c ON r.id_cliente = c.id_cliente
+                ORDER BY r.fecha_reserva DESC
+                LIMIT 5";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    public function getReservasHoy() {
+
+        $sql = "SELECT COUNT(*) AS total
+                FROM reservas
+                WHERE DATE(fecha_reserva) = CURDATE()";
+            
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
+
     public function create($id_cliente, $id_evento, $mesas_reservadas, $personas, $total, $estado) {
 
         $sql = "INSERT INTO reservas

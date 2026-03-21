@@ -29,27 +29,27 @@
                         class="btn btn-outline-dark active"
                         data-filter="todos">
                     <i class="bi bi-list-ul me-1"></i>
-                    Todas
+                    Todos
+                </button>
+
+                <button type="button"
+                        class="btn btn-outline-warning"
+                        data-filter="proximo">
+                    <i class="bi bi-calendar-event me-1"></i>
+                    Proximos
                 </button>
 
                 <button type="button"
                         class="btn btn-outline-success"
                         data-filter="activo">
-                    <i class="bi bi-check-circle-fill me-1"></i>
+                    <i class="bi bi-play-circle me-1"></i>
                     Activos
-                </button>
-
-                <button type="button"
-                        class="btn btn-outline-danger"
-                        data-filter="cancelado">
-                    <i class="bi bi-x-circle-fill me-1"></i>
-                    Cancelados
                 </button>
 
                 <button type="button"
                         class="btn btn-outline-secondary"
                         data-filter="finalizado">
-                    <i class="bi bi-flag-fill me-1"></i>
+                    <i class="bi bi-flag me-1"></i>
                     Finalizados
                 </button>
 
@@ -120,10 +120,10 @@
 
                                     <td>
                                         <span class="badge 
-                                            <?= $ev['estado'] === 'activo'
-                                                ? 'bg-success'
-                                                : ($ev['estado'] === 'cancelado'
-                                                    ? 'bg-danger'
+                                            <?= $ev['estado'] === 'proximo'
+                                                ? 'bg-warning'
+                                                : ($ev['estado'] === 'activo'
+                                                    ? 'bg-success'
                                                     : ($ev['estado'] === 'finalizado'
                                                         ? 'bg-secondary'
                                                         : 'bg-dark')) ?>">
@@ -133,13 +133,28 @@
 
                                     <td class="text-center">
 
+                                        <?php $bloqueado = ((int)$ev['tiene_reservas'] > 0); ?>
+
                                         <div class="btn-group btn-group-sm">
 
-                                            <button class="btn btn-outline-primary btn-update"
-                                                    data-id="<?= $ev['id_evento'] ?>"
-                                                    data-controller="Evento">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
+                                            <?php if ($bloqueado): ?>
+
+                                                <span title="No se puede editar, tiene reservas">
+                                                    <button class="btn btn-outline-primary btn-update" disabled>
+                                                        <i class="bi bi-pencil"></i>
+                                                    </button>
+                                                </span>
+
+                                            <?php else: ?>
+                                                
+                                                <button class="btn btn-outline-primary btn-update"
+                                                        data-id="<?= $ev['id_evento'] ?>"
+                                                        data-controller="Evento"
+                                                        title="Editar evento">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+
+                                            <?php endif; ?>
 
                                             <button class="btn btn-outline-danger btn-delete"
                                                     data-id="<?= $ev['id_evento'] ?>"

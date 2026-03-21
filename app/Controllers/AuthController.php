@@ -18,10 +18,10 @@ class AuthController {
     public function __construct() {
         $this->model = new Cliente();
 
-        header('Content-Type: application/json; charset=utf-8');
     }
-
+        
     private function json($data) {
+        header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
         exit;
     }
@@ -121,7 +121,7 @@ class AuthController {
             
             $mail->send();
             
-            $this->json(['success' => false]);
+            $this->json(['success' => true]);
 
         } catch (Exception $e) {
             

@@ -22,18 +22,27 @@ class AdminController {
         require_once __DIR__ . '/../Views/admin/dashboard.php';
     }
 
-    public function dashboard() {
-        $promociones = $this->promocionModel->getAll();
-        $eventos = $this->eventoModel->getAll();
-        $reservas = $this->reservaModel->getAll();
-
-        $vista = __DIR__ . '/../Views/admin/inicio.php';
-        $this->render($vista);
-    }
-
     public function inicio() {
+        $reservasHoy = $this->reservaModel->getReservasHoy();
+        $eventosActivos = $this->eventoModel->getEventosActivos();
+        $promocionesActivas = $this->promocionModel->getPromocionesActivas();
+        $eventosProximos = $this->eventoModel->getEventosProximos();
+
+        $mesasEventos = $this->eventoModel->getMesasDisponiblesEventos();
+
+        $eventos = $this->eventoModel->getEventosInicio();
+        $reservas = $this->reservaModel->getReservasInicio();
+
         $vista = __DIR__ . '/../Views/admin/inicio.php';
-        $this->render($vista);
+        $this->render($vista, [
+            'reservasHoy' => $reservasHoy,
+            'eventosActivos' => $eventosActivos,
+            'promocionesActivas' => $promocionesActivas,
+            'eventosProximos' => $eventosProximos,
+            'mesasEventos' => $mesasEventos,
+            'eventos' => $eventos,
+            'reservas' => $reservas
+        ]);
     }
     
     public function promocion() {

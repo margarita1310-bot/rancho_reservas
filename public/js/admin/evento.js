@@ -1,5 +1,3 @@
-const EVENTO_URL = 'evento.php';
-
 document.getElementById('btn-create-evento')?.addEventListener('click', () => {
 
     abrirModal({
@@ -43,14 +41,6 @@ document.getElementById('btn-create-evento')?.addEventListener('click', () => {
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Estado</label>
-                <select id="estado" class="form-select">
-                    <option value="activo">Activo</option>
-                    <option value="cancelado">Cancelado</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
                 <label class="form-label">Imagen del evento</label>
                 <input type="file" id="imagen" class="form-control" accept="image/png, image/jpeg">
             </div>
@@ -88,10 +78,9 @@ function crearEvento () {
     formData.append('hora_fin', document.getElementById('hora_fin').value);
     formData.append('mesas_disponibles', document.getElementById('mesas_disponibles').value);
     formData.append('precio_mesa', document.getElementById('precio_mesa').value);
-    formData.append('estado', document.getElementById('estado').value);
     formData.append('imagen', imagen);
 
-    fetch(`${EVENTO_URL}?action=guardar`, {
+    fetch('index.php?action=guardarEvento', {
         method: 'POST',
         body: formData
     })
@@ -111,7 +100,7 @@ document.addEventListener('click', async e => {
 
     const id = btn.dataset.id;
     
-    const res = await fetch(`${EVENTO_URL}?action=obtener`, {
+    const res = await fetch('index.php?action=obtenerEvento', {
         method: 'POST',
         body: new URLSearchParams({ id })
     });
@@ -160,14 +149,6 @@ document.addEventListener('click', async e => {
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Estado</label>
-                <select id="estado" class="form-select">
-                    <option value="activo" ${ev.estado === 'activo' ? 'selected' : ''}>Activo</option>
-                    <option value="cancelado" ${ev.estado === 'cancelado' ? 'selected' : ''}>Cancelado</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
                 <label class="form-label">Cambiar imagen (opcional)</label>
                 <input type="file" id="imagen" class="form-control" accept="image/png, image/jpeg">
             </div>
@@ -192,7 +173,6 @@ function actualizarEvento() {
     data.append('hora_fin', body.querySelector('#hora_fin').value);
     data.append('mesas_disponibles', body.querySelector('#mesas_disponibles').value);
     data.append('precio_mesa', body.querySelector('#precio_mesa').value);
-    data.append('estado', body.querySelector('#estado').value);
 
     const imagen = body.querySelector('#imagen').files[0];
 
@@ -200,7 +180,7 @@ function actualizarEvento() {
         data.append('imagen', imagen);
     }
 
-    fetch(`${EVENTO_URL}?action=actualizar`, {
+    fetch('index.php?action=actualizarEvento', {
         method: 'POST',
         body: data
     })
@@ -233,7 +213,7 @@ function eliminarEvento(btn) {
     
     data.append('id', btn.dataset.id);
 
-    fetch(`${EVENTO_URL}?action=eliminar`, {
+    fetch('index.php?action=eliminarEvento', {
         method: 'POST',
         body: data
     })

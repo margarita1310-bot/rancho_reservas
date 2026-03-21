@@ -10,6 +10,7 @@ body {
     background-color: var(--color-fondo);
     font-family: "Zain", sans-serif;
     font-weight: 400;
+    overflow-x: hidden;
 }
 
 h1 {
@@ -22,6 +23,13 @@ h2, h3 {
     font-family: "Playfair Display", serif;
     font-weight: 400;
     color: var(--color-negro);
+}
+
+#sidebarMenu.show {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    z-index: 1050;
 }
 
 .sidebar, .sidebarMovil, #toggleSidebarBtn {
@@ -87,5 +95,16 @@ h2, h3 {
 @media (max-width: 767px) {
     .sidebar-header {
         display: none;
+    }
+}
+
+@media (min-width: 768px) {
+    #sidebarMenu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        overflow-y: auto;
+        z-index: 1000;
     }
 }

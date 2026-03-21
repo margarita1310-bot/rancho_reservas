@@ -12,9 +12,43 @@ class Promocion {
 
     public function getAll() {
 
-        $stmt = $this->db->query(
-            "SELECT * FROM promociones ORDER BY id_promocion DESC"
-        );
+        $sql = "SELECT id_promocion, titulo, descripcion, fecha_inicio, fecha_fin,
+                CASE
+                    WHEN CURDATE() < fecha_inicio THEN 'proxima'
+                    WHEN CURDATE() BETWEEN fecha_inicio AND fecha_fin THEN 'activa'
+                    WHEN CURDATE() > fecha_fin THEN 'expirada'
+                    ELSE estado
+                END AS estado
+                FROM promociones
+                ORDER BY id_promocion DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    public function getPromocionesDisponibles() {
+
+        $sql = "SELECT id_promocion, titulo, descripcion, fecha_inicio, fecha_fin,
+                CASE
+                    WHEN CURDATE() < fecha_inicio THEN 'proxima'
+                    WHEN CURDATE() BETWEEN fecha_inicio AND fecha_fin THEN 'activa'
+                    WHEN CURDATE() > fecha_fin THEN 'expirada'
+                END AS estado
+                FROM promociones
+                WHERE
+                    CURDATE() < fecha_inicio
+                    OR CURDATE() BETWEEN fecha_inicio AND fecha_fin
+                ORDER BY
+                    CASE
+                        WHEN CURDATE() BETWEEN fecha_inicio AND fecha_fin THEN 1
+                        WHEN CURDATE() < fecha_inicio THEN 2
+                    END,
+                    fecha_inicio ASC";
+            
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
 
         return $stmt->fetchAll();
     }
@@ -30,11 +64,23 @@ class Promocion {
         return $stmt->fetch();
     }
 
-    public function create($titulo, $descripcion, $fecha_inicio, $fecha_fin, $estado) {
+    public function getPromocionesActivas() {
+
+        $sql = "SELECT COUNT(*) AS total
+                FROM promociones
+                WHERE CURDATE() BETWEEN fecha_inicio AND fecha_fin";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
+
+    public function create($titulo, $descripcion, $fecha_inicio, $fecha_fin) {
         
         $sql = "INSERT INTO promociones
-                (titulo, descripcion, fecha_inicio, fecha_fin, estado)
-                VALUES (?, ?, ?, ?, ?)";
+                (titulo, descripcion, fecha_inicio, fecha_fin)
+                VALUES (?, ?, ?, ?)";
 
         $stmt = $this->db->prepare($sql);
 
@@ -42,18 +88,17 @@ class Promocion {
             $titulo,
             $descripcion,
             $fecha_inicio,
-            $fecha_fin,
-            $estado
+            $fecha_fin
         ])) {
             return false;
         }
         return (int) $this->db->lastInsertId();
     }
 
-    public function update($id, $titulo, $descripcion, $fecha_inicio, $fecha_fin, $estado) {
+    public function update($id, $titulo, $descripcion, $fecha_inicio, $fecha_fin) {
         
         $sql = "UPDATE promociones
-                SET titulo=?, descripcion=?, fecha_inicio=?, fecha_fin=?, estado=?
+                SET titulo=?, descripcion=?, fecha_inicio=?, fecha_fin=?
                 WHERE id_promocion=?";
 
         $stmt = $this->db->prepare($sql);
@@ -63,7 +108,6 @@ class Promocion {
             $descripcion,
             $fecha_inicio,
             $fecha_fin,
-            $estado,
             $id
         ]);
     }
@@ -75,16 +119,5 @@ class Promocion {
         );
         
         return $stmt->execute([$id]);
-    }
-
-    public function actualizarPromocionesVencidas() {
-
-        $sql = "UPDATE promociones
-                SET estado = 'expirada'
-                WHERE fecha_fin < CURDATE()
-                AND estado = 'activo'";
-        
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
     }
 }

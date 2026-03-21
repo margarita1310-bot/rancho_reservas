@@ -23,6 +23,25 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#footer-section">Contacto</a>
                     </li>
+                    <li class="nav-item" id="navLogin">
+                        <button 
+                            class="btn btn-login"
+                            data-bs-toggle="modal"
+                            data-bs-target="#loginModal">
+                            Iniciar sesión
+                        </button>
+                    </li>
+                    <li class="nav-item dropdown d-none" id="navUser">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" daata-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle fs-4"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#">Mi perfil</a></li>
+                            <li><a class="dropdown-item" href="#">Mis reservas</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="logout()">Cerrar sesión</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -48,6 +67,25 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#footer-section" data-bs-dismiss="offcanvas">Contacto</a>
+                </li>
+                <li class="nav-item" id="navLogin">
+                        <button 
+                            class="btn btn-login"
+                            data-bs-toggle="modal"
+                            data-bs-target="#loginModal">
+                            Iniciar sesión
+                        </button>
+                    </li>
+                <li class="nav-item dropdown d-none" id="navUser">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" daata-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle fs-4"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">Mi perfil</a></li>
+                        <li><a class="dropdown-item" href="#">Mis reservas</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#" onclick="logout()">Cerrar sesión</a></li>
+                    </ul>
                 </li>
             </ul>
         </div>

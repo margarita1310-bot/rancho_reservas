@@ -20,8 +20,8 @@ class PagoController {
     }
         
     private function json($data, $code=200) {
-        http_response_code($code);
         header('Content-Type: application/json; charset=utf-8');
+        http_response_code($code);
         echo json_encode($data);
         exit;
     }
@@ -122,11 +122,3 @@ class PagoController {
     }
 }
 
-if (isset($_GET["action"])) {
-    $controller = new PagoController();
-    $action = $_GET["action"];
-
-    if(method_exists($controller,$action)){
-        $controller->$action();
-    }
-}

@@ -25,15 +25,21 @@
     
     </main>
 
-    <?php include __DIR__ . '/modal.php'; ?>
+    <?php include __DIR__ . '/reservaModal.php'; ?>
+    <?php include __DIR__ . '/loginModal.php'; ?>
 
     <script>const GOOGLE_CLIENT_ID = "<?php echo $_ENV['GOOGLE_CLIENT_ID']; ?>";</script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://www.paypal.com/sdk/js?client-id=<?php echo $_ENV['PAYPAL_CLIENT_ID']; ?>&currency=<?php echo $_ENV['PAYPAL_CURRENCY']; ?>"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="/public/js/cliente/navbar.js"></script>
+    <script src="/public/js/cliente/steps.js"></script>
+    <script src="/public/js/cliente/evento.js"></script>
+    <script src="/public/js/cliente/cliente.js"></script>
+    <script src="/public/js/cliente/reserva.js"></script>
+    <script src="/public/js/cliente/pago.js"></script>
     <script src="/public/js/cliente/auth.js"></script>
-    <script src="/public/js/cliente/modal.js"></script>
-
+    <script src="/public/js/cliente/login.js"></script>
+    
 </body>
 </html>

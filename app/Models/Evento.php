@@ -12,29 +12,154 @@ class Evento {
 
     public function getAll() {
 
-        $stmt = $this->db->query(
-            "SELECT * FROM eventos ORDER BY id_evento DESC"
-        );
+        $sql = "SELECT id_evento, nombre, descripcion, fecha, hora, hora_fin, mesas_disponibles, precio_mesa,
+                (SELECT COUNT(*)
+                FROM reservas r
+                WHERE r.id_evento = eventos.id_evento) AS tiene_reservas,
+                CASE 
+                    WHEN NOW() < TIMESTAMP(fecha, hora) THEN 'proximo'
+                    WHEN NOW() BETWEEN TIMESTAMP(fecha, hora) AND
+                        (CASE
+                            WHEN hora_fin < hora
+                            THEN DATE_ADD(TIMESTAMP(fecha, hora_fin), INTERVAL 1 DAY)
+                            ELSE TIMESTAMP(fecha, hora_fin)
+                        END)
+                    THEN 'activo'
+                    ELSE 'finalizado'
+                END AS estado
+                FROM eventos
+                ORDER BY id_evento DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
 
         return $stmt->fetchAll();
     }
-
+    
     public function getById($id) {
 
         $stmt = $this->db->prepare(
             "SELECT * FROM eventos WHERE id_evento = ? LIMIT 1"
         );
-
+    
         $stmt->execute([$id]);
+    
+        return $stmt->fetch();
+    }
+
+    public function getEventosDisponibles() {
+
+        $sql = "SELECT id_evento, nombre, descripcion, fecha, hora, hora_fin, mesas_disponibles, precio_mesa,
+                (SELECT COUNT(*)
+                FROM reservas r
+                WHERE r.id_evento = eventos.id_evento) AS tiene_reservas,
+                CASE
+                    WHEN NOW() < TIMESTAMP(fecha, hora) THEN 'proximo'
+                    WHEN NOW() BETWEEN TIMESTAMP(fecha, hora) AND
+                        (CASE
+                            WHEN hora_fin < hora
+                            THEN DATE_ADD(TIMESTAMP(fecha, hora_fin), INTERVAL 1 DAY)
+                            ELSE TIMESTAMP(fecha, hora_fin)
+                        END)
+                    THEN 'activo'
+                    ELSE 'finalizado'
+                END AS estado
+                FROM eventos
+                WHERE
+                    NOW() < TIMESTAMP(fecha, hora)
+                    OR NOW() BETWEEN TIMESTAMP (fecha, hora) AND
+                        (CASE
+                            WHEN hora_fin < hora
+                            THEN DATE_ADD(TIMESTAMP(fecha, hora_fin), INTERVAL 1 DAY)
+                            ELSE TIMESTAMP (fecha, hora_fin)
+                        END)
+                    ORDER BY
+                        CASE
+                            WHEN NOW() BETWEEN TIMESTAMP(fecha, hora) AND
+                                (CASE
+                                    WHEN hora_fin < hora
+                                    THEN DATE_ADD(TIMESTAMP(fecha, hora_fin), INTERVAL 1 DAY)
+                                    ELSE TIMESTAMP(fecha, hora_fin)
+                                END)
+                            THEN 1
+                            WHEN NOW()
+                            THEN 2
+                        END,
+                        fecha ASC";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    public function getEventosInicio() {
+
+        $sql = "SELECT nombre, fecha, hora
+                FROM eventos
+                WHERE NOW() < TIMESTAMP(fecha, hora)";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    public function getEventosActivos() {
+
+        $sql = "SELECT COUNT(*) AS total
+                FROM eventos
+                WHERE NOW() BETWEEN TIMESTAMP(fecha, hora)
+                AND (
+                    CASE
+                        WHEN hora_fin < hora
+                        THEN DATE_ADD(TIMESTAMP(fecha, hora_fin), INTERVAL 1 DAY)
+                        ELSE TIMESTAMP(fecha, hora_fin)
+                    END
+                )";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
 
         return $stmt->fetch();
     }
 
-    public function create($nombre, $descripcion, $fecha, $hora, $hora_fin, $mesas_disponibles, $precio_mesa, $estado) {
+    public function getEventosProximos() {
+
+        $sql = "SELECT COUNT(*) AS total
+                FROM eventos
+                WHERE NOW() < TIMESTAMP(fecha, hora)";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
+
+    public function getMesasDisponiblesEventos() {
+
+        $sql = "SELECT nombre, mesas_disponibles
+                FROM eventos
+                WHERE NOW() < (
+                    CASE
+                        WHEN hora_fin < hora
+                        THEN DATE_ADD(TIMESTAMP(fecha, hora_fin), INTERVAL 1 DAY)
+                        ELSE TIMESTAMP(fecha, hora_fin)
+                    END
+                )
+                ORDER BY mesas_disponibles ASC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    public function create($nombre, $descripcion, $fecha, $hora, $hora_fin, $mesas_disponibles, $precio_mesa) {
 
         $sql = "INSERT INTO eventos
-                (nombre, descripcion, fecha, hora, hora_fin, mesas_disponibles, precio_mesa, estado)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                (nombre, descripcion, fecha, hora, hora_fin, mesas_disponibles, precio_mesa)
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $this->db->prepare($sql);
 
@@ -45,8 +170,7 @@ class Evento {
             $hora,
             $hora_fin,
             $mesas_disponibles,
-            $precio_mesa,
-            $estado
+            $precio_mesa
         ])) {
             return false;
         }
@@ -54,10 +178,10 @@ class Evento {
     }
 
 
-    public function update($id, $nombre, $descripcion, $fecha, $hora, $hora_fin, $mesas_disponibles, $precio_mesa, $estado) {
+    public function update($id, $nombre, $descripcion, $fecha, $hora, $hora_fin, $mesas_disponibles, $precio_mesa) {
 
         $sql = "UPDATE eventos
-                SET nombre=?, descripcion=?, fecha=?, hora=?, hora_fin=?, mesas_disponibles=?, precio_mesa=?, estado=?
+                SET nombre=?, descripcion=?, fecha=?, hora=?, hora_fin=?, mesas_disponibles=?, precio_mesa=?
                 WHERE id_evento=?";
 
         $stmt = $this->db->prepare($sql);
@@ -70,7 +194,6 @@ class Evento {
             $hora_fin,
             $mesas_disponibles,
             $precio_mesa,
-            $estado,
             $id
         ]);
     }
@@ -84,15 +207,16 @@ class Evento {
         return $stmt->execute([$id]);
     }
 
-    public function actualizarEventosPasados() {
-
-        $sql = "UPDATE eventos
-                SET estado = 'finalizado'
-                WHERE fecha < CURDATE()
-                AND estado = 'activo'";
+    public function tieneReservas($id_evento) {
+        
+        $sql = "SELECT COUNT(*) as total FROM reservas WHERE id_evento = ?";
 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute();
+        $stmt->execute([$id_evento]);
+
+        $result = $stmt->fetch();
+
+        return $result['total'] > 0;
     }
 
     public function restarMesas($id_evento, $cantidad = 1) {
@@ -100,10 +224,11 @@ class Evento {
         $sql = "UPDATE eventos
                 SET mesas_disponibles = mesas_disponibles - ?
                 WHERE id_evento = ?
-                AND mesas_disponibles <= ?";
+                AND mesas_disponibles >= ?";
 
         $stmt = $this->db->prepare($sql);
+        $stmt->execute([$cantidad, $id_evento, $cantidad]);
 
-        return $stmt->execute([$cantidad, $id_evento, $cantidad]);
+        return $stmt->rowCount() > 0;
     }
 }

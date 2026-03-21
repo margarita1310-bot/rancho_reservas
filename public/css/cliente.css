@@ -96,6 +96,19 @@ section {
     color: var(--color-dorado);
 }
 
+.btn-login {
+    border-color: var(--color-dorado);
+    color: var(--color-blanco);
+    padding: 8px 18px;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+.btn-login:hover {
+    background: var(--color-dorado);
+    color: var(--color-primario);
+}
+
 .promocion-section {
     background: var(--color-fondo);
 }

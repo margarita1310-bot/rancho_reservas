@@ -4,9 +4,13 @@ session_start();
 
 require_once __DIR__ . '/../../app/Controllers/LoginController.php';
 require_once __DIR__ . '/../../app/Controllers/AdminController.php';
+require_once __DIR__ . '/../../app/Controllers/PromocionController.php';
+require_once __DIR__ . '/../../app/Controllers/EventoController.php';
 
-$logincontroller = new LoginController();
-$admincontroller = new AdminController();
+$loginController = new LoginController();
+$adminController = new AdminController();
+$promocionController = new PromocionController();
+$eventoController = new EventoController();
 
 $action = $_GET['action'] ?? 'login';
 
@@ -17,22 +21,58 @@ if (!isset($_SESSION['admin']) && !in_array($action, ['login', 'autenticar'])) {
 switch ($action) {
     
     case 'login':
-        $logincontroller->login();
+        $loginController->login();
         break;
 
     case 'autenticar':
-        $logincontroller->autenticar();
+        $loginController->autenticar();
         break;
         
     case 'logout':
-        $admincontroller->logout();
+        $adminController->logout();
+        break;
+
+    case 'guardarPromocion':
+        $promocionController->guardar();
+        break;
+
+    case 'obtenerPromocion':
+        $promocionController->obtener();
+        break;
+
+    case 'actualizarPromocion':
+        $promocionController->actualizar();
+        break;
+
+    case 'eliminarPromocion':
+        $promocionController->eliminar();
+        break;
+
+    case 'guardarEvento':
+        $eventoController->guardar();
+        break;
+
+    case 'obtenerEvento':
+        $eventoController->obtener();
+        break;
+
+    case 'actualizarEvento':
+        $eventoController->actualizar();
+        break;
+
+    case 'eliminarEvento':
+        $eventoController->eliminar();
+        break;
+
+    case 'cancelarEvento':
+        $eventoController->cancelarEvento();
         break;
 
     default:
-        if (method_exists($admincontroller, $action)) {
-            $admincontroller->$action();
+        if (method_exists($adminController, $action)) {
+            $adminController->$action();
         } else {
-            $admincontroller->dashboard();
+            $adminController->inicio();
         }
         break;
 }

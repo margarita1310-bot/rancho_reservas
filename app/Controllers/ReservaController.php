@@ -8,10 +8,10 @@ class ReservaController {
 
     public function __construct() {
         $this->model = new Reserva();
-        header('Content-Type: application/json; charset=utf-8');
     }
 
     private function json($data, $code = 200) {
+        header('Content-Type: application/json; charset=utf-8');
         http_response_code($code);
         echo json_encode($data);
         exit;
@@ -69,14 +69,5 @@ class ReservaController {
         }
 
         $this->json($reserva);
-    }
-}
-
-if (isset($_GET['action'])) {
-    $controller = new ReservaController();
-    $action = $_GET['action'];
-
-    if (method_exists($controller, $action)) {
-        $controller->$action();
     }
 }

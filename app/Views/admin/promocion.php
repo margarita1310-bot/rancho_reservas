@@ -33,23 +33,23 @@
                 </button>
 
                 <button type="button"
-                        class="btn btn-outline-success"
-                        data-filter="activa">
-                    <i class="bi bi-check-circle-fill me-1"></i>
-                    Activas
+                        class="btn btn-outline-warning"
+                        data-filter="proxima">
+                    <i class="bi bi-calendar-event me-1"></i>
+                    Proximas
                 </button>
 
                 <button type="button"
-                        class="btn btn-outline-secondary"
-                        data-filter="inactiva">
-                    <i class="bi bi-pause-circle me-1"></i>
-                    Inactivas
+                        class="btn btn-outline-success"
+                        data-filter="activa">
+                    <i class="bi bi-check-circle me-1"></i>
+                    Activas
                 </button>
 
                 <button type="button"
                         class="btn btn-outline-danger"
                         data-filter="expirada">
-                    <i class="bi bi-x-circle-fill me-1"></i>
+                    <i class="bi bi-x-circle me-1"></i>
                     Expiradas
                 </button>
 
@@ -108,11 +108,11 @@
 
                                     <td>
                                         <span class="badge 
-                                            <?= $pr['estado'] === 'activa'
-                                                ? 'bg-success'
-                                                : ($pr['estado'] === 'inactiva'
-                                                    ? 'bg-secondary'
-                                                    : ($pr['estado'] === 'expirada'
+                                            <?= $pr['estado'] === 'proxima'
+                                                ? 'bg-warning'
+                                                : ($pr['estado'] === 'activa'
+                                                    ? 'bg-success'
+                                                    :($pr['estado'] === 'expirada'
                                                         ? 'bg-danger'
                                                         : 'bg-dark')) ?>">
                                             <?= htmlspecialchars($pr['estado']) ?>

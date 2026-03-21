@@ -1,5 +1,3 @@
-const PROMOCION_URL = 'promocion.php';
-
 document.getElementById('btn-create-promocion')?.addEventListener('click', () => {
 
     abrirModal({
@@ -25,14 +23,6 @@ document.getElementById('btn-create-promocion')?.addEventListener('click', () =>
             <div class="col-md-6 mb-3">
                 <label class="form-label">Fecha fin</label>
                 <input type="date" id="fecha_fin" class="form-control">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Estado</label>
-                <select id="estado" class="form-select">
-                    <option value="activa">Activa</option>
-                    <option value="inactiva">Inactiva</option>
-                </select>
             </div>
 
             <div class="mb-3">
@@ -70,10 +60,9 @@ function crearPromocion () {
     formData.append('descripcion', document.getElementById('descripcion').value.trim());
     formData.append('fecha_inicio', fecha_inicio.value);
     formData.append('fecha_fin', fecha_fin.value);
-    formData.append('estado', document.getElementById('estado').value);
     formData.append('imagen', imagen);
 
-    fetch(`${PROMOCION_URL}?action=guardar`, {
+    fetch('index.php?action=guardarPromocion', {
         method: 'POST',
         body: formData
     })
@@ -93,7 +82,7 @@ document.addEventListener('click', async e => {
 
     const id = btn.dataset.id;
 
-    const res = await fetch(`${PROMOCION_URL}?action=obtener`, {
+    const res = await fetch('index.php?action=obtenerPromocion', {
         method: 'POST',
         body: new URLSearchParams({ id })
     });
@@ -127,14 +116,6 @@ document.addEventListener('click', async e => {
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Estado</label>
-                <select id="estado" class="form-select">
-                    <option value="activa" ${pr.estado === 'activa' ? 'selected' : ''}>Activa</option>
-                    <option value="inactiva" ${pr.estado === 'inactiva' ? 'selected' : ''}>Inactiva</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
                 <label class="form-label">Cambiar imagen (opcional)</label>
                 <input type="file" id="imagen" class="form-control" accept="image/png, image/jpeg">
             </div>
@@ -156,7 +137,6 @@ function actualizarPromocion () {
     data.append('descripcion', body.querySelector('#descripcion').value.trim());
     data.append('fecha_inicio', body.querySelector('#fecha_inicio').value);
     data.append('fecha_fin', body.querySelector('#fecha_fin').value);
-    data.append('estado', body.querySelector('#estado').value);
 
     const imagen = body.querySelector('#imagen').files[0];
 
@@ -164,7 +144,7 @@ function actualizarPromocion () {
         data.append('imagen', imagen);
     }
 
-    fetch(`${PROMOCION_URL}?action=actualizar`, {
+    fetch('index.php?action=actualizarPromocion', {
         method: 'POST',
         body: data
     })
@@ -197,7 +177,7 @@ function eliminarPromocion(btn) {
 
     data.append('id', btn.dataset.id);
 
-    fetch(`${PROMOCION_URL}?action=eliminar`, {
+    fetch('index.php?action=eliminarPromocion', {
         method: 'POST',
         body: data
     })
