@@ -1,6 +1,6 @@
 <div class="modal fade" id="reservaModal" tabindex="-1">
 
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered">
 
         <div class="modal-content">
             <div class="modal-header p-0 align-items-center">
@@ -11,49 +11,8 @@
             </div>
             
             <div class="modal-body px-0">
-                <div id="step1" class="step">
-                    <h4>Inicia sesión</h4>
-
-                    <div class="mb-3">
-                        <label class="form-label">Correo electronico</label>
-                        <input type="email" class="form-control" id="emailLogin">
-                    </div>
-
-                    <hr>
-
-                    <div id="google-button" class="mb-3"></div>
-
-                    <button class="btn btn-warning mb-3" onclick="enviarCodigo()">Enviar código</button>
-                    
-                    <div class="mb-3 d-none" id="bloqueCodigo">
-                        <label class="form-label">Código de verificación</label>
-                        <input type="text" class="form-control" id="codigo">
-                        <small class="text-muted mt-1">Este código vence en 10 minutos.</small>
-                    </div>
-                    
-                    <button class="btn btn-success d-none mt-2" id="btnValidarCodigo" onclick="validarCodigo()">Validar código</button>
-                </div>
-
-                <div id="step2" class="step d-none">
-                    <h4>Datos personales</h4>
-                    <form>
-                        <div class="mb-3">
-                            <label class="form-label">Nombre legal</label>
-                            <input type="text" class="form-control" id="nombre">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Teléfono</label>
-                            <input type="text" class="form-control" id="telefono">
-                        </div>
-
-                        <div class="d-flex justify-content-between">
-                            <button type="button" class="btn btn-secondary" onclick="goToStep(1)">Atrás</button>
-                            <button type="button" class="btn btn-warning" onclick="guardarDatosCliente()">Siguiente</button>
-                        </div>
-                    </form>
-                </div>
         
-                <div id="step3" class="step d-none">
+                <div id="step1" class="step d-none">
                     <h4>Detalles de tu reserva</h4>
 
                     <div class="mb-3">
@@ -74,15 +33,14 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Número de personas</label>
-                        <input type="number" class="form-control" id="personas" min="1" max="20">
+                        <input type="number" class="form-control" id="eventoPersonas" min="1" max="20">
                     </div>
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-secondary" onclick="goToStep(2)">Atrás</button>
                         <button type="button" class="btn btn-warning" onclick="guardarDatosReserva()">Siguiente</button>
                     </div>
                 </div>
         
-                <div id="step4" class="step d-none">
+                <div id="step2" class="step d-none">
                     <h4>Confirma tu información</h4>
                     <p><strong>Nombre:</strong> <span id="confirmarNombre"></span></p>
                     <p><strong>Correo:</strong> <span id="confirmarEmail"></span></p>
@@ -95,16 +53,16 @@
 
                     
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-secondary" onclick="goToStep(3)">Atrás</button>
+                        <button type="button" class="btn btn-secondary" onclick="goToStep(1)">Atrás</button>
                         <button type="button" class="btn btn-warning" onclick="crearReserva()">Proceder al pago</button>
                     </div>
                 </div>
         
-                <div id="step5" class="step d-none">
+                <div id="step3" class="step d-none">
                     <h4>Pago con PayPal</h4>
                     <div id="paypal-button"
                         data-reserva="<"></div>
-                    <button type="button" class="btn btn-secondary" onclick="goToStep(4)">Atrás</button>
+                    <button type="button" class="btn btn-secondary" onclick="goToStep(2)">Atrás</button>
                 </div>
             </div>
         </div>

@@ -1,18 +1,3 @@
-window.onload = function () {
-    google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleCredentialResponse
-    });
-    google.accounts.id.renderButton(
-        document.getElementById("google-button"),
-        {
-            theme: "outline",
-            size: "large",
-            text: "continue_with"
-        }
-    );
-};
-
 function handleCredentialResponse(response) {
     const user = parseJwt(response.credential);
     console.log(user);
@@ -21,8 +6,6 @@ function handleCredentialResponse(response) {
     sessionStorage.setItem('nombre', user.name ?? '');
 
     document.getElementById('nombre').value = user.name ?? '';
-    
-    goToStep(2);
     
     fetch('index.php?action=google', {
         method: 'POST',
@@ -43,7 +26,6 @@ function handleCredentialResponse(response) {
 }
 
 function enviarCodigo() {
-
     const email = document.getElementById('emailLogin').value;
 
     fetch('index.php?action=enviarCodigo', {
@@ -51,7 +33,6 @@ function enviarCodigo() {
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: `email=${email}`
     })
-
     .then(res => res.json())
     .then(data => {
         if (data.success) {
@@ -68,7 +49,6 @@ function enviarCodigo() {
 }
 
 function validarCodigo() {
-
     const codigo = document.getElementById('codigo').value.trim();
     const email = document.getElementById('emailLogin').value.trim();
 
@@ -93,7 +73,7 @@ function validarCodigo() {
                 sessionStorage.setItem('telefono', data.cliente.telefono ?? '');
             }
 
-            goToStep(2);
+            loginExitoso(data.cliente);
         } else {
             alert(data.message ?? 'Código incorrecto');
         }
@@ -102,6 +82,37 @@ function validarCodigo() {
         console.error(err);
         alert('Error de conexión');
     });
+}
+
+function loginExitoso(cliente) {
+    sessionStorage.setItem('id_cliente', cliente.id_cliente);
+    sessionStorage.setItem('nombre', cliente?.nombre ?? '');
+    sessionStorage.setItem('email', cliente?.email ?? '');
+    sessionStorage.setItem('telefono', cliente?.telefono ?? '');
+    
+    window.clienteLogueado = true;
+    
+    const loginModal = document.getElementById('loginModal');
+
+    const modal = bootstrap.Modal.getInstance(loginModal) || new bootstrap.Modal(loginModal);
+    modal.hide();
+
+    actualizarNavbar();
+
+    if (!cliente.nombre?.trim() || !cliente.telefono?.trim()) {
+
+        const datosModal = document.getElementById('datosModal');
+
+        const modal = bootstrap.Modal.getInstance(datosModal) || new bootstrap.Modal(datosModal);
+        modal.show();
+    }
+}
+
+function logout() {
+    sessionStorage.clear();
+    window.clienteLogueado = false;
+    actualizarNavbar();
+    location.reload();
 }
 
 function parseJwt(token) {

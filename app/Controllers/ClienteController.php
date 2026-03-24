@@ -2,18 +2,20 @@
 
 require_once __DIR__ . '/../Models/Promocion.php';
 require_once __DIR__ . '/../Models/Evento.php';
-require_once __DIR__ . '/../Models/Reserva.php';
+require_once __DIR__ . '/../Models/Cliente.php';
 
 class ClienteController {
 
     private $promocionModel;
     private $eventoModel;
+    private $clienteModel;
     private $uploadDirEvento;
     private $uploadDirPromocion;
 
     public function __construct() {
         $this->promocionModel = new Promocion();
         $this->eventoModel = new Evento();
+        $this->clienteModel = new Cliente();
 
         $this->uploadDirEvento = __DIR__ . '/../../public/images/evento/';
         $this->uploadDirPromocion = __DIR__ . '/../../public/images/promocion/';
@@ -42,5 +44,14 @@ class ClienteController {
         $this->asignarImagen($promociones, $this->uploadDirPromocion, 'id_promocion');
 
         require_once __DIR__ . '/../Views/cliente/dashboard.php';
+    }
+
+    public function obtenerReservas() {
+        if (!isset($_SESSION['cliente_id'])) {
+            return [];
+        }
+
+        $id_cliente = $_SESSION['cliente_id'];
+        return $this->clienteModel->getReservas($id_cliente);
     }
 }

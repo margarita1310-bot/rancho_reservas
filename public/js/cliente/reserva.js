@@ -1,18 +1,44 @@
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('[data-bs-target="#reservaModal"]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            sessionStorage.setItem('id_evento', btn.dataset.id);
-            sessionStorage.setItem('nombre_evento', btn.dataset.nombre);
-            sessionStorage.setItem('fecha_evento', btn.dataset.fecha);
-            sessionStorage.setItem('precio_evento', btn.dataset.precio);
-    
-        });
-    });
-});
+function reservarEvento(btn) {
+    sessionStorage.setItem('id_evento', btn.dataset.id);
+    sessionStorage.setItem('nombre_evento', btn.dataset.nombre);
+    sessionStorage.setItem('fecha_evento', btn.dataset.fecha);
+    sessionStorage.setItem('precio_evento', btn.dataset.precio);
+
+    abrirReserva();
+}
+
+function abrirReserva() {
+    const id_cliente = sessionStorage.getItem('id_cliente');
+
+    if(!id_cliente) {
+        const loginModal = document.getElementById('loginModal');
+
+        const modal = bootstrap.Modal.getInstance(loginModal) || new bootstrap.Modal(loginModal);
+        modal.show();
+        return;
+    }
+
+    const nombre = sessionStorage.getItem('nombre');
+    const telefono = sessionStorage.getItem('telefono');
+
+    if (!nombre || !telefono) {
+        const datosModal = document.getElementById('datosModal');
+
+        const modal = bootstrap.Modal.getInstance(datosModal) || new bootstrap.Modal(datosModal);
+        modal.show();
+        return;
+    }
+
+    const reservaModal = document.getElementById('reservaModal');
+
+    const modal = bootstrap.Modal.getInstance(reservaModal) || new bootstrap.Modal(reservaModal);
+    cargarDatosEvento();
+    modal.show();
+}
 
 function guardarDatosReserva() {
     const hora = document.getElementById('eventoHora').value;
-    const personas = document.getElementById('personas').value;
+    const personas = document.getElementById('eventoPersonas').value;
 
     if (!hora) {
         alert("Por favor selecciona una hora");
@@ -33,7 +59,7 @@ function guardarDatosReserva() {
     sessionStorage.setItem('personas', personas);
 
     cargarConfirmacion();
-    goToStep(4);
+    goToStep(2);
 }
 
 function cargarConfirmacion() {
@@ -91,7 +117,7 @@ function crearReserva() {
         if(r.status === "ok") {
             reservaID = r.id_reserva;
             iniciarPayPal();
-            goToStep(5);
+            goToStep(3);
         } else {
             alert("Error al crear la reserva")
         }
@@ -99,3 +125,13 @@ function crearReserva() {
     .catch(() => alert('Error en la petición'));
 }
 
+function goToStep(step) {
+    document.querySelectorAll('.step').forEach(s => s.classList.add('d-none'));
+    document.getElementById('step' + step).classList.remove('d-none');
+}
+
+function cargarDatosEvento() {
+    document.getElementById('eventoNombre').value = sessionStorage.getItem('nombre_evento');
+    document.getElementById('eventoFecha').value = sessionStorage.getItem('fecha_evento');
+    document.getElementById('eventoPrecio').value = sessionStorage.getItem('precio_evento');
+}

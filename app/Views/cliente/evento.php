@@ -61,8 +61,7 @@
                                  data-nombre="<?= $ev['nombre'] ?>"
                                  data-fecha="<?= $ev['fecha'] ?>"
                                  data-precio="<?= $ev['precio_mesa'] ?>"
-                                 data-bs-toggle="modal" 
-                                 data-bs-target="#reservaModal">
+                                 onclick="reservarEvento(this)">
                                  Reservar Mesa
                               </button>
 

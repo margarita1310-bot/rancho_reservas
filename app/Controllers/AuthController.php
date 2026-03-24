@@ -57,6 +57,7 @@ class AuthController {
 
         if (!$cliente) {
             $id = $this->model->create($nombre, $email);
+            $cliente = $this->model->buscarPorEmail($email);
         } else {
             $id = $cliente['id_cliente'];
         }
@@ -66,9 +67,10 @@ class AuthController {
         $this->json([
             'success' => true,
             'cliente' => [
-                'id_cliente' => $id,
-                'nombre' => $nombre,
-                'email' => $email
+                'id_cliente' => $cliente['id_cliente'],
+                'nombre' => $cliente['nombre'],
+                'email' => $cliente['email'],
+                'telefono' => $cliente['telefono'] ?? null
             ]
         ]);
     }
