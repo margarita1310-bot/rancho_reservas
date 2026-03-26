@@ -76,7 +76,6 @@ class PagoController {
     public function capturar() {
         
         $paypal_order_id = $_POST['orderID'] ?? null;
-        $id_reserva = $_POST['id_reserva'] ?? null;
 
         if (!$paypal_order_id) {
             $this->json(["status" => "error", "msg" => "orderID requerido"], 400);
@@ -108,13 +107,6 @@ class PagoController {
             json_encode($resultado)
         );
 
-        $reserva = $this->reservaModel->getByIdReserva($id_reserva);
-
-        if ($reserva && $reserva['estado'] !== 'confirmada') {
-            $this->reservaModel->actualizarEstado($id_reserva, "confirmada");
-            $this->eventoModel->restarMesas($reserva['id_evento'], 1);
-        }
-        
         $this->json([
             "status" => "ok",
             "paypal_transaction_id" => $paypal_transaction_id

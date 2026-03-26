@@ -4,13 +4,15 @@ require_once __DIR__ . '/Conexion.php';
 
 class Admin {
 
-    private static function db() {
-        return Conexion::conectar();
+    private $db;
+
+    public function __construct() {
+        $this->db = Conexion::conectar();
     }
 
     public static function getByEmailAdmin($email) {
 
-        $stmt = self::db()->prepare(
+        $stmt = $this->db->prepare(
             "SELECT * FROM administrador WHERE email = ? LIMIT 1"
         );
 
@@ -21,7 +23,7 @@ class Admin {
     
     public static function verificarAdmin($email, $password) {
 
-        $admin = self::getByEmailAdmin($email);
+        $admin = $this->db->getByEmailAdmin($email);
 
         if (!$admin) {
             return false;

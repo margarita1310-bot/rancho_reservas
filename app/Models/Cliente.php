@@ -21,16 +21,26 @@ class Cliente {
         return $stmt->fetch();
     }
 
+    //Transacción
     public function crearCliente($nombre, $email) {
+        try {
+            $this->db->beginTransaction();
+            
+            $stmt = $this->db->prepare(
+                "INSERT INTO clientes (nombre, email, created_at)
+                 VALUES (?, ?, NOW())"
+            );
+    
+            $stmt->execute([$nombre, $email]);
 
-        $stmt = $this->db->prepare(
-            "INSERT INTO clientes (nombre, email, created_at)
-             VALUES (?, ?, NOW())"
-        );
+            $this->db->commit();
 
-        $stmt->execute([$nombre, $email]);
+            return $this->db->lastInsertId();
 
-        return $this->db->lastInsertId();
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            return false;
+        }
     }
 
     public function actualizarCliente($id, $nombre, $telefono) {
@@ -44,6 +54,7 @@ class Cliente {
         return $stmt->execute([$nombre, $telefono, $id]);
     }
 
+    //Consulta multitabla y subconsulta
     public function getReservasCliente($id) {
 
         $sql = "SELECT

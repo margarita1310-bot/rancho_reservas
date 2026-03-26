@@ -10,8 +10,19 @@ class Reserva {
         $this->db = Conexion::conectar();
     }
 
-    public function getAllReservas() {
+    //Obtener reserva por su id
+    public function getByIdReserva($id) {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM reservas WHERE id_reserva = ? LIMIT 1"
+        );
+    
+        $stmt->execute([$id]);
+    
+        return $stmt->fetch();
+    }
 
+    //Obtener todas las reservas
+    public function getAllReservas() {
         $sql = "SELECT 
                     r.id_reserva,
                     c.nombre AS cliente,
@@ -30,6 +41,11 @@ class Reserva {
                 JOIN clientes c ON r.id_cliente = c.id_cliente
                 JOIN eventos e ON r.id_evento = e.id_evento
                 LEFT JOIN pagos p ON r.id_reserva = p.id_reserva
+                AND p.id_pago = (
+                    SELECT MAX(id_pago)
+                    FROM pagos
+                    WHERE id_reserva = r.id_reserva
+                )
                 ORDER BY r.id_reserva DESC";
 
         $stmt = $this->db->query($sql);
@@ -37,19 +53,8 @@ class Reserva {
         return $stmt->fetchAll();
     }
 
-    public function getByIdReserva($id) {
-
-        $stmt = $this->db->prepare(
-            "SELECT * FROM reservas WHERE id_reserva = ? LIMIT 1"
-        );
-    
-        $stmt->execute([$id]);
-    
-        return $stmt->fetch();
-    }
-
+    //Obtener las ultimas 5 reservas realizadas
     public function getReservasInicio() {
-
         $sql = "SELECT
                     c.nombre AS cliente,
                     r.fecha_reserva,
@@ -65,8 +70,8 @@ class Reserva {
         return $stmt->fetchAll();
     }
 
+    //Obtener las reservas del dia actual
     public function getReservasHoy() {
-
         $sql = "SELECT COUNT(*) AS total
                 FROM reservas
                 WHERE DATE(fecha_reserva) = CURDATE()";
@@ -77,8 +82,8 @@ class Reserva {
         return $stmt->fetch();
     }
 
+    //Obtener las reservas que no se han pagado o pendientes
     public function getReservasSinPago() {
-
         $sql = "SELECT *
                 FROM reservas r
                 WHERE NOT EXISTS (
@@ -94,44 +99,54 @@ class Reserva {
         return $stmt->fetchAll();
     }
 
-    public function getReservasPendientes() {
-
-        $sql = "SELECT *
-                FROM reservas
-                WHERE id_reserva NOT IN (
-                    SELECT id_reserva
-                    FROM pagos
-                    WHERE estado = 'COMPLETED'
-                )";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-
-        return $stmt->fetchAll();
-    }
-
+    //Transaccion para crear una reserva
     public function crearReserva($id_cliente, $id_evento, $mesas_reservadas, $personas, $total, $estado) {
+        try {
+            $this->db->beginTransaction();
 
-        $sql = "INSERT INTO reservas
+            //Verificar mesas disponibles
+            $stmt = $this->db->prepare(
+                "SELECT mesas_disponibles
+                FROM eventos
+                WHERE id_evento = ?
+                FOR UPDATE"
+            );
+
+            $stmt->execute([$id_evento]);
+            $evento = $stmt->fetch();
+
+            if (!$evento || $evento['mesas_disponibles'] < $mesas_reservadas) {
+                $this->db->rollBack();
+                return false;
+            }
+
+            //Insertar reserva
+            $stmt = $this->db->prepare(
+                "INSERT INTO reservas
                 (id_cliente, id_evento, mesas_reservadas, personas, total, estado, fecha_reserva)
-                VALUES (?, ?, ?, ?, ?, 'pendiente', NOW())";
+                VALUES (?, ?, ?, ?, ?, 'pendiente', NOW())"
+            );
+            
+            $stmt->execute([
+                $id_cliente,
+                $id_evento,
+                $mesas_reservadas,
+                $personas,
+                $total
+            ]);
 
-        $stmt = $this->db->prepare($sql);
+            //Confirmar
+            $this->db->commit();
 
-        if (!$stmt->execute([
-            $id_cliente,
-            $id_evento,
-            $mesas_reservadas,
-            $personas,
-            $total
-        ])) {
+            return (int) $this->db->lastInsertId();
+        } catch (Exception $e) {
+            $this->db->rollBack();
             return false;
         }
-        return (int) $this->db->lastInsertId();
     }
 
-    public function actualizarEstado($id_reserva, $estado) {
-
+    //Actualizar el estado de la reserva
+    public function actualizarEstadoReserva($id_reserva, $estado) {
         $sql = "UPDATE reservas
                 SET estado = ?
                 WHERE id_reserva = ?";

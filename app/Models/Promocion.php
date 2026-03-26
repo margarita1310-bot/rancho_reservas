@@ -10,15 +10,21 @@ class Promocion {
         $this->db = Conexion::conectar();
     }
 
-    public function getAllPromociones() {
+    //Obtener promocion por su id
+    public function getByIdPromocion($id) {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM promociones WHERE id_promocion = ? LIMIT 1"
+        );
 
+        $stmt->execute([$id]);
+
+        return $stmt->fetch();
+    }
+
+    //Obtener todas las promociones se hace uso de la funcion obtener_estado_promocion
+    public function getAllPromociones() {
         $sql = "SELECT id_promocion, titulo, descripcion, fecha_inicio, fecha_fin,
-                CASE
-                    WHEN CURDATE() < fecha_inicio THEN 'proxima'
-                    WHEN CURDATE() BETWEEN fecha_inicio AND fecha_fin THEN 'activa'
-                    WHEN CURDATE() > fecha_fin THEN 'expirada'
-                    ELSE estado
-                END AS estado
+                obtener_estado_promocion(fecha_inicio, fecha_fin) AS estado
                 FROM promociones
                 ORDER BY id_promocion DESC";
 
@@ -28,18 +34,12 @@ class Promocion {
         return $stmt->fetchAll();
     }
 
+    //Obtener solo las promociones disponibles se hace uso de la funcion obtener_estado_promocion
     public function getPromocionesDisponibles() {
-
         $sql = "SELECT id_promocion, titulo, descripcion, fecha_inicio, fecha_fin,
-                CASE
-                    WHEN CURDATE() < fecha_inicio THEN 'proxima'
-                    WHEN CURDATE() BETWEEN fecha_inicio AND fecha_fin THEN 'activa'
-                    WHEN CURDATE() > fecha_fin THEN 'expirada'
-                END AS estado
+                obtener_estado_promocion(fecha_inicio, fecha_fin) AS estado
                 FROM promociones
-                WHERE
-                    CURDATE() < fecha_inicio
-                    OR CURDATE() BETWEEN fecha_inicio AND fecha_fin
+                WHERE CURDATE() <= fecha_fin
                 ORDER BY
                     CASE
                         WHEN CURDATE() BETWEEN fecha_inicio AND fecha_fin THEN 1
@@ -53,17 +53,7 @@ class Promocion {
         return $stmt->fetchAll();
     }
 
-    public function getByIdPromocion($id) {
-
-        $stmt = $this->db->prepare(
-            "SELECT * FROM promociones WHERE id_promocion = ? LIMIT 1"
-        );
-
-        $stmt->execute([$id]);
-
-        return $stmt->fetch();
-    }
-
+    //Obtener promociones que estan activas
     public function getPromocionesActivas() {
 
         $sql = "SELECT COUNT(*) AS total
@@ -76,8 +66,8 @@ class Promocion {
         return $stmt->fetch();
     }
 
+    //Creacion de una promocion
     public function crearPrommocion($titulo, $descripcion, $fecha_inicio, $fecha_fin) {
-        
         $sql = "INSERT INTO promociones
                 (titulo, descripcion, fecha_inicio, fecha_fin)
                 VALUES (?, ?, ?, ?)";
@@ -95,8 +85,8 @@ class Promocion {
         return (int) $this->db->lastInsertId();
     }
 
+    //Actualizar una promocion
     public function actualizarPromocion($id, $titulo, $descripcion, $fecha_inicio, $fecha_fin) {
-        
         $sql = "UPDATE promociones
                 SET titulo=?, descripcion=?, fecha_inicio=?, fecha_fin=?
                 WHERE id_promocion=?";
@@ -112,8 +102,8 @@ class Promocion {
         ]);
     }
 
+    //Borrar una promocion
     public function borrarPromocion($id) {
-
         $stmt = $this->db->prepare(
             "DELETE FROM promociones WHERE id_promocion=?"
         );
