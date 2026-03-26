@@ -30,7 +30,7 @@ class PromocionController {
     }
 
     public function index() {
-        $promocion = $this->model->getAll();
+        $promocion = $this->model->getAllPromociones();
 
         foreach ($promocion as &$p) {
             $p['imagen'] = $this->obtenerImagen($p['id_promocion']);
@@ -61,7 +61,7 @@ class PromocionController {
             $this->json(['status' => 'error', 'msg' => 'Imagen requerida'], 400);
         }
 
-        $id = $this->model->create($titulo, $descripcion, $fecha_inicio, $fecha_fin);
+        $id = $this->model->crearPromocion($titulo, $descripcion, $fecha_inicio, $fecha_fin);
         
         if (!$id) {
             $this->json(['status' => 'error'], 500);
@@ -83,7 +83,7 @@ class PromocionController {
             $this->json(['status' => 'error'], 400);
         }
         
-        $promocion = $this->model->getById($id);
+        $promocion = $this->model->getByIdPromocion($id);
         
         if (!$promocion) {
             $this->json(['status' => 'error'], 404);
@@ -112,7 +112,7 @@ class PromocionController {
             $this->json(['status' => 'error', 'msg' => 'La fecha de fin no puede ser menor a la fecha de inicio'], 400);
         }
 
-        $ok = $this->model->update(
+        $ok = $this->model->actualizarPromocion(
             $id,
             $_POST['titulo'],
             $_POST['descripcion'],
@@ -137,7 +137,7 @@ class PromocionController {
             $this->json(['status' => 'error', 'msg' => 'ID requerido'], 400);
         }
 
-        if (!$this->model->delete($id)) {
+        if (!$this->model->borrarPromocion($id)) {
             $this->json(['status' => 'error'], 500);
         }
         

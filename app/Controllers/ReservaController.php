@@ -18,7 +18,7 @@ class ReservaController {
     }
 
     public function index() {
-        $reserva = $this->model->getAll();
+        $reserva = $this->model->getAllReservas();
         $this->json($reserva);
     }
 
@@ -35,7 +35,7 @@ class ReservaController {
             $this->json(['status' => 'error', 'msg' => 'Faltan campos requeridos'], 400);
         }
 
-        $id = $this->model->create(
+        $id = $this->model->crearReserva(
             $id_cliente,
             $id_evento,
             $mesas_reservadas,
@@ -62,7 +62,7 @@ class ReservaController {
             $this->json(['status' => 'error', 'msg' => 'ID requerido'], 400);
         }
 
-        $reserva = $this->model->getById($id);
+        $reserva = $this->model->getByIdReserva($id);
 
         if (!$reserva) {
             $this->json(['status' => 'error', 'msg' => 'Reserva no encontrada'], 404);

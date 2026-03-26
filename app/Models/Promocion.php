@@ -10,7 +10,7 @@ class Promocion {
         $this->db = Conexion::conectar();
     }
 
-    public function getAll() {
+    public function getAllPromociones() {
 
         $sql = "SELECT id_promocion, titulo, descripcion, fecha_inicio, fecha_fin,
                 CASE
@@ -53,7 +53,7 @@ class Promocion {
         return $stmt->fetchAll();
     }
 
-    public function getById($id) {
+    public function getByIdPromocion($id) {
 
         $stmt = $this->db->prepare(
             "SELECT * FROM promociones WHERE id_promocion = ? LIMIT 1"
@@ -76,7 +76,7 @@ class Promocion {
         return $stmt->fetch();
     }
 
-    public function create($titulo, $descripcion, $fecha_inicio, $fecha_fin) {
+    public function crearPrommocion($titulo, $descripcion, $fecha_inicio, $fecha_fin) {
         
         $sql = "INSERT INTO promociones
                 (titulo, descripcion, fecha_inicio, fecha_fin)
@@ -95,7 +95,7 @@ class Promocion {
         return (int) $this->db->lastInsertId();
     }
 
-    public function update($id, $titulo, $descripcion, $fecha_inicio, $fecha_fin) {
+    public function actualizarPromocion($id, $titulo, $descripcion, $fecha_inicio, $fecha_fin) {
         
         $sql = "UPDATE promociones
                 SET titulo=?, descripcion=?, fecha_inicio=?, fecha_fin=?
@@ -112,7 +112,7 @@ class Promocion {
         ]);
     }
 
-    public function delete($id) {
+    public function borrarPromocion($id) {
 
         $stmt = $this->db->prepare(
             "DELETE FROM promociones WHERE id_promocion=?"

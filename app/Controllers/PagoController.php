@@ -34,7 +34,7 @@ class PagoController {
             $this->json(["status" => "error", "msg" => "Reserva no válida"], 400);
         }
 
-        $reserva = $this->reservaModel->getById($id_reserva);
+        $reserva = $this->reservaModel->getByIdReserva($id_reserva);
 
         if (!$reserva) {
             $this->json(["status" => "error", "msg" => "Reserva no encontrada"], 404);
@@ -44,7 +44,7 @@ class PagoController {
             $this->json(["status" => "error", "msg" => "La reserva ya fue pagada"], 400);
         }
 
-        $evento = $this->eventoModel->getById($reserva['id_evento']);
+        $evento = $this->eventoModel->getByIdEvento($reserva['id_evento']);
 
         if ($evento['mesas_disponibles'] <= 0) {
             $this->json(["status" => "error", "msg" => "Ya no hay mesas disponibles"], 400);
@@ -58,7 +58,7 @@ class PagoController {
             $this->json(["status" => "error", "msg" => "Error creando orden PayPal"], 500);
         }
 
-        $this->pagoModel->create(
+        $this->pagoModel->crearPago(
             $id_reserva,
             $orden['id'],
             $monto,
@@ -82,7 +82,7 @@ class PagoController {
             $this->json(["status" => "error", "msg" => "orderID requerido"], 400);
         }
 
-        $pago = $this->pagoModel->getByOrderId($paypal_order_id);
+        $pago = $this->pagoModel->getByOrderIdPago($paypal_order_id);
 
         if (!$pago) {
             $this->json(["status" => "error", "msg" => "Pago no encontrado"], 404);
@@ -94,21 +94,21 @@ class PagoController {
 
         $resultado = $this->paypal->captureOrder($paypal_order_id);
 
-        if (!isset($resultado['status']) && $resultado['status'] === "COMPLETED") {
+        if (!isset($resultado['status']) || $resultado['status'] !== "COMPLETED") {
             $this->json(["status" => "error", "respuesta" => $resultado], 500);
         }
         
         $paypal_transaction_id = 
         $resultado['purchase_units'][0]['payments']['captures'][0]['id'];
 
-        $this->pagoModel->update(
+        $this->pagoModel->actualizarPago(
             $paypal_order_id,
             $paypal_transaction_id,
             "COMPLETED",
             json_encode($resultado)
         );
 
-        $reserva = $this->reservaModel->getById($id_reserva);
+        $reserva = $this->reservaModel->getByIdReserva($id_reserva);
 
         if ($reserva && $reserva['estado'] !== 'confirmada') {
             $this->reservaModel->actualizarEstado($id_reserva, "confirmada");

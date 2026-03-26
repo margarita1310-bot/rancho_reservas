@@ -97,7 +97,7 @@ section {
 }
 
 .btn-login {
-    border-color: var(--color-dorado);
+    background: var(--color-secundario);
     color: var(--color-blanco);
     padding: 8px 18px;
     border-radius: 6px;
@@ -263,13 +263,28 @@ section {
     max-width: 700px;
     max-height: 90vh;
     border-radius: 8px;
-    padding: 20px;
+    padding: 1rem;
     overflow-y: auto;
     box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
 .modal-title {
+    font-family: "Playfair Display", serif;
     font-weight: 600;
     letter-spacing: 0;
-    color: var(--color-secundario);
+    color: var(--color-primario);
+}
+
+.form-label {
+    font-weight: 600;
+}
+
+.form-control {
+    border-radius: 1rem;
+    border-color: var(--color-primario);
+}
+
+.form-control:focus {
+    border-color: var(--color-secundario);
+    box-shadow: 0 0 0 0.2rem rgba(133, 69, 7, 0.25);
 }

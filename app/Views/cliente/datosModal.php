@@ -6,10 +6,10 @@
 
             <div class="modal-header p-0 align-items-center">
 
-                <h3 class="modal-title">Completa tus datos</h3>
+                <h4 class="modal-title">Completa tus datos</h4>
 
                 <button type="button" class="btn p-0 text-black ms-auto" data-bs-dismiss="modal">
-                    <i class="bi bi-x-lg fs-3"></i>
+                    <i class="bi bi-x-lg fs-4"></i>
                 </button>
 
             </div>
@@ -36,10 +36,6 @@
             
                 </div>
         
-            </div>
-
-            <div id="loginExitos" class="d-none">
-                <p>Login exitoso</p>
             </div>
         </div>
     </div>

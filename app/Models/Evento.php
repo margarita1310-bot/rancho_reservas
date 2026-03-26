@@ -10,7 +10,7 @@ class Evento {
         $this->db = Conexion::conectar();
     }
 
-    public function getAll() {
+    public function getAllEventos() {
 
         $sql = "SELECT id_evento, nombre, descripcion, fecha, hora, hora_fin, mesas_disponibles, precio_mesa,
                 (SELECT COUNT(*)
@@ -36,7 +36,7 @@ class Evento {
         return $stmt->fetchAll();
     }
     
-    public function getById($id) {
+    public function getByIdEvento($id) {
 
         $stmt = $this->db->prepare(
             "SELECT * FROM eventos WHERE id_evento = ? LIMIT 1"
@@ -155,7 +155,7 @@ class Evento {
         return $stmt->fetchAll();
     }
 
-    public function create($nombre, $descripcion, $fecha, $hora, $hora_fin, $mesas_disponibles, $precio_mesa) {
+    public function crearEvento($nombre, $descripcion, $fecha, $hora, $hora_fin, $mesas_disponibles, $precio_mesa) {
 
         $sql = "INSERT INTO eventos
                 (nombre, descripcion, fecha, hora, hora_fin, mesas_disponibles, precio_mesa)
@@ -178,7 +178,7 @@ class Evento {
     }
 
 
-    public function update($id, $nombre, $descripcion, $fecha, $hora, $hora_fin, $mesas_disponibles, $precio_mesa) {
+    public function actualizarEvento($id, $nombre, $descripcion, $fecha, $hora, $hora_fin, $mesas_disponibles, $precio_mesa) {
 
         $sql = "UPDATE eventos
                 SET nombre=?, descripcion=?, fecha=?, hora=?, hora_fin=?, mesas_disponibles=?, precio_mesa=?
@@ -198,7 +198,7 @@ class Evento {
         ]);
     }
 
-    public function delete($id) {
+    public function borrarEvento($id) {
 
         $stmt = $this->db->prepare(
             "DELETE FROM eventos WHERE id_evento=?"
@@ -231,4 +231,6 @@ class Evento {
 
         return $stmt->rowCount() > 0;
     }
+
+
 }

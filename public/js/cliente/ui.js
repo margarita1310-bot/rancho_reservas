@@ -50,7 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
             google.accounts.id.renderButton(googleBtn, {
                     theme: "outline",
                     size: "large",
-                    text: "continue_with"
+                    text: "continue_with",
+                    width: "100%"
             });
         }
     }

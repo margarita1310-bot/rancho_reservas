@@ -52,6 +52,13 @@ class ClienteController {
         }
 
         $id_cliente = $_SESSION['cliente_id'];
-        return $this->clienteModel->getReservas($id_cliente);
+        $reservas = $this->clienteModel->getReservasCliente($id_cliente);
+
+        foreach ($reservas as &$r) {
+            $r['puede_pagar'] = (in_array($r['estado_pago'], ['CREATED', 'FAILED']) || is_null($r['estado_pago']))
+            && $r['estado_reserva'] !== 'confirmada';
+        }
+
+        return $reservas;
     }
 }

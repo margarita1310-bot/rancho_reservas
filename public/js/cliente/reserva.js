@@ -91,6 +91,15 @@ function cargarConfirmacion() {
 let reservaID = null;
 
 function crearReserva() {
+    if (reservaID) {
+        const paypalDiv = document.getElementById('paypal-button');
+        paypalDiv.dataset.reserva = reservaID;
+
+        goToStep(3);
+        renderPayPal();
+        return;
+    }
+
     const formData =  new FormData();
 
     const id_cliente = sessionStorage.getItem('id_cliente');
@@ -116,8 +125,13 @@ function crearReserva() {
     .then(r => {
         if(r.status === "ok") {
             reservaID = r.id_reserva;
-            iniciarPayPal();
+
+            const paypalDiv = document.getElementById('paypal-button');
+            paypalDiv.dataset.reserva = reservaID;
+
             goToStep(3);
+
+            renderPayPal();
         } else {
             alert("Error al crear la reserva")
         }

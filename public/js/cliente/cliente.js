@@ -37,6 +37,13 @@ function guardarDatosCliente() {
     .catch(() => alert('Error en la petición'));
 }
 
+function habilitarDatosCliente() {
+    document.getElementById('clienteNombre').disabled = false;
+    document.getElementById('clienteTelefono').disabled = false;
+    document.getElementById('btn-actualizar').classList.remove('d-none');
+    document.getElementById('btn-habilitar').classList.add('d-none');
+}
+
 function actualizarDatosCliente() {
     const nombre = document.getElementById('clienteNombre').value.trim();
     const telefono = document.getElementById('clienteTelefono').value.trim();

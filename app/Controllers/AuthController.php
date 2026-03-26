@@ -53,11 +53,11 @@ class AuthController {
         $email = $user->email;
         $nombre = $user->name ?? null;
 
-        $cliente = $this->model->buscarPorEmail($email);
+        $cliente = $this->model->getByEmailCliente($email);
 
         if (!$cliente) {
-            $id = $this->model->create($nombre, $email);
-            $cliente = $this->model->buscarPorEmail($email);
+            $id = $this->model->crearCliente($nombre, $email);
+            $cliente = $this->model->getByEmailCliente($email);
         } else {
             $id = $cliente['id_cliente'];
         }
@@ -161,10 +161,10 @@ class AuthController {
         
         $email = $_SESSION['email_verificacion'];
 
-        $cliente = $this->model->buscarPorEmail($email);
+        $cliente = $this->model->getByEmailCliente($email);
         
         if (!$cliente) {
-            $id = $this->model->create(null, $email);
+            $id = $this->model->crearCliente(null, $email);
 
             $cliente = [
                 'id_cliente' => $id,
@@ -205,7 +205,7 @@ class AuthController {
             $this->json(['success' => false]);
         }
     
-        $this->model->actualizarDatos(
+        $this->model->actualizarCliente(
             $_SESSION['cliente_id'],
             $nombre,
             $telefono

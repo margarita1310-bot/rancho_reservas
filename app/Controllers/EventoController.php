@@ -30,7 +30,7 @@ class EventoController {
     }
 
     public function index() {
-        $evento = $this->model->getAll();
+        $evento = $this->model->getAllEventos();
         
         foreach ($evento as &$e) {
             $e['imagen'] = $this->obtenerImagen($e['id_evento']);
@@ -68,7 +68,7 @@ class EventoController {
             $this->json(['status' => 'error', 'msg' => 'Imagen requerida'], 400);
         }
 
-        $id = $this->model->create($nombre, $descripcion, $fecha, $hora, $hora_fin, $mesas_disponibles, $precio_mesa);
+        $id = $this->model->crearEvento($nombre, $descripcion, $fecha, $hora, $hora_fin, $mesas_disponibles, $precio_mesa);
         
         if (!$id) {
             $this->json(['status' => 'error'], 500);
@@ -90,7 +90,7 @@ class EventoController {
             $this->json(['status' => 'error'], 400);
         }
         
-        $evento = $this->model->getById($id);
+        $evento = $this->model->getByIdEvento($id);
 
         if (!$evento) {
             $this->json(['status' => 'error'], 404);
@@ -130,7 +130,7 @@ class EventoController {
             }
         }
 
-        $ok = $this->model->update(
+        $ok = $this->model->actualizarEvento(
             $id,
             $_POST['nombre'],
             $_POST['descripcion'],
@@ -158,7 +158,7 @@ class EventoController {
             $this->json(['status' => 'error', 'msg' => 'ID requerido'], 400);
         }
 
-        if (!$this->model->delete($id)) {
+        if (!$this->model->borrarEvento($id)) {
             $this->json(['status' => 'error'], 500);
         }
 

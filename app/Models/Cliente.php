@@ -10,7 +10,7 @@ class Cliente {
         $this->db = Conexion::conectar();
     }
 
-    public function buscarPorEmail($email) {
+    public function getByEmailCliente($email) {
 
         $stmt = $this->db->prepare(
             "SELECT * FROM clientes WHERE email = ? LIMIT 1"
@@ -21,7 +21,7 @@ class Cliente {
         return $stmt->fetch();
     }
 
-    public function create($nombre, $email) {
+    public function crearCliente($nombre, $email) {
 
         $stmt = $this->db->prepare(
             "INSERT INTO clientes (nombre, email, created_at)
@@ -33,7 +33,7 @@ class Cliente {
         return $this->db->lastInsertId();
     }
 
-    public function actualizarDatos($id, $nombre, $telefono) {
+    public function actualizarCliente($id, $nombre, $telefono) {
 
         $stmt = $this->db->prepare(
             "UPDATE clientes
@@ -44,21 +44,31 @@ class Cliente {
         return $stmt->execute([$nombre, $telefono, $id]);
     }
 
-    public function getReservas($id) {
+    public function getReservasCliente($id) {
 
         $sql = "SELECT
-                    r.*,
+                    r.id_reserva,
                     e.nombre AS evento,
-                    e.fecha,
-                    e.hora, e.hora_fin,
+                    e.fecha AS fecha_evento,
+                    e.hora,
+                    e.hora_fin,
+                    r.mesas_reservadas,
+                    r.personas,
+                    r.total,
+                    r.estado AS estado_reserva,
+                    p.id_pago,
                     p.monto,
                     p.moneda,
-                    p.estado AS estado_pago
+                    p.estado AS estado_pago,
+                    p.fecha_creacion AS fecha_pago
                 FROM reservas r
                 JOIN eventos e ON r.id_evento = e.id_evento
                 LEFT JOIN pagos p ON r.id_reserva = p.id_reserva
+                    AND p.id_pago = (SELECT MAX(id_pago)
+                                    FROM pagos
+                                    WHERE id_reserva = r.id_reserva)
                 WHERE r.id_cliente = ?
-                ORDER BY e.fecha ASC";
+                ORDER BY e.fecha DESC";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$id]);

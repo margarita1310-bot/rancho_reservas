@@ -8,7 +8,7 @@ class Admin {
         return Conexion::conectar();
     }
 
-    public static function findByEmail($email) {
+    public static function getByEmailAdmin($email) {
 
         $stmt = self::db()->prepare(
             "SELECT * FROM administrador WHERE email = ? LIMIT 1"
@@ -19,9 +19,9 @@ class Admin {
         return $stmt->fetch();
     }
     
-    public static function verificar($email, $password) {
+    public static function verificarAdmin($email, $password) {
 
-        $admin = self::findByEmail($email);
+        $admin = self::getByEmailAdmin($email);
 
         if (!$admin) {
             return false;

@@ -31,7 +31,7 @@
     <?php include __DIR__ . '/perfilModal.php'; ?>
     <?php include __DIR__ . '/reservasClienteModal.php'; ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://www.paypal.com/sdk/js?client-id=<?php echo $_ENV['PAYPAL_CLIENT_ID']; ?>&currency=<?php echo $_ENV['PAYPAL_CURRENCY']; ?>"></script>
     <script>const GOOGLE_CLIENT_ID = "<?php echo $_ENV['GOOGLE_CLIENT_ID']; ?>";</script>

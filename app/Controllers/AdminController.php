@@ -46,7 +46,7 @@ class AdminController {
     }
     
     public function promocion() {
-        $promociones = $this->promocionModel->getAll();
+        $promociones = $this->promocionModel->getAllPromociones();
 
         $vista =  __DIR__ . '/../Views/admin/promocion.php';
         $this->render($vista, [
@@ -55,7 +55,7 @@ class AdminController {
     }
     
     public function evento() {
-        $eventos = $this->eventoModel->getAll();
+        $eventos = $this->eventoModel->getAllEventos();
 
         $vista = __DIR__ . '/../Views/admin/evento.php';
         $this->render($vista, [
@@ -64,7 +64,7 @@ class AdminController {
     }
 
     public function reserva() {
-        $reservas = $this->reservaModel->getAll();
+        $reservas = $this->reservaModel->getAllReservas();
 
         $vista = __DIR__ . '/../Views/admin/reserva.php';
         $this->render($vista, [

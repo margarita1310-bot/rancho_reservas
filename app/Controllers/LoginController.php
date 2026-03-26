@@ -24,7 +24,7 @@ class LoginController {
             return;
         }
 
-        $admin = Admin::verificar($email, $password);
+        $admin = Admin::verificarAdmin($email, $password);
 
         if ($admin) {
             $_SESSION['admin'] = $admin;

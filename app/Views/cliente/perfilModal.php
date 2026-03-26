@@ -6,9 +6,12 @@
 
             <div class="modal-header p-0">
 
-                <h3 class="modal-title">Mi Perfil</h3>
+                <h4 class="modal-title">
+                    <i class="bi bi-person-circle"></i>
+                    Mi Perfil
+                </h4>
                 <button type="button" class="btn p-0 text-black ms-auto" data-bs-dismiss="modal">
-                    <i class="bi bi-x-lg fs-3"></i>
+                    <i class="bi bi-x-lg fs-4"></i>
                 </button>
 
             </div>
@@ -22,19 +25,19 @@
 
                 <div class="mb-3">
                     <label class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="clienteNombre">
+                    <input type="text" class="form-control" id="clienteNombre" disabled>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Teléfono</label>
-                    <input type="text" class="form-control" id="clienteTelefono">
+                    <input type="text" class="form-control" id="clienteTelefono" disabled>
                 </div>
             
             </div>
 
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button class="btn btn-success" onclick="actualizarDatosCliente()">Guardar</button>
+            <div class="modal-footer p-0">
+                <button id="btn-habilitar" class="btn btn-primary" onclick="habilitarDatosCliente()">Editar</button>
+                <button id="btn-actualizar" class="btn btn-success d-none" onclick="actualizarDatosCliente()">Guardar</button>
             </div>
 
         </div>

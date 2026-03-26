@@ -10,7 +10,7 @@ class Reserva {
         $this->db = Conexion::conectar();
     }
 
-    public function getAll() {
+    public function getAllReservas() {
 
         $sql = "SELECT 
                     r.id_reserva,
@@ -37,30 +37,11 @@ class Reserva {
         return $stmt->fetchAll();
     }
 
-    public function getById($id) {
-    
-        $sql = "SELECT 
-                    r.*,
-                    c.nombre AS cliente,
-                    c.email,
-                    c.telefono,
-                    e.nombre AS evento,
-                    e.fecha,
-                    e.hora,
-                    e.hora_fin,
-                    p.paypal_order_id,
-                    p.paypal_transaction_id,
-                    p.monto,
-                    p.moneda,
-                    p.estado AS estado_pago
-                FROM reservas r
-                JOIN clientes c ON r.id_cliente = c.id_cliente
-                JOIN eventos e ON r.id_evento = e.id_evento
-                LEFT JOIN pagos p ON r.id_reserva = p.id_reserva
-                WHERE r.id_reserva = ?
-                LIMIT 1";
-    
-        $stmt = $this->db->prepare($sql);
+    public function getByIdReserva($id) {
+
+        $stmt = $this->db->prepare(
+            "SELECT * FROM reservas WHERE id_reserva = ? LIMIT 1"
+        );
     
         $stmt->execute([$id]);
     
@@ -96,7 +77,40 @@ class Reserva {
         return $stmt->fetch();
     }
 
-    public function create($id_cliente, $id_evento, $mesas_reservadas, $personas, $total, $estado) {
+    public function getReservasSinPago() {
+
+        $sql = "SELECT *
+                FROM reservas r
+                WHERE NOT EXISTS (
+                    SELECT 1
+                    FROM pagos p
+                    WHERE p.id_reserva = r.id_reserva
+                    AND p.estado = 'COMPLETED'
+                )";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    public function getReservasPendientes() {
+
+        $sql = "SELECT *
+                FROM reservas
+                WHERE id_reserva NOT IN (
+                    SELECT id_reserva
+                    FROM pagos
+                    WHERE estado = 'COMPLETED'
+                )";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    public function crearReserva($id_cliente, $id_evento, $mesas_reservadas, $personas, $total, $estado) {
 
         $sql = "INSERT INTO reservas
                 (id_cliente, id_evento, mesas_reservadas, personas, total, estado, fecha_reserva)
