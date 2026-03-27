@@ -21,3 +21,13 @@ function formatearFecha($fecha) {
 
     return "$dia de $mes de $anio";
 }
+
+function formatearFechaCompleta($fecha) {
+    if (!$fecha) return '';
+
+    try {
+        return (new DateTime($fecha))->format('d/m/y');
+    } catch (Exception $e) {
+        return '';
+    }
+}

@@ -10,6 +10,7 @@ class LoginController {
     }
 
     public function autenticar() {
+        $adminModel = new Admin();
 
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -24,7 +25,7 @@ class LoginController {
             return;
         }
 
-        $admin = Admin::verificarAdmin($email, $password);
+        $admin = $adminModel->verificarAdmin($email, $password);
 
         if ($admin) {
             $_SESSION['admin'] = $admin;

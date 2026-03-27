@@ -29,9 +29,8 @@ class ReservaController {
         $mesas_reservadas = $_POST['mesas_reservadas'] ?? 0;
         $personas = $_POST['personas'] ?? 0;
         $total = $_POST['total'] ?? 0;
-        $estado = $_POST['estado'] ?? 'pendiente';
 
-        if (!$id_cliente || !$id_evento || !$mesas_reservadas || !$personas) {
+        if (!$id_cliente || !$id_evento || $mesas_reservadas <= 0 || $personas <= 0) {
             $this->json(['status' => 'error', 'msg' => 'Faltan campos requeridos'], 400);
         }
 
@@ -40,8 +39,7 @@ class ReservaController {
             $id_evento,
             $mesas_reservadas,
             $personas,
-            $total,
-            $estado
+            $total
         );
 
         if (!$id) {
@@ -69,5 +67,62 @@ class ReservaController {
         }
 
         $this->json($reserva);
+    }
+
+    public function cancelar() {
+
+        $id_reserva = $_POST['id_reserva'] ?? null;
+
+        if (!$id_reserva) {
+            $this->json([
+                'status' => 'error',
+                'msg' => 'Reserva inválida'
+            ]);
+        }
+
+        $reserva = $this->model->getByIdReserva($id_reserva);
+
+        if (!$reserva){
+            $this->json([
+                'status' => 'error',
+                'msg' => 'No encontrada'
+            ]);
+        }
+
+        $ok = $this->model->cancelarReserva($id_reserva);
+
+        if (!$ok) {
+            $this->json([
+                'status' => 'error',
+                'msg' => 'Error al cancelar'
+            ]);
+        }
+
+        $this->json([
+            'status' => 'ok'
+        ]);
+    }
+
+    public function comprobante() {
+
+        $id_reserva = $_GET['id_reserva'] ?? null;
+
+        if (!$id_reserva) {
+            $this->json([
+                'status' => 'error',
+                'msg' => 'Reserva inválida'
+            ]);
+        }
+
+        $reserva = $this->model->getDetallesReserva($id_reserva);
+
+        if (!$reserva){
+            $this->json([
+                'status' => 'error',
+                'msg' => 'No encontrada'
+            ]);
+        }
+
+        require_once __DIR__ . '/../Views/cliente/comprobante.php';
     }
 }

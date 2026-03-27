@@ -67,7 +67,7 @@ class Promocion {
     }
 
     //Creacion de una promocion
-    public function crearPrommocion($titulo, $descripcion, $fecha_inicio, $fecha_fin) {
+    public function crearPromocion($titulo, $descripcion, $fecha_inicio, $fecha_fin) {
         $sql = "INSERT INTO promociones
                 (titulo, descripcion, fecha_inicio, fecha_fin)
                 VALUES (?, ?, ?, ?)";

@@ -1,3 +1,4 @@
+//Función para validar los datos al iniciar sesión con Google
 function handleCredentialResponse(response) {
     const user = parseJwt(response.credential);
     console.log(user);
@@ -17,16 +18,31 @@ function handleCredentialResponse(response) {
     .then(res => res.json())
     .then(data => {
         if(data.success) {
-
-            sessionStorage.setItem("id_cliente", data.cliente.id_cliente);
-
-            loginExitoso(data.cliente);
+            if (data.cliente) {
+                sessionStorage.setItem('id_cliente', data.cliente.id_cliente ?? '');
+                sessionStorage.setItem('nombre', data.cliente.nombre ?? '');
+                sessionStorage.setItem('telefono', data.cliente.telefono ?? '');
+            }
+            if (data.nuevo) {
+                alert("Asegúrate de ingresar los siguientes datos correctamente.");
+                abrirDatosModal(data.cliente);
+            } else {
+                alert("Inicio de sesión exitoso.");
+                loginExitoso(data.cliente);
+            }
         }
-    });
+    })
+    .catch(() => alert("Error de Google."));
 }
 
+//Función para enviar el código al iniciar sesión por medio de correo
 function enviarCodigo() {
     const email = document.getElementById('emailLogin').value;
+
+    if (!email) {
+        alert("Ingresa un correo electronico valido.");
+        return;
+    }
 
     fetch('index.php?action=enviarCodigo', {
         method: 'POST',
@@ -36,54 +52,62 @@ function enviarCodigo() {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
+            document.getElementById('btnEnviarCodigo').classList.add('d-none');
             document.getElementById('bloqueCodigo').classList.remove('d-none');
             document.getElementById('btnValidarCodigo').classList.remove('d-none');
         } else {
-            alert('Error al enviar el código');
+            alert("Error al enviar el código.");
         }
     })
-    .catch(err => {
-        console.error(err);
-        alert('Error de conexión');
-    });
+    .catch(() => alert("Error de conexión."));
 }
 
+//Función para validar el código al iniciar sesión por medio de correo
 function validarCodigo() {
     const codigo = document.getElementById('codigo').value.trim();
     const email = document.getElementById('emailLogin').value.trim();
 
+    if(!email) {
+        alert("Ingresa un correo electronico valido.");
+        return;
+    }
+
     if (!codigo) {
-        alert('Ingresa el código');
+        alert("Ingresa el código.");
         return;
     }
 
     fetch('index.php?action=validarCodigo', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: `codigo=${encodeURIComponent(codigo)}&email=${encodeURIComponent(email)}`
+        body: `codigo=${encodeURIComponent(codigo)}`
     })
     .then(res => res.json())
     .then(data => {
         if (data.success) {
             sessionStorage.setItem('email', email);
-            
+
             if (data.cliente) {
                 sessionStorage.setItem('id_cliente', data.cliente.id_cliente);
                 sessionStorage.setItem('nombre', data.cliente.nombre ?? '');
                 sessionStorage.setItem('telefono', data.cliente.telefono ?? '');
             }
+            if (data.nuevo) {
+                alert("Asegúrate de ingresar los siguientes datos correctamente.");
+                abrirDatosModal(data.cliente);
+            } else {
+                alert("Inicio de sesión exitoso.");
+                loginExitoso(data.cliente);
+            }
 
-            loginExitoso(data.cliente);
         } else {
-            alert(data.message ?? 'Código incorrecto');
+            alert(data.message ?? "Código incorrecto.");
         }
     })
-    .catch(err => {
-        console.error(err);
-        alert('Error de conexión');
-    });
+    .catch(() => alert("Error de conexión."));
 }
 
+//Función al iniciar sesión correctamente
 function loginExitoso(cliente) {
     sessionStorage.setItem('id_cliente', cliente.id_cliente);
     sessionStorage.setItem('nombre', cliente?.nombre ?? '');
@@ -93,26 +117,19 @@ function loginExitoso(cliente) {
     window.clienteLogueado = true;
     
     const loginModal = document.getElementById('loginModal');
-
     const modal = bootstrap.Modal.getInstance(loginModal) || new bootstrap.Modal(loginModal);
     modal.hide();
 
     actualizarNavbar();
-
-    if (!cliente.nombre?.trim() || !cliente.telefono?.trim()) {
-
-        const datosModal = document.getElementById('datosModal');
-
-        const modal = bootstrap.Modal.getInstance(datosModal) || new bootstrap.Modal(datosModal);
-        modal.show();
-    }
 }
 
+//Función al cerrar sesión en la pagina
 function logout() {
     sessionStorage.clear();
     window.clienteLogueado = false;
     actualizarNavbar();
     location.reload();
+    alert("Sesión cerrada exitosamente.")
 }
 
 function parseJwt(token) {

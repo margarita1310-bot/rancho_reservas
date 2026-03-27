@@ -46,6 +46,8 @@
                                  <span>
                                     <i class="bi bi-clock me-2"></i>
                                     <?= formatearHora($ev['hora']) ?>
+                                    -
+                                    <?= formatearHora($ev['hora_fin']) ?>
                                  </span>
 
                                  <span class="evento-precio">
@@ -60,6 +62,8 @@
                                  data-id="<?= $ev['id_evento'] ?>"
                                  data-nombre="<?= $ev['nombre'] ?>"
                                  data-fecha="<?= $ev['fecha'] ?>"
+                                 data-hora="<?= $ev['hora'] ?>"
+                                 data-hora_fin="<?= $ev['hora_fin'] ?>"
                                  data-precio="<?= $ev['precio_mesa'] ?>"
                                  onclick="reservarEvento(this)">
                                  Reservar Mesa

@@ -138,29 +138,34 @@
                                         <div class="btn-group btn-group-sm">
 
                                             <?php if ($bloqueado): ?>
-
                                                 <span title="No se puede editar, tiene reservas">
                                                     <button class="btn btn-outline-primary btn-update" disabled>
                                                         <i class="bi bi-pencil"></i>
                                                     </button>
                                                 </span>
-
                                             <?php else: ?>
-                                                
                                                 <button class="btn btn-outline-primary btn-update"
                                                         data-id="<?= $ev['id_evento'] ?>"
                                                         data-controller="Evento"
                                                         title="Editar evento">
                                                     <i class="bi bi-pencil"></i>
                                                 </button>
-
                                             <?php endif; ?>
 
-                                            <button class="btn btn-outline-danger btn-delete"
-                                                    data-id="<?= $ev['id_evento'] ?>"
-                                                    data-controller="Evento">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
+                                            <?php if ($bloqueado): ?>
+                                                <span title="No se puede borrar, tiene reservas">
+                                                    <button class="btn btn-outline-danger btn-delete" disabled>
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </span>
+                                            <?php else: ?>
+                                                <button class="btn btn-outline-danger btn-delete"
+                                                        data-id="<?= $ev['id_evento'] ?>"
+                                                        data-controller="Evento"
+                                                        title="Borrar evento">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            <?php endif; ?>
 
                                         </div>
 

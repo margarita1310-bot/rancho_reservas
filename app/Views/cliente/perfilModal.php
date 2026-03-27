@@ -4,12 +4,9 @@
 
         <div class="modal-content">
 
-            <div class="modal-header p-0">
+            <div class="modal-header p-0 align-items-center">
 
-                <h4 class="modal-title">
-                    <i class="bi bi-person-circle"></i>
-                    Mi Perfil
-                </h4>
+                <h4 class="modal-title">Mi Perfil</h4>
                 <button type="button" class="btn p-0 text-black ms-auto" data-bs-dismiss="modal">
                     <i class="bi bi-x-lg fs-4"></i>
                 </button>
@@ -33,13 +30,9 @@
                     <input type="text" class="form-control" id="clienteTelefono" disabled>
                 </div>
             
+                <button id="btn-habilitar" class="btn btn-primary w-100" onclick="habilitarDatosCliente()">Editar</button>
+                <button id="btn-actualizar" class="btn btn-success d-none w-100" onclick="actualizarDatosCliente()">Guardar</button>
             </div>
-
-            <div class="modal-footer p-0">
-                <button id="btn-habilitar" class="btn btn-primary" onclick="habilitarDatosCliente()">Editar</button>
-                <button id="btn-actualizar" class="btn btn-success d-none" onclick="actualizarDatosCliente()">Guardar</button>
-            </div>
-
         </div>
     </div>
 </div>

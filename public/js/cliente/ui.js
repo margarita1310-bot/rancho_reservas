@@ -1,3 +1,4 @@
+//Función para actualizar el navBar al iniciar sesión
 function actualizarNavbar() {
     const id =  sessionStorage.getItem('id_cliente');
     const nombre = sessionStorage.getItem('nombre');
@@ -28,11 +29,11 @@ function actualizarNavbar() {
     }
 }
 
+//Función para abrir el modal al iniciae sesión loginModal
 function abrirLogin() {
     if (window.clienteLogueado) return;
 
     const loginModal = document.getElementById('loginModal');
-
     const modal = bootstrap.Modal.getInstance(loginModal) || new bootstrap.Modal(loginModal);
     modal.show();
 }

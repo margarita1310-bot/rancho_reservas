@@ -30,12 +30,10 @@
                                 <div class="d-flex justify-content-between align-items-start mb-2">
 
                                     <div>
-
-                                        <h4 class="mb-1 fw-blod"><?= $rc['evento'] ?></h4>
+                                        <p class="mb-1 fw-bold"><?= $rc['evento'] ?></p>
                                         <small class="text-muted">
                                             <?= formatearFecha($rc['fecha_evento']) ?>
                                         </small>
-
                                     </div>
 
                                     <div class="d-flex flex-column align-items-end gap-1">
@@ -44,6 +42,9 @@
                                             <span class = "badge bg-success">Pagado</span>
                                         <?php elseif ($rc['estado_reserva'] === 'pendiente'): ?>
                                             <span class = "badge bg-warning">Pendiente</span>
+                                            <small class="text-danger fw-semibold">
+                                                Tienes 30 minutos para completar tu pago.
+                                            </small>
                                         <?php elseif ($rc['estado_reserva'] === 'cancelada'): ?>
                                             <span class = "badge bg-danger">Cancelada</span>
                                         <?php endif; ?>
@@ -54,17 +55,7 @@
                         
                                 <hr class="my-2">
 
-                                <div class="mb-2">
-
-                                    <span class="badge bg-primary">
-                                        <?= formatearhora($rc['hora']) ?>
-                                        -
-                                        <?= formatearhora($rc['hora_fin']) ?>
-                                    </span>
-
-                                </div>
-
-                                <div class="row text-center mb-2">
+                                <div class="row text-center mb-3">
 
                                     <div class="col">
 
@@ -91,11 +82,19 @@
 
                                 <div class="d-flex gap-2">
 
-                                    <?php if ($rc['puede_pagar']): ?>
-                                        <button class="btn btn-sm btn-success" onclick="pagarReserva(<?= $rc['id_reserva'] ?>)">
-                                            <?= $rc['estado_pago'] === 'FAILED' ? 'Reintentar pago' : 'Pagar' ?>
-                                        </button>
-                                    <?php endif; ?>
+                                    <div class="d-flex align-items-center w-100">
+                                        <?php if ($rc['puede_pagar']): ?>
+                                            <button type="button" class="btn btn-sm btn-success" onclick="pagarReserva(<?= $rc['id_reserva'] ?>)">
+                                                <?= $rc['estado_pago'] === 'FAILED' ? 'Reintentar pago' : 'Pagar' ?>
+                                            </button>
+                                        <?php endif; ?>
+                                        <?php if ($rc['puede_cancelar']): ?>                                        
+                                            <button type="button" class="btn btn-sm btn-danger ms-auto" onclick="cancelarReserva(<?= $rc['id_reserva'] ?>)">Cancelar</button>
+                                        <?php endif; ?>
+                                        <?php if ($rc['estado_pago'] === 'COMPLETED'): ?>
+                                            <button type="button" class="btn btn-sm btn-primary ms-auto" onclick="verComprobante(<?= $rc['id_reserva'] ?>)">Ver comprobante</button>
+                                        <?php endif; ?>
+                                    </div>
 
                                 </div>
 
@@ -109,7 +108,7 @@
 
                     <div class="card mb-4 shadow-sm border-0 text-center p-4">
                         <div class="card-body">
-                            <h5 class="card-title text-muted">Sin reservas</h5>
+                            <h4 class="card-title text-muted">Sin reservas</h4>
             
                             <p class="card-text text-secondary">
                                 Aún no has realizado ninguna reserva.

@@ -85,9 +85,6 @@ section {
 .btn-reservar {
     background: var(--color-dorado);
     color: var(--color-primario);
-    border: none;
-    padding: 8px 18px;
-    border-radius: 6px;
     transition: 0.3s;
 }
 
@@ -99,8 +96,6 @@ section {
 .btn-login {
     background: var(--color-secundario);
     color: var(--color-blanco);
-    padding: 8px 18px;
-    border-radius: 6px;
     transition: 0.3s;
 }
 
@@ -257,7 +252,7 @@ section {
 }
 
 .modal-content {
-    background: var(--color-fondo);
+    background: var(--color-blanco);
     color: var(--color-negro);
     width: 100%;
     max-width: 700px;
@@ -287,4 +282,48 @@ section {
 .form-control:focus {
     border-color: var(--color-secundario);
     box-shadow: 0 0 0 0.2rem rgba(133, 69, 7, 0.25);
+}
+
+.step-indicator {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    background: transparent;
+    border: 2px solid var(--color-primario);
+    color: var(--color-negro);
+}
+
+.step-indicator.active + small {
+    color: var(--color-secundario) !important;
+}
+
+.step-indicator.active {
+    background-color: var(--color-secundario);
+    color: var(--color-blanco);
+}
+
+.step-indicator.completed + small {
+    color: var(--color-primario) !important;
+}
+
+.step-indicator.completed {
+    background-color: var(--color-primario);
+    color: var(--color-blanco);
+}
+
+#reservaModal p {
+    font-family: "Playfair Display", serif;
+    color: var(--color-secundario);
+}
+
+.body-datos {
+    background-color: var(--color-fondo);
+}
+
+#reservasClienteModal .card {
+    background: var(--color-fondo);
 }

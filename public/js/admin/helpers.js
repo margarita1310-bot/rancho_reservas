@@ -1,5 +1,4 @@
 function configurarFechasPromocion() {
-
     const hoy = new Date().toISOString().split('T')[0];
 
     const fechaInicio = document.getElementById('fecha_inicio');
@@ -22,7 +21,6 @@ function configurarFechasPromocion() {
 }
 
 function configurarFechaEvento() {
-
     const hoy = new Date().toISOString().split('T')[0];
 
     const fecha = document.getElementById('fecha');
@@ -39,3 +37,19 @@ function configurarFechaEvento() {
         });
     }
 }
+
+document.getElementById('filtro-fecha-reserva').addEventListener('change', function () {
+    const fechaSeleccionada = this.value;
+    const filas = document.querySelectorAll('tbody tr');
+
+    filas.forEach(fila => {
+        const fecha = fila.getAttribute('data-fecha');
+
+        if (!fechaSeleccionada || fecha === fechaSeleccionada) {
+            fila.style.display = '';
+        } else {
+            fila.style.display = 'none';
+        }
+    });
+});
+

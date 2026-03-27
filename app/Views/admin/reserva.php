@@ -78,19 +78,20 @@
                     <thead class="table-light">
                         <tr>
                             <th>Reserva</th>
+                            <th>Fecha</th>
                             <th>Cliente</th>
                             <th>Evento</th>
                             <th>Personas</th>
                             <th>Total</th>
                             <th>Estado</th>
                             <th>Pago</th>
-                            <th class="text-center">Acciones</th>
                         </tr>
                     </thead>
 
                     <tbody>
 
                         <?php require_once __DIR__ . '/../../helpers/format.php' ?>
+                        <?php require_once __DIR__ . '/../../helpers/estado.php' ?>
                         
                         <?php $reservas = $reservas ?? []; ?>
                         
@@ -98,14 +99,19 @@
 
                             <?php foreach ($reservas as $re): ?>
 
-                                <tr data-estado="<?= strtolower($re['estado']) ?>">
+                                <tr data-estado="<?= strtolower($re['estado']) ?>"
+                                    data-fecha="<?= date('Y-m-d', strtotime($re['fecha_reserva'])) ?>">
 
                                     <td>
                                         <?= htmlspecialchars($re['id_reserva']) ?>
                                     </td>
 
                                     <td>
-                                        <div class="fw-semiblod">
+                                        <?= htmlspecialchars(formatearFechaCompleta($re['fecha_reserva'])) ?>
+                                    </td>
+
+                                    <td>
+                                        <div class="fw-semibold">
                                             <?= htmlspecialchars($re['cliente']) ?>
                                         </div>
                                         <small class="text-muted">
@@ -114,7 +120,7 @@
                                     </td>
 
                                     <td>
-                                        <div class="fw-semiblod">
+                                        <div class="fw-semibold">
                                             <?= htmlspecialchars($re['evento']) ?>
                                         </div>
                                         <small class="text-muted">
@@ -131,41 +137,15 @@
                                     </td>
 
                                     <td>
-                                        <span class="badge
-                                            <?= $re['estado'] === 'pendiente'
-                                            ? 'bg-warning'
-                                            : ($re['estado'] === 'confirmada'
-                                                ? 'bg-success'
-                                                : ($re['estado'] === 'cancelada'
-                                                    ? 'bg-danger'
-                                                    : 'bg-secondary')) ?>">
-                                            <?= htmlspecialchars($re['estado']) ?>
+                                        <span class="badge <?= badgeReserva($re['estado']) ?>">
+                                            <?= textoReserva($re['estado']) ?>
                                         </span>
                                     </td>
 
                                     <td>
-                                        <span class="badge
-                                            <?= $re['estado_pago'] === 'CREATED'
-                                            ? 'bg-warning'
-                                            : ($re['estado_pago'] === 'COMPLETED'
-                                                ? 'bg-success'
-                                                : ($re['estado_pago'] === 'FAILED'
-                                                    ? 'bg-danger'
-                                                    : 'bg-secondary')) ?>">
-                                            <?= htmlspecialchars($re['estado_pago']) ?>
+                                        <span class="badge <?= badgePago($re['estado_pago']) ?>">
+                                            <?= textoPago($re['estado_pago']) ?>
                                         </span>
-                                    </td>
-
-                                    <td class="text-center">
-
-                                        <div class="btn-group btn-group-sm">
-
-                                            <button class="btn btn-outline-primary">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-
-                                        </div>
-
                                     </td>
 
                                 </tr>

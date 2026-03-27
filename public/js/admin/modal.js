@@ -1,12 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-
     function abrirModal ({
         titulo,
         contenido,
         textoBoton = "Guardar",
         claseBoton = "btn-primary",
         onSubmit })
-        
         {
             const modal = document.getElementById('modal-global');
             const modalTitulo = document.getElementById('modal-title');

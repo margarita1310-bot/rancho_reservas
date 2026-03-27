@@ -55,22 +55,26 @@ class AuthController {
 
         $cliente = $this->model->getByEmailCliente($email);
 
-        if (!$cliente) {
-            $id = $this->model->crearCliente($nombre, $email);
-            $cliente = $this->model->getByEmailCliente($email);
-        } else {
-            $id = $cliente['id_cliente'];
+        if ($cliente) {
+            $_SESSION['cliente_id'] = $cliente['id_cliente'];
+
+            return $this->json([
+                'success' => true,
+                'nuevo' => false,
+                'cliente' => $cliente
+            ]);
         }
 
-        $_SESSION['cliente_id'] = $id;
+        $_SESSION['google_email_temp'] = $email;
+        $_SESSION['google_nombre_temp'] = $nombre;
 
         $this->json([
             'success' => true,
+            'nuevo' => true,
             'cliente' => [
-                'id_cliente' => $cliente['id_cliente'],
-                'nombre' => $cliente['nombre'],
-                'email' => $cliente['email'],
-                'telefono' => $cliente['telefono'] ?? null
+                'nombre' => $nombre,
+                'email' => $email,
+                'telefono' => null
             ]
         ]);
     }
@@ -164,51 +168,60 @@ class AuthController {
         $cliente = $this->model->getByEmailCliente($email);
         
         if (!$cliente) {
-            $id = $this->model->crearCliente(null, $email);
-
             $cliente = [
-                'id_cliente' => $id,
+                'id_cliente' => null,
                 'nombre' => null,
                 'email' => $email,
                 'telefono' => null
             ];
+        } else {
+            $_SESSION['cliente_id'] = $cliente['id_cliente'];
         }
         
-        $_SESSION['cliente_id'] = $cliente['id_cliente'];
         $_SESSION['codigo_verificado'] = true;
+        $_SESSION['email_temp'] = $email;
         
         unset(
             $_SESSION['codigo_verificacion'],
             $_SESSION['codigo_expira'],
             $_SESSION['email_verificacion']
         );
+
+        $nuevo = !$cliente || !$cliente['telefono'];
         
         $this->json([
             'success' => true,
+            'nuevo' => $nuevo,
             'cliente' => $cliente
         ]);
     }
    
     public function guardarDatosCliente() {
 
-        if (!isset($_SESSION['cliente_id'])) {
+        if (!isset($_SESSION['codigo_verificado'])) {
             $this->json([
                 'success' => false,
-                'message' => 'Usuario no autenticado'
+                'message' => 'No verificado'
             ]);
         }
     
         $nombre = $_POST['nombre'] ?? '';
         $telefono = $_POST['telefono'] ?? '';
+        $email = $_SESSION['google_email_temp']
+            ?? $_SESSION['email_temp'] ?? null;
     
-        if (!$nombre || !$telefono) {
+        if (!$nombre || !$telefono || !$email) {
             $this->json(['success' => false]);
         }
-    
-        $this->model->actualizarCliente(
-            $_SESSION['cliente_id'],
-            $nombre,
-            $telefono
+
+        $id = $this->model->crearCliente($nombre, $email, $telefono);
+
+        $_SESSION['cliente_id'] = $id;
+
+        unset(
+            $_SESSION['google_email_temp'],
+            $_SESSION['google_nombre_temp'],
+            $_SESSION['email_temp']
         );
         
         $this->json(['success' => true]);

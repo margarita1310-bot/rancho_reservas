@@ -10,8 +10,8 @@ class Admin {
         $this->db = Conexion::conectar();
     }
 
-    public static function getByEmailAdmin($email) {
-
+    //Obtener administrador por email
+    public function getByEmailAdmin($email) {
         $stmt = $this->db->prepare(
             "SELECT * FROM administrador WHERE email = ? LIMIT 1"
         );
@@ -21,9 +21,9 @@ class Admin {
         return $stmt->fetch();
     }
     
-    public static function verificarAdmin($email, $password) {
-
-        $admin = $this->db->getByEmailAdmin($email);
+    //Verificar admin
+    public function verificarAdmin($email, $password) {
+        $admin = $this->getByEmailAdmin($email);
 
         if (!$admin) {
             return false;

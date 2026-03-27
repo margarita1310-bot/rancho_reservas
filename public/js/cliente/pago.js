@@ -1,3 +1,4 @@
+//Función para crear y capturar una orden de pago desde el boton de PayPal
 function renderPayPal() {
     const paypalDiv = document.getElementById('paypal-button');
     const id_reserva = paypalDiv.dataset.reserva;
@@ -19,7 +20,7 @@ function renderPayPal() {
             .then(r => r.json())
             .then(r => {
                 if (r.status === "ok") {
-                    alert("Pago completado");
+                    alert("Pago completado.");
                     location.reload();
                 } else {
                     alert("Error en el pago");
@@ -29,6 +30,7 @@ function renderPayPal() {
     }).render('#paypal-button');
 }
 
+//Funcion para crear la orden de pago
 function crearOrdenPaypal(id_reserva) {
     return fetch("index.php?action=crearOrden", {
         method:"POST",
@@ -37,27 +39,24 @@ function crearOrdenPaypal(id_reserva) {
     })
     .then(r => r.json())
     .then(r => {
-
         if (r.status !== "ok") {
-            alert("Error creando orden");
-            throw new Error("Orden invalida");
+            alert("Error creando orden.");
+            throw new Error("Orden invalida.");
         }
-
         return r.orderID;
     });
 }
 
+//Función para pagar una reserva en caso de fallo
 function pagarReserva(id_reserva) {
     const paypalDiv = document.getElementById('paypal-button');
     paypalDiv.dataset.reserva = id_reserva;
 
     const reservasClienteModal = document.getElementById('reservasClienteModal');
-
     const modalReservas = bootstrap.Modal.getInstance(reservasClienteModal) || new bootstrap.Modal(reservasClienteModal);
     modalReservas.hide();
     
     const reservaModal = document.getElementById('reservaModal');
-    
     const modalPago = bootstrap.Modal.getInstance(reservaModal) || new bootstrap.Modal(reservaModal);
     modalPago.show();
 

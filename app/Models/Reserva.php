@@ -53,6 +53,30 @@ class Reserva {
         return $stmt->fetchAll();
     }
 
+    //Obtener datos de la reserva
+    public function getDetallesReserva($id) {
+        $sql = "SELECT 
+                    r.id_reserva,
+                    c.nombre AS cliente,
+                    c.email,
+                    e.nombre AS evento,
+                    e.fecha,
+                    r.personas,
+                    r.total,
+                    p.fecha_actualizacion AS fecha_pago,
+                    p.paypal_transaction_id,
+                    p.estado AS estado_pago
+                FROM reservas r
+                JOIN clientes c ON r.id_cliente = c.id_cliente
+                JOIN eventos e ON r.id_evento = e.id_evento
+                LEFT JOIN pagos p ON r.id_reserva = p.id_reserva
+                ORDER BY r.id_reserva DESC";
+
+        $stmt = $this->db->query($sql);
+
+        return $stmt->fetch();
+    }
+
     //Obtener las ultimas 5 reservas realizadas
     public function getReservasInicio() {
         $sql = "SELECT
@@ -100,7 +124,7 @@ class Reserva {
     }
 
     //Transaccion para crear una reserva
-    public function crearReserva($id_cliente, $id_evento, $mesas_reservadas, $personas, $total, $estado) {
+    public function crearReserva($id_cliente, $id_evento, $mesas_reservadas, $personas, $total) {
         try {
             $this->db->beginTransaction();
 
@@ -115,7 +139,7 @@ class Reserva {
             $stmt->execute([$id_evento]);
             $evento = $stmt->fetch();
 
-            if (!$evento || $evento['mesas_disponibles'] < $mesas_reservadas) {
+            if (!$evento || (int)$evento['mesas_disponibles'] < (int)$mesas_reservadas) {
                 $this->db->rollBack();
                 return false;
             }
@@ -135,24 +159,25 @@ class Reserva {
                 $total
             ]);
 
+            $id = $this->db->lastInsertId();
             //Confirmar
             $this->db->commit();
+            return $id;
 
-            return (int) $this->db->lastInsertId();
         } catch (Exception $e) {
             $this->db->rollBack();
             return false;
         }
     }
 
-    //Actualizar el estado de la reserva
-    public function actualizarEstadoReserva($id_reserva, $estado) {
-        $sql = "UPDATE reservas
-                SET estado = ?
-                WHERE id_reserva = ?";
-        
-        $stmt = $this->db->prepare($sql);
+    //Cancelar la reserva
+    public function cancelarReserva($id_reserva) {
+        $stmt = $this->db->prepare(
+            "UPDATE reservas
+            SET estado = 'cancelada'
+            WHERE id_reserva = ? AND estado = 'pendiente'"
+        );
 
-        return $stmt->execute([$estado, $id_reserva]);
+        return $stmt->execute([$id_reserva]);
     }
 }

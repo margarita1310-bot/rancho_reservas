@@ -158,6 +158,11 @@ class EventoController {
             $this->json(['status' => 'error', 'msg' => 'ID requerido'], 400);
         }
 
+        if ($this->model->tieneReservas($id)) {
+            $this->json(['status' => 'error', 'msg' => 'No se puede borrar, el evento ya tiene reservas'], 400);
+            return;
+        }
+
         if (!$this->model->borrarEvento($id)) {
             $this->json(['status' => 'error'], 500);
         }

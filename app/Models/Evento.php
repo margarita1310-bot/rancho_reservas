@@ -58,7 +58,7 @@ class Evento {
                     e.precio_mesa,
                     COUNT(r.id_reserva) AS tiene_reservas,
                     obtener_estado_evento(e.fecha, e.hora, e.hora_fin) AS estado
-                FROM eventos
+                FROM eventos e
                 LEFT JOIN reservas r ON e.id_evento = r.id_evento
                 WHERE NOW() < TIMESTAMP(e.fecha, e.hora)
                     OR NOW() BETWEEN TIMESTAMP (e.fecha, e.hora) AND

@@ -1,5 +1,5 @@
+//Carga del form al crear una promocion
 document.getElementById('btn-create-promocion')?.addEventListener('click', () => {
-
     abrirModal({
         titulo: 'Nueva Promoción',
         textoBoton: 'Crear',
@@ -36,8 +36,8 @@ document.getElementById('btn-create-promocion')?.addEventListener('click', () =>
     setTimeout(configurarFechasPromocion, 50);
 });
 
+//Función para crear una promocion
 function crearPromocion () {
-
     const titulo = document.getElementById('titulo');
     const fecha_inicio = document.getElementById('fecha_inicio');
     const fecha_fin = document.getElementById('fecha_fin');
@@ -69,13 +69,13 @@ function crearPromocion () {
     .then(r => r.json())
     .then(r => {
         if (r.status === 'ok') location.reload();
-        else alert('Error al guardar');
+        else alert("Error al guardar.");
     })
-    .catch(() => alert('Error en la petición'));
+    .catch(() => alert("Error en la petición."));
 }
 
+//Carga del form al actualizar promocion
 document.addEventListener('click', async e => {
-
     const btn = e.target.closest('.btn-update');
 
     if (!btn || btn.dataset.controller !== 'Promocion') return;
@@ -126,8 +126,8 @@ document.addEventListener('click', async e => {
     setTimeout(configurarFechasPromocion, 50);
 });
 
+//Función para actualizar una promocion
 function actualizarPromocion () {
-
     const body = document.getElementById('modal-body');
     
     const data = new FormData();
@@ -151,13 +151,13 @@ function actualizarPromocion () {
     .then(r => r.json())
     .then(r => {
         if (r.status === 'ok') location.reload();
-        else alert('Error al actualizar');
+        else alert("Error al actualizar.");
     })
-    .catch(() => alert('Error en la petición'));
+    .catch(() => alert("Error en la petición."));
 }
 
+//Carga del modal borrar promocion
 document.addEventListener('click', e => {
-
     const btn = e.target.closest('.btn-delete');
 
     if (!btn || btn.dataset.controller !== 'Promocion') return;
@@ -171,8 +171,8 @@ document.addEventListener('click', e => {
     });
 });
 
+//Función para eliminar una promocion
 function eliminarPromocion(btn) {
-
     const data = new FormData();
 
     data.append('id', btn.dataset.id);
@@ -189,5 +189,5 @@ function eliminarPromocion(btn) {
 
         document.getElementById('modal-global').classList.add('d-none');
     })
-    .catch(() => alert('Error en la petición'));
+    .catch(() => alert("Error en la petición."));
 }

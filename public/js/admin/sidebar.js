@@ -10,7 +10,6 @@ document.querySelectorAll('#sidebarMenu .nav-link').forEach(link => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-
     const sidebar = document.getElementById("sidebarMenu");
     const toggleBtn = document.getElementById("toggleSidebarBtn");
     const icon = toggleBtn.querySelector("i");

@@ -1,5 +1,4 @@
 document.addEventListener('click', function (e) {
-
     const btn = e.target.closest('[data-filter]');
     if (!btn) return;
 
@@ -9,15 +8,12 @@ document.addEventListener('click', function (e) {
     const tabla = document.querySelector('table'); // si solo tienes una tabla
 
     if (!tabla) return;
-
-    // Quitar clase active de todos los botones del grupo
+    
     contenedor.querySelectorAll('[data-filter]')
         .forEach(b => b.classList.remove('active'));
 
-    // Activar el botón actual
     btn.classList.add('active');
 
-    // Filtrar filas
     tabla.querySelectorAll('tbody tr').forEach(row => {
 
         const estadoFila = row.dataset.estado;

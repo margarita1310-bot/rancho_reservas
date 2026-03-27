@@ -1,5 +1,5 @@
+//Carga del form al crear un evento
 document.getElementById('btn-create-evento')?.addEventListener('click', () => {
-
     abrirModal({
         titulo: 'Nuevo Evento',
         textoBoton: 'Crear',
@@ -51,13 +51,14 @@ document.getElementById('btn-create-evento')?.addEventListener('click', () => {
     setTimeout(configurarFechaEvento, 50);
 });
 
+//Función para crear un evento
 function crearEvento () {
-
     const nombre = document.getElementById('nombre');
     const fecha = document.getElementById('fecha');
     const hora = document.getElementById('hora');
+    const hora_fin = document.getElementById('hora_fin');
 
-    if(!nombre.value.trim() || !fecha.value || !hora.value) {
+    if(!nombre.value.trim() || !fecha.value || !hora.value || !hora_fin) {
         alert('Completa los campos obligatorios');
         return;
     }
@@ -75,7 +76,7 @@ function crearEvento () {
     formData.append('descripcion', document.getElementById('descripcion').value.trim());
     formData.append('fecha', fecha.value);
     formData.append('hora', hora.value);
-    formData.append('hora_fin', document.getElementById('hora_fin').value);
+    formData.append('hora_fin', hora_fin.value);
     formData.append('mesas_disponibles', document.getElementById('mesas_disponibles').value);
     formData.append('precio_mesa', document.getElementById('precio_mesa').value);
     formData.append('imagen', imagen);
@@ -87,13 +88,13 @@ function crearEvento () {
     .then(r => r.json())
     .then(r => {
         if (r.status === 'ok') location.reload();
-        else alert('Error al guardar');
+        else alert("Error al guardar.");
     })
-    .catch(() => alert('Error en la petición'));
+    .catch(() => alert("Error en la petición."));
 }
 
+//Carga del form al actualizar evento
 document.addEventListener('click', async e => {
-
     const btn = e.target.closest('.btn-update');
 
     if (!btn || btn.dataset.controller !== 'Evento') return;
@@ -159,8 +160,8 @@ document.addEventListener('click', async e => {
     setTimeout(configurarFechaEvento, 50);
 });
 
+//Función para actualizar un evento
 function actualizarEvento() {
-    
     const body = document.getElementById('modal-body');
     
     const data = new FormData();
@@ -187,13 +188,13 @@ function actualizarEvento() {
     .then(r => r.json())
     .then(r => {
         if (r.status === 'ok') location.reload();
-        else alert('Error al actualizar');
+        else alert("Error al actualizar.");
     })
-    .catch(() => alert('Error en la petición'));
+    .catch(() => alert("Error en la petición."));
 }
 
+//Carga del modal borrar evento
 document.addEventListener('click', e => {
-
     const btn = e.target.closest('.btn-delete');
 
     if (!btn || btn.dataset.controller !== 'Evento') return;
@@ -207,8 +208,8 @@ document.addEventListener('click', e => {
     });
 });
 
+//Función para eliminar un evento
 function eliminarEvento(btn) {
-
     const data = new FormData();
     
     data.append('id', btn.dataset.id);
@@ -225,5 +226,5 @@ function eliminarEvento(btn) {
 
         document.getElementById('modal-global').classList.add('d-none');
     })
-    .catch(() => alert('Error en la petición'));
+    .catch(() => alert("Error en la petición."));
 }

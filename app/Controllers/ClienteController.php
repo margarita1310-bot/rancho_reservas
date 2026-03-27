@@ -56,7 +56,8 @@ class ClienteController {
 
         foreach ($reservas as &$r) {
             $r['puede_pagar'] = (in_array($r['estado_pago'], ['CREATED', 'FAILED']) || is_null($r['estado_pago']))
-            && $r['estado_reserva'] !== 'confirmada';
+            && $r['estado_reserva'] === 'pendiente';
+            $r['puede_cancelar'] = $r['estado_reserva'] === 'pendiente';
         }
 
         return $reservas;

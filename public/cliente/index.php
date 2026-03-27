@@ -47,6 +47,14 @@ switch ($action) {
         $reservaController->guardar();
         break;
 
+    case 'cancelarReserva':
+        $reservaController->cancelar();
+        break;
+
+    case 'comprobante':
+        $reservaController->comprobante();
+        break;
+
     default:
         echo "Acción no válida.";
         break;

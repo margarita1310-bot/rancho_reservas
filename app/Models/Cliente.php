@@ -10,8 +10,8 @@ class Cliente {
         $this->db = Conexion::conectar();
     }
 
+    //Obtener cliente por su correo
     public function getByEmailCliente($email) {
-
         $stmt = $this->db->prepare(
             "SELECT * FROM clientes WHERE email = ? LIMIT 1"
         );
@@ -21,17 +21,17 @@ class Cliente {
         return $stmt->fetch();
     }
 
-    //Transacción
-    public function crearCliente($nombre, $email) {
+    //Transacción al crear un cliente
+    public function crearCliente($nombre, $email, $telefono) {
         try {
             $this->db->beginTransaction();
             
             $stmt = $this->db->prepare(
-                "INSERT INTO clientes (nombre, email, created_at)
-                 VALUES (?, ?, NOW())"
+                "INSERT INTO clientes (nombre, email, telefono, created_at)
+                 VALUES (?, ?, ?, NOW())"
             );
     
-            $stmt->execute([$nombre, $email]);
+            $stmt->execute([$nombre, $email, $telefono]);
 
             $this->db->commit();
 
@@ -43,20 +43,8 @@ class Cliente {
         }
     }
 
-    public function actualizarCliente($id, $nombre, $telefono) {
-
-        $stmt = $this->db->prepare(
-            "UPDATE clientes
-             SET nombre = ?, telefono = ?
-             WHERE id_cliente = ?"
-        );
-
-        return $stmt->execute([$nombre, $telefono, $id]);
-    }
-
-    //Consulta multitabla y subconsulta
+    //Obtener reservas del cliente
     public function getReservasCliente($id) {
-
         $sql = "SELECT
                     r.id_reserva,
                     e.nombre AS evento,
