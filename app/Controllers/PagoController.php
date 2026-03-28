@@ -1,9 +1,9 @@
 <?php
 
-require_once __DIR__ . '/../Models/Pago.php';
-require_once __DIR__ . '/../Models/Reserva.php';
-require_once __DIR__ . '/../Models/Evento.php';
-require_once __DIR__ . '/../libraries/PayPal/PayPalService.php';
+require_once ROOT_PATH . '/app/models/Pago.php';
+require_once ROOT_PATH . '/app/models/Reserva.php';
+require_once ROOT_PATH . '/app/models/Evento.php';
+require_once ROOT_PATH . '/app/libraries/PayPal/PayPalService.php';
 
 class PagoController {
 

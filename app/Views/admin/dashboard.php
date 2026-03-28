@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Rye&family=Zain:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="/public/css/admin.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>css/admin.css">
 
 </head>
 <body>
@@ -16,7 +16,7 @@
     <div class="sidebarMovil d-md-none text-white d-flex justify-content-between align-items-center px-3 py-2 shadow-sm">
 
         <h1 class="d-flex align-items-center mb-0 fs-5">
-            <img src="/public/images/logo.jpg" alt="Rancho La Joya Logo" class="sidebar-logo rounded ms-2 me-2">
+            <img src="<?= BASE_URL ?>images/logo.jpg" alt="Rancho La Joya Logo" class="sidebar-logo rounded ms-2 me-2">
             Rancho La Joya
         </h1>
 
@@ -49,12 +49,13 @@
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/public/js/admin/filter.js"></script>
-    <script src="/public/js/admin/helpers.js"></script>
-    <script src="/public/js/admin/sidebar.js"></script>
-    <script src="/public/js/admin/modal.js"></script>
-    <script src="/public/js/admin/evento.js"></script>
-    <script src="/public/js/admin/promocion.js"></script>
+    <script>const BASE_URL = "<?= BASE_URL ?>"</script>
+    <script src="<?= BASE_URL ?>js/admin/filter.js"></script>
+    <script src="<?= BASE_URL ?>js/admin/helpers.js"></script>
+    <script src="<?= BASE_URL ?>js/admin/sidebar.js"></script>
+    <script src="<?= BASE_URL ?>js/admin/modal.js"></script>
+    <script src="<?= BASE_URL ?>js/admin/evento.js"></script>
+    <script src="<?= BASE_URL ?>js/admin/promocion.js"></script>
 
 </body>
 </html>

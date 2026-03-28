@@ -68,7 +68,7 @@ section {
         rgba(32,13,2,0.6) 40%,
         rgba(32,13,2,0.6) 60%,
         rgba(32,13,2,0.9) 100%),
-    url('/public/images/hero.jpg');
+    url('/images/hero.jpg');
     background-size: cover;
     background-position: center;
     min-height: 80vh;
@@ -146,7 +146,7 @@ section {
         rgba(32,13,2,0.7) 30%,
         rgba(32,13,2,0.7) 70%,
         rgba(32,13,2,1) 100%),
-    url('/public/images/fondo.jpg');
+    url('/images/fondo.jpg');
     background-size: cover;
     background-position: center;
 }
@@ -232,7 +232,7 @@ section {
         rgba(32,13,2,1) 0%,
         rgba(32,13,2,0.8) 40%,
         rgba(32,13,2,0.6) 100%),
-    url('/public/images/fondo.jpg');
+    url('/images/fondo.jpg');
     background-size: cover;
     background-position: center;
 }

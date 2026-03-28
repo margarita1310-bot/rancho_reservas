@@ -1,0 +1,27 @@
+:root {
+    --color-primario: #200D02;
+    --color-secundario: #854507;
+    --color-fondo: #F5E9D8; 
+    --color-dorado: #F5C16C;
+    --color-blanco: #FFFFFF;
+    --color-negro: #000000;
+}
+
+body {
+    background-color: var(--color-fondo);
+    font-family: "Zain", sans-serif;
+    font-weight: 400;
+}
+
+.card-header {
+    background: var(--color-primario);
+    padding: 15px;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.list-group-item {
+    border: none;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}

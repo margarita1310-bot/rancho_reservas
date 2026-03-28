@@ -24,7 +24,7 @@ function guardarDatosCliente() {
     formData.append('nombre', nombre);
     formData.append('telefono', telefono);
 
-    fetch('index.php?action=guardarDatosCliente', {
+    fetch(BASE_URL + 'cliente?action=guardarDatosCliente', {
         method: 'POST',
         body: formData
     })
@@ -84,7 +84,7 @@ function actualizarDatosCliente() {
     formData.append('telefono', telefono);
     formData.append('id_cliente', sessionStorage.getItem('id_cliente'));
 
-    fetch('index.php?action=guardarDatosCliente', {
+    fetch(BASE_URL + 'cliente?action=guardarDatosCliente', {
         method: 'POST',
         body: formData
     })

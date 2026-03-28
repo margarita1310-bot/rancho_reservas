@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../Models/Reserva.php';
+require_once ROOT_PATH . '/app/models/Reserva.php';
 
 class ReservaController {
 
@@ -123,6 +123,6 @@ class ReservaController {
             ]);
         }
 
-        require_once __DIR__ . '/../Views/cliente/comprobante.php';
+        require_once ROOT_PATH . '/app/views/cliente/comprobante.php';
     }
 }

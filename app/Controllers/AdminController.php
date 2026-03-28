@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/../Models/Promocion.php';
-require_once __DIR__ . '/../Models/Evento.php';
-require_once __DIR__ . '/../Models/Reserva.php';
+require_once ROOT_PATH . '/app/models/Promocion.php';
+require_once ROOT_PATH . '/app/models/Evento.php';
+require_once ROOT_PATH . '/app/models/Reserva.php';
 
 class AdminController {
 
@@ -19,7 +19,7 @@ class AdminController {
     private function render($vista, $data = []) {
         extract($data);
 
-        require_once __DIR__ . '/../Views/admin/dashboard.php';
+        require_once ROOT_PATH . '/app/views/admin/dashboard.php';
     }
 
     public function inicio() {
@@ -33,7 +33,7 @@ class AdminController {
         $eventos = $this->eventoModel->getEventosInicio();
         $reservas = $this->reservaModel->getReservasInicio();
 
-        $vista = __DIR__ . '/../Views/admin/inicio.php';
+        $vista = ROOT_PATH . '/app/views/admin/inicio.php';
         $this->render($vista, [
             'reservasHoy' => $reservasHoy,
             'eventosActivos' => $eventosActivos,
@@ -48,7 +48,7 @@ class AdminController {
     public function promocion() {
         $promociones = $this->promocionModel->getAllPromociones();
 
-        $vista =  __DIR__ . '/../Views/admin/promocion.php';
+        $vista =  ROOT_PATH . '/app/views/admin/promocion.php';
         $this->render($vista, [
             'promociones' => $promociones
         ]);
@@ -57,7 +57,7 @@ class AdminController {
     public function evento() {
         $eventos = $this->eventoModel->getAllEventos();
 
-        $vista = __DIR__ . '/../Views/admin/evento.php';
+        $vista = ROOT_PATH . '/app/views/admin/evento.php';
         $this->render($vista, [
             'eventos' => $eventos
         ]);
@@ -66,7 +66,7 @@ class AdminController {
     public function reserva() {
         $reservas = $this->reservaModel->getAllReservas();
 
-        $vista = __DIR__ . '/../Views/admin/reserva.php';
+        $vista = ROOT_PATH . '/app/views/admin/reserva.php';
         $this->render($vista, [
             'reservas' => $reservas
         ]);
@@ -76,7 +76,7 @@ class AdminController {
         session_unset();
         session_destroy();
         
-        header("Location: index.php?action=login");
+        header("Location: ". BASE_URL . "admin?action=login");
         exit;
     }
 }

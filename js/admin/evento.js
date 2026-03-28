@@ -81,7 +81,7 @@ function crearEvento () {
     formData.append('precio_mesa', document.getElementById('precio_mesa').value);
     formData.append('imagen', imagen);
 
-    fetch('index.php?action=guardarEvento', {
+    fetch(BASE_URL + 'admin?action=guardarEvento', {
         method: 'POST',
         body: formData
     })
@@ -101,7 +101,7 @@ document.addEventListener('click', async e => {
 
     const id = btn.dataset.id;
     
-    const res = await fetch('index.php?action=obtenerEvento', {
+    const res = await fetch(BASE_URL + 'admin?action=obtenerEvento', {
         method: 'POST',
         body: new URLSearchParams({ id })
     });
@@ -181,7 +181,7 @@ function actualizarEvento() {
         data.append('imagen', imagen);
     }
 
-    fetch('index.php?action=actualizarEvento', {
+    fetch(BASE_URL + 'admin?action=actualizarEvento', {
         method: 'POST',
         body: data
     })
@@ -214,7 +214,7 @@ function eliminarEvento(btn) {
     
     data.append('id', btn.dataset.id);
 
-    fetch('index.php?action=eliminarEvento', {
+    fetch(BASE_URL + 'admin?action=eliminarEvento', {
         method: 'POST',
         body: data
     })

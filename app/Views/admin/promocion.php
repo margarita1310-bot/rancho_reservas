@@ -78,7 +78,7 @@
 
                     <tbody>
 
-                        <?php require_once __DIR__ . '/../../helpers/format.php' ?>
+                        <?php require_once ROOT_PATH . '/app/helpers/format.php' ?>
 
                         <?php $promociones = $promociones ?? []; ?>
 

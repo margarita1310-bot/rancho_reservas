@@ -61,7 +61,7 @@
   
     <div class="footer-bottom text-center text-white py-4">
 
-        <img src="/public/images/logo.jpg"
+        <img src="<?= BASE_URL ?>images/logo.jpg"
             class="footer-logo mb-2 img-fluid rounded">
 
         <h1>RANCHO LA JOYA</h1>

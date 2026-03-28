@@ -25,7 +25,7 @@
                 <div class="mt-3 d-none" id="bloqueCodigo">
                     
                     <label class="form-label">Código de verificación</label>
-                    <input type="text" class="form-control" id="codigo">
+                    <input type="number" class="form-control" id="codigo">
                     <small class="text-muted mt-1">Este código vence en 10 minutos.</small>
                     
                 </div>

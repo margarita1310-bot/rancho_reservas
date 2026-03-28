@@ -1,12 +1,12 @@
 <?php
 
-require_once __DIR__ . '/../Models/Admin.php';
+require_once ROOT_PATH . '/app/models/Admin.php';
 
 class LoginController {
 
     public function login() {
         $error = '';
-        require_once __DIR__ . '/../Views/admin/login.php';
+        require_once ROOT_PATH . '/app/views/admin/login.php';
     }
 
     public function autenticar() {
@@ -21,7 +21,7 @@ class LoginController {
 
         if (!$email || !$password) {
             $error = "Debes ingresar email y contraseña.";
-            require_once __DIR__ . '/../Views/admin/login.php';
+            require_once ROOT_PATH . '/app/views/admin/login.php';
             return;
         }
 
@@ -30,11 +30,11 @@ class LoginController {
         if ($admin) {
             $_SESSION['admin'] = $admin;
 
-            header("Location: index.php?action=inicio");
+            header("Location: " . BASE_URL . "admin?action=inicio");
             exit;
         }
         
         $error = "Usuario o contraseña incorrectos.";
-        require_once __DIR__ . '/../Views/admin/login.php';
+        require_once ROOT_PATH . '/app/views/admin/login.php';
     }
 }

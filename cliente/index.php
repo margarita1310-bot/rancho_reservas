@@ -1,14 +1,19 @@
 <?php
 
-require_once __DIR__ . '/../../app/config/env.php';
-require_once __DIR__ . '/../../app/Controllers/ClienteController.php';
-require_once __DIR__ . '/../../app/Controllers/AuthController.php';
-require_once __DIR__ . '/../../app/Controllers/PagoController.php';
-require_once __DIR__ . '/../../app/Controllers/ReservaController.php';
+define('ROOT_PATH', dirname(__DIR__, 1));
+
+require_once ROOT_PATH . '/app/config/env.php';
+
+require_once ROOT_PATH . '/app/controllers/ClienteController.php';
+require_once ROOT_PATH . '/app/controllers/AuthController.php';
+require_once ROOT_PATH . '/app/controllers/PagoController.php';
+require_once ROOT_PATH . '/app/controllers/EventoController.php';
+require_once ROOT_PATH . '/app/controllers/ReservaController.php';
 
 $clienteController = new ClienteController();
 $authController = new AuthController();
 $pagoController = new PagoController();
+$eventoController = new EventoController();
 $reservaController = new ReservaController();
 
 $action = $_GET['action'] ?? 'index';
@@ -43,6 +48,10 @@ switch ($action) {
         $pagoController->capturar();
         break;
     
+    case 'verificarMesas':
+        $eventoController->verificarMesas();
+        break;
+
     case 'guardarReserva':
         $reservaController->guardar();
         break;

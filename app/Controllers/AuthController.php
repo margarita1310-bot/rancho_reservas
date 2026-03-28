@@ -5,11 +5,11 @@ session_start();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require_once __DIR__ . '/../config/env.php';
-require_once __DIR__ . '/../Models/Cliente.php';
-require_once __DIR__ . '/../libraries/PHPMailer/src/Exception.php';
-require_once __DIR__ . '/../libraries/PHPMailer/src/PHPMailer.php';
-require_once __DIR__ . '/../libraries/PHPMailer/src/SMTP.php';
+require_once ROOT_PATH . '/app/config/env.php';
+require_once ROOT_PATH . '/app/models/Cliente.php';
+require_once ROOT_PATH . '/app/libraries/PHPMailer/src/Exception.php';
+require_once ROOT_PATH . '/app/libraries/PHPMailer/src/PHPMailer.php';
+require_once ROOT_PATH . '/app/libraries/PHPMailer/src/SMTP.php';
 
 class AuthController {
 
@@ -114,6 +114,7 @@ class AuthController {
             $mail->Password = $_ENV['MAIL_PASSWORD'];
             $mail->SMTPSecure = $_ENV['MAIL_ENCRYPTION'];
             $mail->Port = $_ENV['MAIL_PORT'];
+            $mail->CharSet = 'UTF-8';
             
             $mail->setFrom($_ENV['MAIL_USERNAME'], 'Rancho La Joya');
             $mail->addAddress($email);

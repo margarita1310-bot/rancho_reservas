@@ -5,7 +5,7 @@
         <div class="container-fluid">
 
             <a class="navbar-brand rounded" href="#hero-section">
-                <img src="/public/images/logo.jpg" height="36" alt="LaJoya Logo">
+                <img src="<?= BASE_URL ?>images/logo.jpg" height="36" alt="LaJoya Logo">
             </a>
 
             <div class="d-flex align-items-center gap-3 order-lg-3">
@@ -67,7 +67,7 @@
         <div class="offcanvas-header">
             
             <a class="navbar-brand rounded" href="#hero-section">
-                <img src="/public/images/logo.jpg" height="36" alt="LaJoya Logo">
+                <img src="<?= BASE_URL ?>images/logo.jpg" height="36" alt="LaJoya Logo">
             </a>
 
             <button type="button" class="btn text-white ms-auto" data-bs-dismiss="offcanvas">

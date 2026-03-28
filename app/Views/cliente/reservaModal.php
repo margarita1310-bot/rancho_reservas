@@ -60,6 +60,7 @@
                     <div class="mb-3">
                         <label class="form-label">Número de personas</label>
                         <input type="number" class="form-control" id="eventoPersonas" min="1" max="20">
+                        <small id="info-personas" class="text-muted"></small>
                     </div>
 
                     <button type="button" class="btn btn-primary w-100" onclick="guardarDatosReserva()">Siguiente</button>
@@ -118,8 +119,10 @@
 
                     <div class="d-flex justify-content-between mt-3">
                         <button type="button" class="btn btn-outline-secondary" onclick="goToStep(1)">Atrás</button>
-                        <button type="button" class="btn btn-primary" onclick="crearReserva()">Proceder al pago</button>
+                        <button id="crear-reserva" type="button" class="btn btn-primary" onclick="crearReserva()">Proceder al pago</button>
                     </div>
+
+                    <small id="error-reserva" class="text-danger"></small>
 
                 </div>
         

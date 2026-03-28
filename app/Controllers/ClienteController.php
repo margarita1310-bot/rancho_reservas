@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/../Models/Promocion.php';
-require_once __DIR__ . '/../Models/Evento.php';
-require_once __DIR__ . '/../Models/Cliente.php';
+require_once ROOT_PATH . '/app/models/Promocion.php';
+require_once ROOT_PATH . '/app/models/Evento.php';
+require_once ROOT_PATH . '/app/models/Cliente.php';
 
 class ClienteController {
 
@@ -17,8 +17,8 @@ class ClienteController {
         $this->eventoModel = new Evento();
         $this->clienteModel = new Cliente();
 
-        $this->uploadDirEvento = __DIR__ . '/../../public/images/evento/';
-        $this->uploadDirPromocion = __DIR__ . '/../../public/images/promocion/';
+        $this->uploadDirEvento = ROOT_PATH . '/public_html/images/evento/';
+        $this->uploadDirPromocion = ROOT_PATH . '/public_html/images/promocion/';
     }
 
     private function asignarImagen(&$items, $dir, $idField) {
@@ -43,7 +43,7 @@ class ClienteController {
         $promociones = $this->promocionModel->getPromocionesDisponibles();
         $this->asignarImagen($promociones, $this->uploadDirPromocion, 'id_promocion');
 
-        require_once __DIR__ . '/../Views/cliente/dashboard.php';
+        require_once ROOT_PATH . '/app/views/cliente/dashboard.php';
     }
 
     public function obtenerReservas() {

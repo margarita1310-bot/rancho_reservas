@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../Models/Evento.php';
+require_once ROOT_PATH . '/app/models/Evento.php';
 
 class EventoController {
 
@@ -10,7 +10,7 @@ class EventoController {
 
     public function __construct() {
         $this->model = new Evento();
-        $this->uploadDir = __DIR__ . '/../../public/images/evento/';
+        $this->uploadDir = ROOT_PATH . '/public_html/images/evento/';
     }
         
     private function json($data, $code = 200) {
@@ -37,6 +37,19 @@ class EventoController {
         }
         
         $this->json($evento);
+    }
+
+    public function verificarMesas() {
+
+        $id_evento = $_GET['id_evento'];
+
+        $evento = $this->model->getByIdEvento($id_evento);
+
+        if ($evento['mesas_disponibles'] <= 0) {
+            $this->json(["status" => "error", "msg" => "Ya no hay mesas disponibles"]);
+        } else {
+            $this->json(["status" => "ok"]);
+        }
     }
 
     public function guardar() {

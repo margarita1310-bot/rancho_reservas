@@ -62,7 +62,7 @@ function crearPromocion () {
     formData.append('fecha_fin', fecha_fin.value);
     formData.append('imagen', imagen);
 
-    fetch('index.php?action=guardarPromocion', {
+    fetch(BASE_URL + 'admin?action=guardarPromocion', {
         method: 'POST',
         body: formData
     })
@@ -82,7 +82,7 @@ document.addEventListener('click', async e => {
 
     const id = btn.dataset.id;
 
-    const res = await fetch('index.php?action=obtenerPromocion', {
+    const res = await fetch(BASE_URL + 'admin?action=obtenerPromocion', {
         method: 'POST',
         body: new URLSearchParams({ id })
     });
@@ -144,7 +144,7 @@ function actualizarPromocion () {
         data.append('imagen', imagen);
     }
 
-    fetch('index.php?action=actualizarPromocion', {
+    fetch(BASE_URL + 'admin?action=actualizarPromocion', {
         method: 'POST',
         body: data
     })
@@ -177,7 +177,7 @@ function eliminarPromocion(btn) {
 
     data.append('id', btn.dataset.id);
 
-    fetch('index.php?action=eliminarPromocion', {
+    fetch(BASE_URL + 'admin?action=eliminarPromocion', {
         method: 'POST',
         body: data
     })

@@ -8,7 +8,7 @@ function handleCredentialResponse(response) {
 
     document.getElementById('nombre').value = user.name ?? '';
     
-    fetch('index.php?action=google', {
+    fetch(BASE_URL + 'cliente?action=google', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -27,7 +27,6 @@ function handleCredentialResponse(response) {
                 alert("Asegúrate de ingresar los siguientes datos correctamente.");
                 abrirDatosModal(data.cliente);
             } else {
-                alert("Inicio de sesión exitoso.");
                 loginExitoso(data.cliente);
             }
         }
@@ -44,7 +43,7 @@ function enviarCodigo() {
         return;
     }
 
-    fetch('index.php?action=enviarCodigo', {
+    fetch(BASE_URL + 'cliente?action=enviarCodigo', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: `email=${email}`
@@ -77,7 +76,7 @@ function validarCodigo() {
         return;
     }
 
-    fetch('index.php?action=validarCodigo', {
+    fetch(BASE_URL + 'cliente?action=validarCodigo', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: `codigo=${encodeURIComponent(codigo)}`
@@ -96,7 +95,6 @@ function validarCodigo() {
                 alert("Asegúrate de ingresar los siguientes datos correctamente.");
                 abrirDatosModal(data.cliente);
             } else {
-                alert("Inicio de sesión exitoso.");
                 loginExitoso(data.cliente);
             }
 

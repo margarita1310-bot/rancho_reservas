@@ -2,10 +2,14 @@
 
 session_start();
 
-require_once __DIR__ . '/../../app/Controllers/LoginController.php';
-require_once __DIR__ . '/../../app/Controllers/AdminController.php';
-require_once __DIR__ . '/../../app/Controllers/PromocionController.php';
-require_once __DIR__ . '/../../app/Controllers/EventoController.php';
+define('ROOT_PATH', dirname(__DIR__, 1));
+
+require_once ROOT_PATH . '/app/config/env.php';
+
+require_once ROOT_PATH . '/app/controllers/LoginController.php';
+require_once ROOT_PATH . '/app/controllers/AdminController.php';
+require_once ROOT_PATH . '/app/controllers/PromocionController.php';
+require_once ROOT_PATH . '/app/controllers/EventoController.php';
 
 $loginController = new LoginController();
 $adminController = new AdminController();
@@ -20,6 +24,10 @@ if (!isset($_SESSION['admin']) && !in_array($action, ['login', 'autenticar'])) {
 
 switch ($action) {
     
+    case 'inicio':
+        $adminController->inicio();
+        break;
+
     case 'login':
         $loginController->login();
         break;

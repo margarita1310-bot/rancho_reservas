@@ -45,34 +45,50 @@ function cargarDatosEvento() {
 
 //Funcion del boton reservar
 function reservarEvento(btn) {
-    sessionStorage.setItem('id_evento', btn.dataset.id);
-    sessionStorage.setItem('nombre_evento', btn.dataset.nombre);
-    sessionStorage.setItem('fecha_evento', btn.dataset.fecha);
-    sessionStorage.setItem('precio_evento', btn.dataset.precio);
-    sessionStorage.setItem('hora_evento', btn.dataset.hora);
-    sessionStorage.setItem('hora_fin_evento', btn.dataset.hora_fin);
 
-    const horaEvento = btn.dataset.hora;
-    const horaFinEvento = btn.dataset.hora_fin;
+    const id_evento = btn.dataset.id;
+
+    fetch(BASE_URL + "cliente?action=verificarMesas&id_evento=" + id_evento)
+    .then(r => r.json())
+    .then(r => {
+        if (r.status === "error") {
+            btn.disabled = true;
+            btn.textContent = "Sin disponibilidad";
+            return;
+        }
+        
+        sessionStorage.setItem('id_evento', btn.dataset.id);
+        sessionStorage.setItem('nombre_evento', btn.dataset.nombre);
+        sessionStorage.setItem('fecha_evento', btn.dataset.fecha);
+        sessionStorage.setItem('precio_evento', btn.dataset.precio);
+        sessionStorage.setItem('hora_evento', btn.dataset.hora);
+        sessionStorage.setItem('hora_fin_evento', btn.dataset.hora_fin);
+        
+        const horaEvento = btn.dataset.hora;
+        const horaFinEvento = btn.dataset.hora_fin;
+        
+        const eventoInicio = aMinutos(horaEvento);
+        let eventoFin = aMinutos(horaFinEvento);
     
-    const eventoInicio = aMinutos(horaEvento);
-    let eventoFin = aMinutos(horaFinEvento);
-
-    if (eventoFin < eventoInicio) {
-        eventoFin += 24 * 60;
-    }
-
-    const inicioLlegada = eventoInicio - (2 * 60);
-    const finLlegada = eventoFin - (2 * 60);
-
-    const inicioHora = minutosAHora(inicioLlegada);
-    const finHora = minutosAHora(finLlegada);
-
+        if (eventoFin < eventoInicio) {
+            eventoFin += 24 * 60;
+        }
     
-    document.getElementById('info-hora').innerHTML =
-    `Puedes LLegar entre ${inicioHora} y ${finHora}`;
+        const inicioLlegada = eventoInicio - (2 * 60);
+        const finLlegada = eventoFin - (2 * 60);
     
-    abrirReserva();
+        const inicioHora = minutosAHora(inicioLlegada);
+        const finHora = minutosAHora(finLlegada);
+    
+        
+        document.getElementById('info-hora').innerHTML =
+        `Puedes llegar entre ${inicioHora} y ${finHora}`;
+    
+        document.getElementById('info-personas').innerHTML =
+        `Ingrese de 1 a 20 personas.`;
+        
+        abrirReserva();
+    });
 }
 
 //Función que abre el modal para insertar los datos faltantes de la reserva reservaModal
@@ -136,14 +152,14 @@ function guardarDatosReserva() {
     if (eventoFin < eventoInicio) {
         eventoFinAjustado += 24 * 60;
     }
-
-    let llegadaAjustada = llegada;
-    if (llegada < eventoInicio) {
-        llegadaAjustada += 24 * 60;
-    }
-
+    
     const inicioLlegada = eventoInicio - (2 * 60);
     const finLlegada = eventoFinAjustado - (2 * 60);
+
+    let llegadaAjustada = llegada;
+    if (llegada < inicioLlegada) {
+        llegadaAjustada += 24 * 60;
+    }
 
     if (llegadaAjustada < inicioLlegada || llegadaAjustada > finLlegada) {
         alert("La hora de llegada debe ser entre 2 horas antes de iniciar y 2 horas antes de terminar el evento.");
@@ -226,7 +242,7 @@ function crearReserva() {
     formData.append('personas', personas);
     formData.append('total', precio);
 
-    fetch("index.php?action=guardarReserva", {
+    fetch(BASE_URL + "cliente?action=guardarReserva", {
         method:"POST",
         body: formData
     })
@@ -254,7 +270,7 @@ function cancelarReserva(id_reserva) {
         return;
     }
 
-    fetch("index.php?action=cancelarReserva", {
+    fetch(BASE_URL + "cliente?action=cancelarReserva", {
         method:"POST",
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: 'id_reserva=' + id_reserva
@@ -273,5 +289,5 @@ function cancelarReserva(id_reserva) {
 
 //Función para ver el comprobante de pago de la reserva
 function verComprobante(id_reserva) {
-    window.open(`index.php?action=comprobante&id_reserva=${id_reserva}`, '_blank');
+    window.open(`cliente?action=comprobante&id_reserva=${id_reserva}`, '_blank');
 }

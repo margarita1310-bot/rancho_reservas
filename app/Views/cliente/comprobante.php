@@ -7,7 +7,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Rye&family=Zain:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="/public/css/cliente.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>css/comprobante.css">
 
 </head>
 <body>
@@ -61,9 +61,7 @@
                 </div>
 
             </div>
-
         </div>
-        
     </div>
 </body>
 </html>

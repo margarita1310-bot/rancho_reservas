@@ -12,7 +12,7 @@ function renderPayPal() {
         },
         
         onApprove: function (data) {
-            return fetch("index.php?action=capturarPago", {
+            return fetch(BASE_URL + "cliente?action=capturarPago", {
                 method:"POST",
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 body: `orderID=${data.orderID}&id_reserva=${id_reserva}`
@@ -32,7 +32,7 @@ function renderPayPal() {
 
 //Funcion para crear la orden de pago
 function crearOrdenPaypal(id_reserva) {
-    return fetch("index.php?action=crearOrden", {
+    return fetch(BASE_URL + "cliente?action=crearOrden", {
         method:"POST",
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: 'id_reserva=' + id_reserva

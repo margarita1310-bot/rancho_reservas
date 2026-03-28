@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../Models/Promocion.php';
+require_once ROOT_PATH . '/app/models/Promocion.php';
 
 class PromocionController {
 
@@ -10,7 +10,7 @@ class PromocionController {
 
     public function __construct() {
         $this->model = new Promocion();
-        $this->uploadDir = __DIR__ . '/../../public/images/promocion/';
+        $this->uploadDir = ROOT_PATH . '/public_html/images/promocion/';
     }
         
     private function json($data, $code = 200) {

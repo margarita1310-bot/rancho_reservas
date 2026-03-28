@@ -90,8 +90,8 @@
 
                     <tbody>
 
-                        <?php require_once __DIR__ . '/../../helpers/format.php' ?>
-                        <?php require_once __DIR__ . '/../../helpers/estado.php' ?>
+                        <?php require_once ROOT_PATH . '/app/helpers/format.php' ?>
+                        <?php require_once ROOT_PATH . '/app/helpers/estado.php' ?>
                         
                         <?php $reservas = $reservas ?? []; ?>
                         

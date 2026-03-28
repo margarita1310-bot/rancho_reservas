@@ -22,7 +22,7 @@
         <ul class="nav nav-pills flex-column mb-auto">
 
             <li class="nav-item">
-                <a href="index.php?action=inicio"
+                <a href="admin?action=inicio"
                     class="nav-link text-white <?= $action === 'inicio' ? 'active' : '' ?>">
                     <i class="bi bi-grid me-2"></i>
                     Inicio
@@ -30,7 +30,7 @@
             </li>
 
             <li class="nav-item">
-                <a href="index.php?action=promocion"
+                <a href="admin?action=promocion"
                     class="nav-link text-white <?= $action === 'promocion' ? 'active' : '' ?>">
                     <i class="bi bi-tag me-2"></i>
                     Promociones
@@ -38,7 +38,7 @@
             </li>
 
             <li class="nav-item">
-                <a href="index.php?action=evento"
+                <a href="admin?action=evento"
                     class="nav-link text-white <?= $action === 'evento' ? 'active' : '' ?>">
                     <i class="bi bi-calendar2-week me-2"></i>
                     Eventos
@@ -46,7 +46,7 @@
             </li>
 
             <li class="nav-item">
-                <a href="index.php?action=reserva"
+                <a href="admin?action=reserva"
                     class="nav-link text-white <?= $action === 'reserva' ? 'active' : '' ?>">
                     <i class="bi bi-journal-check me-2"></i>
                     Reservas
@@ -57,7 +57,7 @@
 
         <hr class="border-secondary">
 
-        <a href="index.php?action=logout"
+        <a href="admin?action=logout"
             class="btn btn-danger w-100 mt-auto">
             <i class="bi bi-box-arrow-right me-2"></i>
             Cerrar sesión

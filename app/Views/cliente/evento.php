@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/../../helpers/format.php' ?>
+<?php require_once ROOT_PATH . '/app/helpers/format.php' ?>
 
 <?php if (!empty($eventos)): ?>
 
@@ -58,6 +58,7 @@
                               </div>
                               
                               <button 
+                                 id="btn-reservar"
                                  class="btn btn-reservar mt-3"
                                  data-id="<?= $ev['id_evento'] ?>"
                                  data-nombre="<?= $ev['nombre'] ?>"
