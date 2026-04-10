@@ -1,26 +1,25 @@
-<section id="modal-global" class="modal-overlay d-none">
+<section class="modal fade" id="modalGlobal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
 
-    <div class="modal-content">
-
-        <h2 id="modal-title" class="text-center"></h2>
-
-        <form id="modal-form" class="text-start">
-
-            <div id="modal-body" class="row"></div>
-
-            <div class="d-flex gap-2 mt-3 justify-content-end">
-
-                <button type="button" class="btn btn-primary btn-sm" id="modal-btn-save">
-                    Guardar
+            <div class="modal-header p-0 align-items-center">
+                <h4 class="modal-title" id="modalTitle"></h4>
+                <button type="button" class="btn p-0 text-black ms-auto" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg fs-4"></i>
                 </button>
-                <button type="button" class="btn btn-secondary btn-sm" id="modal-btn-cancel">
-                    Cancelar
-                </button>
-
+            </div>
+            
+            <div class="modal-body px-0" id="modalBody">
             </div>
 
-        </form>
-
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-primary" id="modalBtnSave">
+                    Guardar
+                </button>
+            </div>
+        </div>
     </div>
-    
 </section>

@@ -39,6 +39,7 @@
             <main class="col-md-9 col-lg-10 order-md-2 ms-sm-auto px-md-4 py-4">
                 
                 <?php require_once $vista; ?>
+                <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3"></div>
             
             </main>
             
@@ -50,6 +51,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>const BASE_URL = "<?= BASE_URL ?>"</script>
+    <script src="<?= BASE_URL ?>js/admin/ui.js"></script>
     <script src="<?= BASE_URL ?>js/admin/filter.js"></script>
     <script src="<?= BASE_URL ?>js/admin/helpers.js"></script>
     <script src="<?= BASE_URL ?>js/admin/sidebar.js"></script>

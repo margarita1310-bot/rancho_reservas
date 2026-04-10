@@ -27,7 +27,6 @@ class AuthController {
     }
 
     public function googleLogin() {
-
         $data = json_decode(file_get_contents("php://input"), true);
 
         if(!isset($data['token'])) {
@@ -45,7 +44,7 @@ class AuthController {
         }
 
         $user = json_decode($response);
-
+        
         if (!isset($user->email)) {
             $this->json(['success' => false]);
         }
@@ -56,7 +55,7 @@ class AuthController {
         $cliente = $this->model->getByEmailCliente($email);
 
         if ($cliente) {
-            $_SESSION['cliente_id'] = $cliente['id_cliente'];
+            $_SESSION['cliente'] = $cliente['id_cliente'];
 
             return $this->json([
                 'success' => true,
@@ -67,6 +66,7 @@ class AuthController {
 
         $_SESSION['google_email_temp'] = $email;
         $_SESSION['google_nombre_temp'] = $nombre;
+        $_SESSION['codigo_verificado'] = true;
 
         $this->json([
             'success' => true,
@@ -80,11 +80,10 @@ class AuthController {
     }
     
     public function enviarCodigo() {
-
         if (empty($_POST['email'])) {
             $this->json([
                 'success' => false,
-                'message' => 'Email requerido'
+                'msg' => 'Correo electrónico requerido'
             ]);
         }
 
@@ -93,7 +92,7 @@ class AuthController {
         if (!$email) {
             $this->json([
                 'success' => false,
-                'message' => 'Email inválido'
+                'msg' => 'Correo electrónico inválido'
             ]);
         }
         
@@ -106,7 +105,6 @@ class AuthController {
         $mail = new PHPMailer(true);
         
         try {
-
             $mail->isSMTP();
             $mail->Host = $_ENV['MAIL_HOST'];
             $mail->SMTPAuth = true;
@@ -134,33 +132,32 @@ class AuthController {
             
             $this->json([
                 'success' => false,
-                'message' => 'Error al enviar correo'
+                'msg' => 'Error al enviar correo'
             ]);
         }
     }
     
     public function validarCodigo() {
-
         $codigoIngresado = $_POST['codigo'] ?? '';
         
         if (!isset($_SESSION['codigo_verificacion'], $_SESSION['codigo_expira'])) {
             $this->json([
                 'success' => false,
-                'message' => 'No hay código activo'
+                'msg' => 'No hay código activo'
             ]);
         }
         
         if (time() > $_SESSION['codigo_expira']) {
             $this->json([
                 'success' => false,
-                'message' => 'Código expirado'
+                'msg' => 'Código expirado'
             ]);
         }
         
         if ($codigoIngresado != $_SESSION['codigo_verificacion']) {
             $this->json([
                 'success' => false,
-                'message' => 'Código incorrecto'
+                'msg' => 'Código incorrecto'
             ]);
         }
         
@@ -176,7 +173,7 @@ class AuthController {
                 'telefono' => null
             ];
         } else {
-            $_SESSION['cliente_id'] = $cliente['id_cliente'];
+            $_SESSION['cliente'] = $cliente['id_cliente'];
         }
         
         $_SESSION['codigo_verificado'] = true;
@@ -188,7 +185,7 @@ class AuthController {
             $_SESSION['email_verificacion']
         );
 
-        $nuevo = !$cliente || !$cliente['telefono'];
+        $nuevo = !$cliente['id_cliente'] || !$cliente['telefono'];
         
         $this->json([
             'success' => true,
@@ -198,26 +195,70 @@ class AuthController {
     }
    
     public function guardarDatosCliente() {
-
         if (!isset($_SESSION['codigo_verificado'])) {
             $this->json([
                 'success' => false,
-                'message' => 'No verificado'
+                'msg' => 'No verificado'
             ]);
         }
     
-        $nombre = $_POST['nombre'] ?? '';
-        $telefono = $_POST['telefono'] ?? '';
+        $nombre = trim($_POST['nombre'] ?? '');
+        $telefono = trim($_POST['telefono'] ?? '');
         $email = $_SESSION['google_email_temp']
-            ?? $_SESSION['email_temp'] ?? null;
-    
-        if (!$nombre || !$telefono || !$email) {
-            $this->json(['success' => false]);
+        ?? $_SESSION['email_temp'] ?? null;
+        
+        if (!preg_match('/^[\p{L}\s]+$/u', $nombre)) {
+            $this->json([
+                'success' => false,
+                'msg' => 'El nombre solo puede contener letras y espacios'
+            ]);
+        }
+
+        if (!$nombre) {
+            $this->json([
+                'success' => false,
+                'msg' => 'El nombre es obligatorio'
+            ]);
+        }
+
+        if (!preg_match('/^[0-9]{10}$/', $telefono)) {
+            $this->json([
+                'success' => false,
+                'msg' => 'El teléfono debe contener 10 dígitos'
+            ]);
+        }
+
+        if (!$telefono) {
+            $this->json([
+                'success' => false,
+                'msg' => 'Teléfono es obligatorio'
+            ]);
+        }
+
+        if ($email && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->json([
+                'success' => false,
+                'msg' => 'Correo electrónico inválido'
+            ]);
+        }
+
+        if (!$email) {
+            $this->json([
+                'success' => false,
+                'msg' => 'Correo electrónico es obligatorio'
+            ]);
+        }
+        
+        if (!$nombre && !$telefono && !$email) {
+            $this->json([
+                'success' => false,
+                'msg' => 'Todos los campos son obligatorios'
+            ]);
         }
 
         $id = $this->model->crearCliente($nombre, $email, $telefono);
-
-        $_SESSION['cliente_id'] = $id;
+            
+        $_SESSION['cliente'] = $id;
 
         unset(
             $_SESSION['google_email_temp'],
@@ -225,6 +266,66 @@ class AuthController {
             $_SESSION['email_temp']
         );
         
+        $this->json([
+            'success' => true,
+            'cliente' => [
+                'id_cliente' => $id,
+                'nombre' => $nombre,
+                'email' => $email,
+                'telefono' => $telefono
+            ]
+        ]);
+    }
+
+    public function actualizarDatosCliente() {
+        if (!isset($_SESSION['cliente'])) {
+            $this->json([
+                'success' => false,
+                'msg' => 'No autenticado'
+            ]);
+        }
+
+        $id = $_SESSION['cliente'];
+        $nombre = trim($_POST['nombre'] ?? '');
+        $telefono = trim($_POST['telefono'] ?? '');
+
+        if (!preg_match('/^[\p{L}\s]+$/u', $nombre)) {
+            $this->json([
+                'success' => false,
+                'msg' => 'El nombre solo puede contener letras y espacios'
+            ]);
+        }
+
+        if (!$nombre) {
+            $this->json([
+                'success' => false,
+                'msg' => 'El nombre es obligatorio'
+            ]);
+        }
+
+        if (!preg_match('/^[0-9]{10}$/', $telefono)) {
+            $this->json([
+                'success' => false,
+                'msg' => 'El teléfono debe contener 10 dígitos'
+            ]);
+        }
+
+        if (!$telefono) {
+            $this->json([
+                'success' => false,
+                'msg' => 'Teléfono es obligatorio'
+            ]);
+        }
+
+        if (!$nombre && !$telefono) {
+            $this->json([
+                'success' => false,
+                'msg' => 'Todos los campos son obligatorios'
+            ]);
+        }
+
+        $this->model->actualizarCliente($id, $nombre, $telefono);
+
         $this->json(['success' => true]);
     }
 }

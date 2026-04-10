@@ -39,6 +39,10 @@ switch ($action) {
     case 'guardarDatosCliente':
         $authController->guardarDatosCliente();
         break;
+
+    case 'actualizarDatosCliente':
+        $authController->actualizarDatosCliente();
+        break;
     
     case 'crearOrden':
         $pagoController->crearOrden();

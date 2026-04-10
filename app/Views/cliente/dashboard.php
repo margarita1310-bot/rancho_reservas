@@ -22,26 +22,26 @@
         <?php include __DIR__ . '/promocion.php'; ?>
         <?php include __DIR__ . '/evento.php'; ?>
         <?php include __DIR__ . '/footer.php'; ?>
+        <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3"></div>
     
     </main>
 
-    <?php include __DIR__ . '/loginModal.php'; ?>
-    <?php include __DIR__ . '/datosModal.php'; ?>
-    <?php include __DIR__ . '/reservaModal.php'; ?>
-    <?php include __DIR__ . '/perfilModal.php'; ?>
-    <?php include __DIR__ . '/reservasClienteModal.php'; ?>
+    <?php include __DIR__ . '/modalLogin.php'; ?>
+    <?php include __DIR__ . '/modalDatosCliente.php'; ?>
+    <?php include __DIR__ . '/modalReservar.php'; ?>
+    <?php include __DIR__ . '/modalPerfilCliente.php'; ?>
+    <?php include __DIR__ . '/modalReservasCliente.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://www.paypal.com/sdk/js?client-id=<?php echo $_ENV['PAYPAL_CLIENT_ID']; ?>&currency=<?php echo $_ENV['PAYPAL_CURRENCY']; ?>"></script>
     <script>const GOOGLE_CLIENT_ID = "<?php echo $_ENV['GOOGLE_CLIENT_ID']; ?>";</script>
     <script>const BASE_URL = "<?= BASE_URL ?>"</script>
+    <script src="<?= BASE_URL ?>js/cliente/ui.js"></script>
     <script src="<?= BASE_URL ?>js/cliente/auth.js"></script>
     <script src="<?= BASE_URL ?>js/cliente/cliente.js"></script>
     <script src="<?= BASE_URL ?>js/cliente/reserva.js"></script>
     <script src="<?= BASE_URL ?>js/cliente/pago.js"></script>
-    <script src="<?= BASE_URL ?>js/cliente/navbar.js"></script>
-    <script src="<?= BASE_URL ?>js/cliente/ui.js"></script>
     
 </body>
 </html>

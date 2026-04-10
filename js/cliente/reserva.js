@@ -1,57 +1,10 @@
-//Función para navegar por el modal reservaModal
-function goToStep(step) {
-    document.querySelectorAll('.step').forEach(s => s.classList.add('d-none'));
-    document.getElementById('step' + step).classList.remove('d-none');
-
-    document.querySelectorAll('.step-indicator').forEach(s => {
-        s.classList.remove('active', 'completed');
-    });
-
-    for (let i = 1; i <= 3 ; i++) {
-        const indicator = document.getElementById('indicator' + i);
-
-        if (i < step) {
-            indicator.classList.add('completed');
-            indicator.innerHTML = '<i class="bi bi-check"></i>';
-        } else if (i === step) {
-            indicator.classList.add('active');
-            indicator.innerHTML = i;
-        } else {
-            indicator.innerHTML = i;
-        }
-    }
-}
-
-function aMinutos(hhmm) {
-    const [h, m] = hhmm.split(":").map(Number);
-    return h * 60 + m;
-}
-
-function minutosAHora(min) {
-    min = min % (24 * 60);
-
-    const h = Math.floor(min / 60);
-    const m = min % 60;
-
-    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-}
-
-//Funcion para cargar los datos del evento en el modal
-function cargarDatosEvento() {
-    document.getElementById('eventoNombre').value = sessionStorage.getItem('nombre_evento');
-    document.getElementById('eventoFecha').value = sessionStorage.getItem('fecha_evento');
-    document.getElementById('eventoPrecio').value = sessionStorage.getItem('precio_evento');
-}
-
-//Funcion del boton reservar
-function reservarEvento(btn) {
-
+function botonReservar(btn) {
     const id_evento = btn.dataset.id;
 
     fetch(BASE_URL + "cliente?action=verificarMesas&id_evento=" + id_evento)
-    .then(r => r.json())
-    .then(r => {
-        if (r.status === "error") {
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "error") {
             btn.disabled = true;
             btn.textContent = "Sin disponibilidad";
             return;
@@ -60,89 +13,84 @@ function reservarEvento(btn) {
         sessionStorage.setItem('id_evento', btn.dataset.id);
         sessionStorage.setItem('nombre_evento', btn.dataset.nombre);
         sessionStorage.setItem('fecha_evento', btn.dataset.fecha);
-        sessionStorage.setItem('precio_evento', btn.dataset.precio);
         sessionStorage.setItem('hora_evento', btn.dataset.hora);
         sessionStorage.setItem('hora_fin_evento', btn.dataset.hora_fin);
-        
-        const horaEvento = btn.dataset.hora;
-        const horaFinEvento = btn.dataset.hora_fin;
-        
-        const eventoInicio = aMinutos(horaEvento);
-        let eventoFin = aMinutos(horaFinEvento);
-    
-        if (eventoFin < eventoInicio) {
-            eventoFin += 24 * 60;
-        }
-    
-        const inicioLlegada = eventoInicio - (2 * 60);
-        const finLlegada = eventoFin - (2 * 60);
-    
-        const inicioHora = minutosAHora(inicioLlegada);
-        const finHora = minutosAHora(finLlegada);
-    
-        
-        document.getElementById('info-hora').innerHTML =
-        `Puedes llegar entre ${inicioHora} y ${finHora}`;
-    
-        document.getElementById('info-personas').innerHTML =
-        `Ingrese de 1 a 20 personas.`;
-        
-        abrirReserva();
+        sessionStorage.setItem('precio_evento', btn.dataset.precio);
+
+        abrirDatosReserva();
     });
 }
 
-//Función que abre el modal para insertar los datos faltantes de la reserva reservaModal
-function abrirReserva() {
+function abrirDatosReserva() {
     const id_cliente = sessionStorage.getItem('id_cliente');
+    const nombre = sessionStorage.getItem('nombre_cliente');
+    const telefono = sessionStorage.getItem('telefono_cliente');
+    sessionStorage.setItem('accion_post', 'reservar');
 
     if(!id_cliente) {
-        alert("Inicia sesión primero.");
-
-        const loginModal = document.getElementById('loginModal');
-        const modal = bootstrap.Modal.getInstance(loginModal) || new bootstrap.Modal(loginModal);
-        modal.show();
-
+        abrirLogin();
+        return;
+    } else if (!nombre || !telefono) {
+        abrirDatosCliente();
         return;
     }
 
-    const nombre = sessionStorage.getItem('nombre');
-    const telefono = sessionStorage.getItem('telefono');
-
-    if (!nombre || !telefono) {
-        alert("Asegúrate de ingresar los siguientes datos correctamente.");
-
-        const datosModal = document.getElementById('datosModal');
-        const modal = bootstrap.Modal.getInstance(datosModal) || new bootstrap.Modal(datosModal);
-        modal.show();
-
-        return;
-    }
-
-    const reservaModal = document.getElementById('reservaModal');
-    const modal = bootstrap.Modal.getInstance(reservaModal) || new bootstrap.Modal(reservaModal);
+    const modalReservar = document.getElementById('modalReservar');
+    const modal = bootstrap.Modal.getInstance(modalReservar) || new bootstrap.Modal(modalReservar);
     cargarDatosEvento();
-
+    
     modal.show();
 }
 
-//Función para guardar los datos de la reserva en reservaModal
+function cerrarDatosReserva() {
+    const modalReservar = document.getElementById('modalReservar');
+    const modal = bootstrap.Modal.getInstance(modalReservar) || new bootstrap.Modal(modalReservar);
+    modal.hide();
+}
+
+function cargarDatosEvento() {
+    document.getElementById('nombreEvento').value = sessionStorage.getItem('nombre_evento');
+    document.getElementById('fechaEvento').value = sessionStorage.getItem('fecha_evento');
+    document.getElementById('precioEvento').value = sessionStorage.getItem('precio_evento');
+
+    const horaEvento = sessionStorage.getItem('hora_evento');
+    const horaFinEvento = sessionStorage.getItem('hora_fin_evento');
+
+    const eventoInicio = aMinutos(horaEvento);
+    let eventoFin = aMinutos(horaFinEvento);
+
+    if (eventoFin < eventoInicio) {
+        eventoFin += 24 * 60;
+    }
+
+    const inicioLlegada = eventoInicio - (2 * 60);
+    const finLlegada = eventoFin - (2 * 60);
+
+    const inicioHora = minutosAHora(inicioLlegada);
+    const finHora = minutosAHora(finLlegada);
+
+    const infoHora = document.getElementById('info-hora');
+    const infoPersonas = document.getElementById('info-personas');
+
+    infoHora.innerHTML = `Puedes llegar entre ${inicioHora} y ${finHora}`;
+    infoPersonas.innerHTML = `Ingrese de 1 a 20 personas.`;
+}
+
 function guardarDatosReserva() {
-    const hora = document.getElementById('eventoHora').value;
-    const personas = document.getElementById('eventoPersonas').value;
+    const hora = document.getElementById('horaEvento').value;
+    const personas = document.getElementById('personasEvento').value;
 
     const fechaEvento = sessionStorage.getItem('fecha_evento');
     const horaEvento = sessionStorage.getItem('hora_evento');
     const horaFinEvento = sessionStorage.getItem('hora_fin_evento');
 
-    if (!hora) {
-        alert("Por favor selecciona una hora.");
-        return;
-    }
+    const errorHoraEvento = document.getElementById('errorHoraEvento');
+    const errorPersonasEvento = document.getElementById('errorPersonasEvento');
 
-    if (!horaEvento || !horaFinEvento) {
-        alert("Error con horarios del evento.");
-        return;
-    }
+    errorHoraEvento.textContent = '';
+    errorPersonasEvento.textContent = '';
+
+    let error = false;
 
     const llegada = aMinutos(hora);
     const eventoInicio = aMinutos(horaEvento);
@@ -157,13 +105,14 @@ function guardarDatosReserva() {
     const finLlegada = eventoFinAjustado - (2 * 60);
 
     let llegadaAjustada = llegada;
+
     if (llegada < inicioLlegada) {
         llegadaAjustada += 24 * 60;
     }
 
     if (llegadaAjustada < inicioLlegada || llegadaAjustada > finLlegada) {
-        alert("La hora de llegada debe ser entre 2 horas antes de iniciar y 2 horas antes de terminar el evento.");
-        return;
+        errorHoraEvento.textContent = 'La hora de llegada es incorrecta.';
+        error = true;
     }
 
     const inicioEvento = new Date(`${fechaEvento}T${horaEvento}:00`);
@@ -173,32 +122,46 @@ function guardarDatosReserva() {
     finReserva.setHours(finReserva.getHours() + 1);
 
     if (ahora > finReserva) {
-        alert("Ya no es posible reservar, el evento inició hace más de 1 hora.");
+        mostrarToast("Ya no es posible reservar, el evento inició hace más de 1 hora.", 'error');
         return;
     }
 
-    if (!personas || personas < 1 || personas > 20) {
-        alert("El número de personas debe ser entre 1 y 20.");
-        return;
+    if (!hora) {
+        errorHoraEvento.textContent = 'La hora de llegada es obligatoria.';
+        error = true;
     }
 
-    sessionStorage.setItem('hora', hora);
-    sessionStorage.setItem('personas', personas);
+    if (!personas) {
+        errorPersonasEvento.textContent = 'El número de personas es obligatorio.';
+        error = true;
+    }
 
-    cargarConfirmacion();
-    goToStep(2);
+    if (personas < 1 || personas > 20) {
+        errorPersonasEvento.textContent = 'El número de personas es incorrecto.';
+        error = true;
+    }
+    
+    if (!hora || !personas || personas < 1 || personas > 20) {
+        mostrarToast('Completa los campos correctamente.', 'error');
+        return;
+    } else {     
+        sessionStorage.setItem('hora_evento', hora);
+        sessionStorage.setItem('personas_evento', personas);
+
+        cargarDatosReserva();
+        goToStep(2);
+    }
 }
 
-//Función que carga los datos de la reserva raservaModal
-function cargarConfirmacion() {
+function cargarDatosReserva() {
     document.getElementById('confirmarNombre').textContent =
-        sessionStorage.getItem('nombre') ?? '';
+        sessionStorage.getItem('nombre_cliente') ?? '';
 
     document.getElementById('confirmarEmail').textContent =
-        sessionStorage.getItem('email') ?? '';
+        sessionStorage.getItem('email_cliente') ?? '';
 
     document.getElementById('confirmarTelefono').textContent =
-        sessionStorage.getItem('telefono') ?? '';
+        sessionStorage.getItem('telefono_cliente') ?? '';
 
     document.getElementById('confirmarEvento').textContent =
         sessionStorage.getItem('nombre_evento') ?? '';
@@ -210,13 +173,12 @@ function cargarConfirmacion() {
         sessionStorage.getItem('precio_evento') ?? '';
 
     document.getElementById('confirmarHora').textContent =
-        sessionStorage.getItem('hora') ?? '';
+        sessionStorage.getItem('hora_evento') ?? '';
 
     document.getElementById('confirmarPersonas').textContent =
-        sessionStorage.getItem('personas') ?? '';
+        sessionStorage.getItem('personas_evento') ?? '';
 }
 
-//Función que guarda los datos de la reserva para seguir con el pago
 let reservaID = null;
 function crearReserva() {
     if (reservaID) {
@@ -230,13 +192,11 @@ function crearReserva() {
 
     const formData =  new FormData();
 
-    const id_cliente = sessionStorage.getItem('id_cliente');
     const id_evento = sessionStorage.getItem('id_evento');
     const mesas_reservadas = 1;
-    const personas = sessionStorage.getItem('personas');
+    const personas = sessionStorage.getItem('personas_evento');
     const precio = sessionStorage.getItem('precio_evento');
 
-    formData.append('id_cliente', id_cliente);
     formData.append('id_evento', id_evento);
     formData.append('mesas_reservadas', mesas_reservadas);
     formData.append('personas', personas);
@@ -258,13 +218,12 @@ function crearReserva() {
 
             renderPayPal();
         } else {
-            alert("Error al crear la reserva.")
+            mostrarToast(r.msg || 'Error al crear la reserva.', 'error');
         }
     })
-    .catch(() => alert("Error en la petición."));
+    .catch(() => mostrarToast('Error en la petición.', 'error'));
 }
 
-//Función para cancelar la reserva
 function cancelarReserva(id_reserva) {
     if (!confirm("¿Seguro que quieres cancelar esta reserva?")) {
         return;
@@ -278,16 +237,15 @@ function cancelarReserva(id_reserva) {
     .then(r => r.json())
     .then(r => {
         if (r.status === "ok") {
-            alert("Reserva cancelada correctamente.");
+            mostrarToast("Reserva cancelada correctamente.", 'success');
             location.reload();
         } else {
-            alert(r.msg || "Error al cancelar.");
+            mostrarToast(r.msg || 'Error al cancelar la reserva.', 'error');
         }
     })
-    .catch(() => alert("Error en la conexión."));
+    .catch(() => mostrarToast('Error en la conexión.', 'error'));
 }
 
-//Función para ver el comprobante de pago de la reserva
 function verComprobante(id_reserva) {
     window.open(`cliente?action=comprobante&id_reserva=${id_reserva}`, '_blank');
 }

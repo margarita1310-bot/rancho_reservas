@@ -1,79 +1,102 @@
-//Función para validar los datos al iniciar sesión con Google
-function handleCredentialResponse(response) {
-    const user = parseJwt(response.credential);
-    console.log(user);
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof google !== "undefined") {
+        google.accounts.id.initialize({
+            client_id: GOOGLE_CLIENT_ID,
+            callback: handleCredentialResponse
+        });
 
-    sessionStorage.setItem('email', user.email);
-    sessionStorage.setItem('nombre', user.name ?? '');
+        const googleBtn = document.getElementById("googleLogin");
 
-    document.getElementById('nombre').value = user.name ?? '';
-    
-    fetch(BASE_URL + 'cliente?action=google', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            token: response.credential
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if(data.success) {
-            if (data.cliente) {
-                sessionStorage.setItem('id_cliente', data.cliente.id_cliente ?? '');
-                sessionStorage.setItem('nombre', data.cliente.nombre ?? '');
-                sessionStorage.setItem('telefono', data.cliente.telefono ?? '');
-            }
-            if (data.nuevo) {
-                alert("Asegúrate de ingresar los siguientes datos correctamente.");
-                abrirDatosModal(data.cliente);
-            } else {
-                loginExitoso(data.cliente);
-            }
+        if (googleBtn) {
+            google.accounts.id.renderButton(googleBtn, {
+                    theme: "outline",
+                    size: "large",
+                    text: "continue_with",
+                    width: "100%"
+            });
         }
-    })
-    .catch(() => alert("Error de Google."));
-}
-
-//Función para enviar el código al iniciar sesión por medio de correo
-function enviarCodigo() {
-    const email = document.getElementById('emailLogin').value;
-
-    if (!email) {
-        alert("Ingresa un correo electronico valido.");
-        return;
     }
 
+    const id = sessionStorage.getItem('id_cliente');
+    window.clienteLogueado = !!id;
+
+    actualizarNavbar();
+
+    const modalReservar = document.getElementById('modalReservar');
+
+    if (modalReservar) {
+        modalReservar.addEventListener('show.bs.modal', () => {
+            goToStep(1);
+        });
+    }
+});
+
+function abrirLogin() {
+    if (window.clienteLogueado) return;
+
+    document.getElementById('emailLogin').disabled = false;
+    const modalLogin = document.getElementById('modalLogin');
+    const modal = bootstrap.Modal.getInstance(modalLogin) || new bootstrap.Modal(modalLogin);
+    modal.show();
+}
+
+function cerrarLogin() {
+    const modalLogin = document.getElementById('modalLogin');
+    const modal = bootstrap.Modal.getInstance(modalLogin) || new bootstrap.Modal(modalLogin);
+    modal.hide();
+}
+
+function abrirDatosLogin() {
+    cerrarLogin();
+    abrirDatosCliente();
+}
+
+function enviarCodigo() {
+    const email = document.getElementById('emailLogin').value;
+    const errorEmailLogin = document.getElementById('errorEmailLogin');
+
+    errorEmailLogin.textContent = '';
+
+    let error = false;
+    
+    if (!email) {
+        errorEmailLogin.textContent = 'El correo es obligatorio.';
+        error = true;
+    }
+    
     fetch(BASE_URL + 'cliente?action=enviarCodigo', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: `email=${email}`
+        body: `email=${encodeURIComponent(email)}`
     })
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            document.getElementById('btnEnviarCodigo').classList.add('d-none');
-            document.getElementById('bloqueCodigo').classList.remove('d-none');
-            document.getElementById('btnValidarCodigo').classList.remove('d-none');
+            mostrarToast('Enviando código, revisa tu correo electrónico.', 'info');
+            document.getElementById('emailLogin').disabled = true;
+            document.getElementById('enviarCodigoLogin').classList.add('d-none');
+            document.getElementById('bloqueCodigoLogin').classList.remove('d-none');
+            document.getElementById('validarCodigoLogin').classList.remove('d-none');
         } else {
-            alert("Error al enviar el código.");
+            mostrarToast(data.msg || 'Error al enviar el código.', 'error');
         }
     })
-    .catch(() => alert("Error de conexión."));
+    .catch(() => mostrarToast('Error de conexión.', 'error'));
 }
 
-//Función para validar el código al iniciar sesión por medio de correo
 function validarCodigo() {
-    const codigo = document.getElementById('codigo').value.trim();
+    const codigo = document.getElementById('codigoLogin').value.trim();
     const email = document.getElementById('emailLogin').value.trim();
 
-    if(!email) {
-        alert("Ingresa un correo electronico valido.");
-        return;
-    }
+    const errorCodigoLogin = document.getElementById('errorCodigoLogin');
+
+    errorCodigoLogin.textContent = '';
+
+    let error = false;
 
     if (!codigo) {
-        alert("Ingresa el código.");
-        return;
+        errorCodigoLogin.textContent = 'El código es obligatorio.';
+        error = true;
     }
 
     fetch(BASE_URL + 'cliente?action=validarCodigo', {
@@ -84,50 +107,19 @@ function validarCodigo() {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            sessionStorage.setItem('email', email);
-
-            if (data.cliente) {
-                sessionStorage.setItem('id_cliente', data.cliente.id_cliente);
-                sessionStorage.setItem('nombre', data.cliente.nombre ?? '');
-                sessionStorage.setItem('telefono', data.cliente.telefono ?? '');
-            }
+            sessionStorage.setItem('email_cliente', email);
             if (data.nuevo) {
-                alert("Asegúrate de ingresar los siguientes datos correctamente.");
-                abrirDatosModal(data.cliente);
-            } else {
-                loginExitoso(data.cliente);
+                abrirDatosLogin();
+                return;
             }
-
+            if (data.cliente) {
+                successLogin(data.cliente);
+            }
         } else {
-            alert(data.message ?? "Código incorrecto.");
+            errorCodigoLogin.textContent = data.msg || 'Código incorrecto.';
         }
     })
-    .catch(() => alert("Error de conexión."));
-}
-
-//Función al iniciar sesión correctamente
-function loginExitoso(cliente) {
-    sessionStorage.setItem('id_cliente', cliente.id_cliente);
-    sessionStorage.setItem('nombre', cliente?.nombre ?? '');
-    sessionStorage.setItem('email', cliente?.email ?? '');
-    sessionStorage.setItem('telefono', cliente?.telefono ?? '');
-    
-    window.clienteLogueado = true;
-    
-    const loginModal = document.getElementById('loginModal');
-    const modal = bootstrap.Modal.getInstance(loginModal) || new bootstrap.Modal(loginModal);
-    modal.hide();
-
-    actualizarNavbar();
-}
-
-//Función al cerrar sesión en la pagina
-function logout() {
-    sessionStorage.clear();
-    window.clienteLogueado = false;
-    actualizarNavbar();
-    location.reload();
-    alert("Sesión cerrada exitosamente.")
+    .catch(() => mostrarToast('Error de conexión.', 'error'));
 }
 
 function parseJwt(token) {
@@ -141,3 +133,59 @@ function parseJwt(token) {
     );
     return JSON.parse(jsonPayload);
 }
+
+function handleCredentialResponse(response) {
+    const user = parseJwt(response.credential);
+
+    sessionStorage.setItem('email_cliente', user.email);
+
+    document.getElementById('nombreCliente').value = user.name ?? '';
+    
+    fetch(BASE_URL + 'cliente?action=google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            token: response.credential
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success) {
+            if (data.nuevo) {
+                abrirDatosLogin();
+                return;
+            }
+            if (data.cliente) {
+                successLogin(data.cliente);
+            }
+        }
+    })
+    .catch(() => mostrarToast('Error de Google.', 'error'));
+}
+
+function successLogin(cliente) {
+    sessionStorage.setItem('id_cliente', cliente.id_cliente);
+    sessionStorage.setItem('email_cliente', cliente?.email ?? '');
+    sessionStorage.setItem('nombre_cliente', cliente?.nombre ?? '');
+    sessionStorage.setItem('telefono_cliente', cliente?.telefono ?? '');
+
+    mostrarToast('Inicio de sesión exitoso.', 'success');
+    
+    window.clienteLogueado = true;
+    
+    cerrarLogin();
+    actualizarNavbar();
+
+    if (sessionStorage.getItem('accion_post') === 'reservar') {
+        sessionStorage.removeItem('accion_post');
+        abrirDatosReserva();
+    }
+}
+
+function logout() {
+    sessionStorage.clear();
+    window.clienteLogueado = false;
+    actualizarNavbar();
+    location.reload();
+}
+

@@ -1,99 +1,174 @@
-//Carga del form al crear un evento
 document.getElementById('btn-create-evento')?.addEventListener('click', () => {
     abrirModal({
         titulo: 'Nuevo Evento',
         textoBoton: 'Crear',
         claseBoton: 'btn-success',
         contenido: `
-            <div class="mb-3">
-                <label class="form-label">Nombre</label>
-                <input type="text" id="nombre" class="form-control">
+        <p class="text-muted">Una vez reservado el evento, no podrá ser modificado. Verifique la información antes de crear el evento.</p>
+        <div class="row">
+            <div class="mb-3 col-12">
+                <label class="form-label">Nombre <span class="text-danger">*</span></label>
+                <input type="text" id="nombre" class="form-control mb-1">
+                <span id="errorNombreEvento" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Descripción</label>
-                <textarea id="descripcion" class="form-control" rows="3"></textarea>
+            <div class="mb-3 col-12">
+                <label class="form-label">Descripción <span class="text-danger">*</span></label>
+                <textarea id="descripcion" class="form-control mb-1" rows="3"></textarea>
+                <span id="errorDescripcionEvento" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Fecha</label>
-                <input type="date" id="fecha" class="form-control">
+            <div class="mb-3 col-12">
+                <label class="form-label">Fecha <span class="text-danger">*</span></label>
+                <input type="date" id="fecha" class="form-control mb-1">
+                <span id="errorFechaEvento" class="text-danger"></span>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Hora</label>
-                <input type="time" id="hora" class="form-control">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Hora <span class="text-danger">*</span></label>
+                <input type="time" id="hora" class="form-control mb-1">
+                <span id="errorHoraEvento" class="text-danger"></span>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Hora de terminación</label>
-                <input type="time" id="hora_fin" class="form-control">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Hora de terminación <span class="text-danger">*</span></label>
+                <input type="time" id="hora_fin" class="form-control mb-1">
+                <span id="errorHoraFinEvento" class="text-danger"></span>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Mesas disponibles</label>
-                <input type="number" id="mesas_disponibles" class="form-control">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Mesas disponibles <span class="text-danger">*</span></label>
+                <input type="number" id="mesas_disponibles" class="form-control mb-1">
+                <span id="errorMesasDisponiblesEvento" class="text-danger"></span>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Precio</label>
-                <input type="number" step="0.01" id="precio_mesa" class="form-control">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Precio <span class="text-danger">*</span></label>
+                <input type="number" step="0.01" id="precio_mesa" class="form-control mb-1">
+                <span id="errorPrecioMesaEvento" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Imagen del evento</label>
-                <input type="file" id="imagen" class="form-control" accept="image/png, image/jpeg">
+            <div class="mb-3 col-12">
+                <label class="form-label">Imagen del evento <span class="text-danger">*</span></label>
+                <input type="file" id="imagen" class="form-control mb-1" accept="image/png, image/jpeg">
+                <span id="errorImagenEvento" class="text-danger"></span>
             </div>
+        </div>
         `,
         onSubmit: crearEvento
     });
 
-    setTimeout(configurarFechaEvento, 50);
+    setTimeout(configurarFechaEvento, 100);
 });
 
-//Función para crear un evento
 function crearEvento () {
-    const nombre = document.getElementById('nombre');
-    const fecha = document.getElementById('fecha');
-    const hora = document.getElementById('hora');
-    const hora_fin = document.getElementById('hora_fin');
+    const nombre = document.getElementById('nombre').value.trim();
+    const descripcion = document.getElementById('descripcion').value.trim();
+    const fecha = document.getElementById('fecha').value;
+    const hora = document.getElementById('hora').value;
+    const hora_fin = document.getElementById('hora_fin').value;
+    const mesasDisponibles = document.getElementById('mesas_disponibles').value;
+    const precioMesa = document.getElementById('precio_mesa').value;
 
-    if(!nombre.value.trim() || !fecha.value || !hora.value || !hora_fin) {
-        alert('Completa los campos obligatorios');
-        return;
+    const errorNombre = document.getElementById('errorNombreEvento');
+    const errorDescripcion = document.getElementById('errorDescripcionEvento');
+    const errorFecha = document.getElementById('errorFechaEvento');
+    const errorHora = document.getElementById('errorHoraEvento');
+    const errorHoraFin = document.getElementById('errorHoraFinEvento');
+    const errorMesasDisponibles = document.getElementById('errorMesasDisponiblesEvento');
+    const errorPrecioMesa = document.getElementById('errorPrecioMesaEvento');
+    const errorImagen = document.getElementById('errorImagenEvento');
+
+    errorNombre.textContent = '';
+    errorDescripcion.textContent = '';
+    errorFecha.textContent = '';
+    errorHora.textContent = '';
+    errorHoraFin.textContent = '';
+    errorMesasDisponibles.textContent = '';
+    errorPrecioMesa.textContent = '';
+    errorImagen.textContent = '';
+
+    let error = false;
+
+    if (!nombre) {
+        errorNombre.textContent = 'El nombre es obligatorio.';
+        error = true;
     }
 
+    if (!descripcion) {
+        errorDescripcion.textContent = 'La descripción es obligatoria.';
+        error = true;
+    }
+
+    if (!fecha) {
+        errorFecha.textContent = 'La fecha es obligatoria.';
+        error = true;
+    }
+
+    if (!hora) {
+        errorHora.textContent = 'La hora es obligatoria.';
+        error = true;
+    }
+
+    if (!hora_fin) {
+        errorHoraFin.textContent = 'La hora de terminación es obligatoria.';
+        error = true;
+    }
+
+    if (hora && hora_fin && hora >= hora_fin) {
+        errorHoraFin.textContent = 'La hora de terminación debe ser mayor a la hora de inicio.';
+        error = true;
+    }
+
+    if (!/^[0-9]+$/.test(mesasDisponibles) || mesasDisponibles < 1) {
+        errorMesasDisponibles.textContent = 'El número de mesas disponibles es incorrecto.';
+        error = true;
+    }
+
+    if (!/^[0-9]+\.?[0-9]*$/.test(precioMesa) || precioMesa <= 0) {
+        errorPrecioMesa.textContent = 'El precio de la mesa es incorrecto.';
+        error = true;
+    }
+    
     const imagen = document.getElementById('imagen').files[0];
     
     if (!imagen) {
-        alert('Selecciona una imagen');
+        errorImagen.textContent = 'La imagen es obligatoria.';
+        error = true;
+    }
+    
+    if (error) {
+        mostrarToast('Completa los campos correctamente.', 'error');
         return;
     }
 
     const formData = new FormData();
     
-    formData.append('nombre', nombre.value.trim());
-    formData.append('descripcion', document.getElementById('descripcion').value.trim());
-    formData.append('fecha', fecha.value);
-    formData.append('hora', hora.value);
-    formData.append('hora_fin', hora_fin.value);
-    formData.append('mesas_disponibles', document.getElementById('mesas_disponibles').value);
-    formData.append('precio_mesa', document.getElementById('precio_mesa').value);
+    formData.append('nombre', nombre);
+    formData.append('descripcion', descripcion);
+    formData.append('fecha', fecha);
+    formData.append('hora', hora);
+    formData.append('hora_fin', hora_fin);
+    formData.append('mesas_disponibles', mesasDisponibles);
+    formData.append('precio_mesa', precioMesa);
     formData.append('imagen', imagen);
 
     fetch(BASE_URL + 'admin?action=guardarEvento', {
         method: 'POST',
         body: formData
     })
-    .then(r => r.json())
-    .then(r => {
-        if (r.status === 'ok') location.reload();
-        else alert("Error al guardar.");
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            cerrarModal();
+            location.reload();
+        } else {
+            mostrarToast(data.msg || "Error al guardar el evento.", 'error');
+        } 
     })
-    .catch(() => alert("Error en la petición."));
+    .catch(() => mostrarToast("Error en la petición.", 'error'));
 }
 
-//Carga del form al actualizar evento
 document.addEventListener('click', async e => {
     const btn = e.target.closest('.btn-update');
 
@@ -113,67 +188,147 @@ document.addEventListener('click', async e => {
         textoBoton: 'Actualizar',
         claseBoton: 'btn-success',
         contenido: `
+        <p class="text-muted">Una vez reservado el evento, no podrá ser modificado. Verifique la información antes de crear el evento.</p>
+        <div class="row">
             <input type="hidden" id="id_evento" value="${ev.id_evento}">
-            <div class="mb-3">
-                <label class="form-label">Nombre</label>
-                <input type="text" id="nombre" class="form-control" value="${ev.nombre}">
+            <div class="mb-3 col-12">
+                <label class="form-label">Nombre <span class="text-danger">*</span> </label>
+                <input type="text" id="nombre" class="form-control mb-1" value="${ev.nombre}">
+                <span id="errorNombreEvento" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Descripcion</label>
-                <textarea id="descripcion" class="form-control" rows="3">${ev.descripcion}</textarea>
+            <div class="mb-3 col-12">
+                <label class="form-label">Descripcion <span class="text-danger">*</span> </label>
+                <textarea id="descripcion" class="form-control mb-1" rows="3">${ev.descripcion}</textarea>
+                <span id="errorDescripcionEvento" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Fecha</label>
-                <input type="date" id="fecha" class="form-control" value="${ev.fecha}">
+            <div class="mb-3 col-12">
+                <label class="form-label">Fecha <span class="text-danger">*</span> </label>
+                <input type="date" id="fecha" class="form-control mb-1" value="${ev.fecha}">
+                <span id="errorFechaEvento" class="text-danger"></span>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Hora</label>
-                <input type="time" id="hora" class="form-control" value="${ev.hora}">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Hora <span class="text-danger">*</span> </label>
+                <input type="time" id="hora" class="form-control mb-1" value="${ev.hora}">
+                <span id="errorHoraEvento" class="text-danger"></span>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Hora de terminación</label>
-                <input type="time" id="hora_fin" class="form-control" value="${ev.hora_fin}">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Hora de terminación <span class="text-danger">*</span> </label>
+                <input type="time" id="hora_fin" class="form-control mb-1" value="${ev.hora_fin}">
+                <span id="errorHoraFinEvento" class="text-danger"></span>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Mesas disponibles</label>
-                <input type="number" id="mesas_disponibles" class="form-control" value="${ev.mesas_disponibles}">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Mesas disponibles <span class="text-danger">*</span> </label>
+                <input type="number" id="mesas_disponibles" class="form-control mb-1" value="${ev.mesas_disponibles}">
+                <span id="errorMesasDisponiblesEvento" class="text-danger"></span>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Precio</label>
-                <input type="number" step="0.01" id="precio_mesa" class="form-control" value="${ev.precio_mesa}">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Precio <span class="text-danger">*</span> </label>
+                <input type="number" step="0.01" id="precio_mesa" class="form-control mb-1" value="${ev.precio_mesa}">
+                <span id="errorPrecioMesaEvento" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Cambiar imagen (opcional)</label>
+            <div class="mb-3 col-12">
+                <label class="form-label">Cambiar imagen <span class="text-muted">(opcional)</span></label>
                 <input type="file" id="imagen" class="form-control" accept="image/png, image/jpeg">
             </div>
+        </div>
         `,
         onSubmit: actualizarEvento
     });
 
-    setTimeout(configurarFechaEvento, 50);
+    setTimeout(configurarFechaEvento, 100);
 });
 
-//Función para actualizar un evento
 function actualizarEvento() {
-    const body = document.getElementById('modal-body');
+    const body = document.getElementById('modalBody');
+
+    const nombre = body.querySelector('#nombre').value.trim();
+    const descripcion = body.querySelector('#descripcion').value.trim();
+    const fecha = body.querySelector('#fecha').value;
+    const hora = body.querySelector('#hora').value;
+    const hora_fin = body.querySelector('#hora_fin').value;
+    const mesasDisponibles = body.querySelector('#mesas_disponibles').value;
+    const precioMesa = body.querySelector('#precio_mesa').value;
+
+    const errorNombre = body.querySelector('#errorNombreEvento');
+    const errorDescripcion = body.querySelector('#errorDescripcionEvento');
+    const errorFecha = body.querySelector('#errorFechaEvento');
+    const errorHora = body.querySelector('#errorHoraEvento');
+    const errorHoraFin = body.querySelector('#errorHoraFinEvento');
+    const errorMesasDisponibles = body.querySelector('#errorMesasDisponiblesEvento');
+    const errorPrecioMesa = body.querySelector('#errorPrecioMesaEvento');
+
+    errorNombre.textContent = '';
+    errorDescripcion.textContent = '';
+    errorFecha.textContent = '';
+    errorHora.textContent = '';
+    errorHoraFin.textContent = '';
+    errorMesasDisponibles.textContent = '';
+    errorPrecioMesa.textContent = '';
+
+    let error = false;
+
+    if (!nombre) {
+        errorNombre.textContent = 'El nombre es obligatorio.';
+        error = true;
+    }
+
+    if (!descripcion) {
+        errorDescripcion.textContent = 'La descripción es obligatoria.';
+        error = true;
+    }
+
+    if (!fecha) {
+        errorFecha.textContent = 'La fecha es obligatoria.';
+        error = true;
+    }
+
+    if (!hora) {
+        errorHora.textContent = 'La hora es obligatoria.';
+        error = true;
+    }
+
+    if (!hora_fin) {
+        errorHoraFin.textContent = 'La hora de terminación es obligatoria.';
+        error = true;
+    }
+
+    if (hora && hora_fin && hora >= hora_fin) {
+        errorHoraFin.textContent = 'La hora de terminación debe ser mayor a la hora de inicio.';
+        error = true;
+    }
+
+    if (!/^[0-9]+$/.test(mesasDisponibles) || mesasDisponibles < 1) {
+        errorMesasDisponibles.textContent = 'El número de mesas disponibles es incorrecto.';
+        error = true;
+    }
+
+    if (!/^[0-9]+\.?[0-9]*$/.test(precioMesa) || precioMesa <= 0) {
+        errorPrecioMesa.textContent = 'El precio de la mesa es incorrecto.';
+        error = true;
+    }
+
+    if (error) {
+        mostrarToast('Completa los campos correctamente.', 'error');
+        return;
+    }
     
     const data = new FormData();
 
     data.append('id', body.querySelector('#id_evento').value);
-    data.append('nombre', body.querySelector('#nombre').value.trim());
-    data.append('descripcion', body.querySelector('#descripcion').value.trim());
-    data.append('fecha', body.querySelector('#fecha').value);
-    data.append('hora', body.querySelector('#hora').value);
-    data.append('hora_fin', body.querySelector('#hora_fin').value);
-    data.append('mesas_disponibles', body.querySelector('#mesas_disponibles').value);
-    data.append('precio_mesa', body.querySelector('#precio_mesa').value);
+    data.append('nombre', nombre);
+    data.append('descripcion', descripcion);
+    data.append('fecha', fecha);
+    data.append('hora', hora);
+    data.append('hora_fin', hora_fin);
+    data.append('mesas_disponibles', mesasDisponibles);
+    data.append('precio_mesa', precioMesa);
 
     const imagen = body.querySelector('#imagen').files[0];
 
@@ -185,15 +340,18 @@ function actualizarEvento() {
         method: 'POST',
         body: data
     })
-    .then(r => r.json())
-    .then(r => {
-        if (r.status === 'ok') location.reload();
-        else alert("Error al actualizar.");
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            cerrarModal();
+            location.reload();
+        } else {
+            mostrarToast(data.msg || "Error al actualizar el evento.", 'error');
+        }
     })
-    .catch(() => alert("Error en la petición."));
+    .catch(() => mostrarToast("Error en la petición.", 'error'));
 }
 
-//Carga del modal borrar evento
 document.addEventListener('click', e => {
     const btn = e.target.closest('.btn-delete');
 
@@ -208,7 +366,6 @@ document.addEventListener('click', e => {
     });
 });
 
-//Función para eliminar un evento
 function eliminarEvento(btn) {
     const data = new FormData();
     
@@ -218,13 +375,12 @@ function eliminarEvento(btn) {
         method: 'POST',
         body: data
     })
-    .then(r => r.json())
-    .then(r => {
-        if (r.status === 'ok') {
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
             btn.closest('tr').remove();
         }
-
-        document.getElementById('modal-global').classList.add('d-none');
+        cerrarModal();
     })
-    .catch(() => alert("Error en la petición."));
+    .catch(() => mostrarToast("Error en la petición.", 'error'));
 }

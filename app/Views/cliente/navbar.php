@@ -22,13 +22,13 @@
 
                     <a class="btn dropdown-toggle text-white" data-bs-toggle="dropdown">
                         <i class="bi bi-person-circle fs-6 me-1"></i>
-                        <span id="nombreCliente" class="d-none d-lg-inline"></span>
-                        <span id="inicialesCliente" class="d-inline d-lg-none"></span>
+                        <span id="nombreClienteNav" class="d-none d-lg-inline"></span>
+                        <span id="inicialesClienteNav" class="d-inline d-lg-none"></span>
                     </a>
 
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#" onclick="abrirPerfil()">Mi perfil</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="abrirReservas()">Mis reservas</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="abrirPerfilCliente()">Mi perfil</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="abrirReservasCliente()">Mis reservas</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item text-danger" href="#" onclick="logout()">Cerrar sesión</a></li>
                     </ul>

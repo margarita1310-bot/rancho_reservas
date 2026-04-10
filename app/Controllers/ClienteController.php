@@ -47,11 +47,11 @@ class ClienteController {
     }
 
     public function obtenerReservas() {
-        if (!isset($_SESSION['cliente_id'])) {
+        if (!isset($_SESSION['cliente'])) {
             return [];
         }
 
-        $id_cliente = $_SESSION['cliente_id'];
+        $id_cliente = $_SESSION['cliente'];
         $reservas = $this->clienteModel->getReservasCliente($id_cliente);
 
         foreach ($reservas as &$r) {

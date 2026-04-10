@@ -1,7 +1,7 @@
 :root {
     --color-primario: #200D02;
     --color-secundario: #854507;
-    --color-fondo: #F5E9D8; 
+    --color-fondo: #EFE6D8; 
     --color-dorado: #F5C16C;
     --color-blanco: #FFFFFF;
     --color-negro: #000000;
@@ -202,22 +202,32 @@ section {
     background-color: var(--color-fondo);
 }
 
-.footer-top h4 {
+.footer-top h3 {
     font-weight: 600;
     margin-bottom: 1rem;
+}
+
+.footer-top p {
+    font-weight: 700;
+    color: var(--color-primario);
+}
+
+.footer-top i {
+    color: var(--color-secundario);
 }
 
 .footer-horario li {
     color: var(--color-secundario);
 }
 
-.social-icons {
-    margin-top: 10px;
+.footer-horario li strong {
+    font-weight: 700;
+    color: var(--color-primario);
 }
 
 .social-icon {
     color: var(--color-secundario);
-    font-size: 1.4rem;
+    font-size: 1.75rem;
     transition: .3s;
 }
 
@@ -271,7 +281,7 @@ section {
 }
 
 .form-label {
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .form-control {

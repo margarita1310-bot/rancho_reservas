@@ -1,44 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
-    function abrirModal ({
-        titulo,
-        contenido,
-        textoBoton = "Guardar",
-        claseBoton = "btn-primary",
-        onSubmit })
-        {
-            const modal = document.getElementById('modal-global');
-            const modalTitulo = document.getElementById('modal-title');
-            const modalBody = document.getElementById('modal-body');
-            const btnSave = document.getElementById('modal-btn-save');
-            const btnCancel = document.getElementById('modal-btn-cancel');
-            
-            modalTitulo.textContent = titulo;
-            modalBody.innerHTML = contenido;
+    const modalGlobal = document.getElementById('modalGlobal');
 
-            btnSave.textContent = textoBoton;
-            btnSave.className = `btn btn-sm ${claseBoton}`;
-
-            modal.classList.remove('d-none');
-        
-            btnSave.onclick = () => {
-                if (onSubmit) {
-                    onSubmit();
-                }
-
-                modal.classList.add('d-none');
-            };
-
-            btnCancel.onclick = () => {
-                modal.classList.add('d-none');
-            };
-        
-            modal.onclick = e => {
-                if (e.target === modal) {
-                    modal.classList.add('d-none');
-                }
-            };
-        }
-        
-        window.abrirModal = abrirModal;
+    if (modalGlobal) {
+        modalGlobal.addEventListener('shown.bs.modal', () => {
+            configurarFechaEvento();
+            configurarFechasPromocion();
+        });
     }
-);
+});
+function abrirModal ({
+    titulo,
+    contenido,
+    textoBoton = "Guardar",
+    claseBoton = "btn-primary",
+    onSubmit })
+    {
+        const modalGlobal = document.getElementById('modalGlobal');
+        const modal = bootstrap.Modal.getInstance(modalGlobal) || new bootstrap.Modal(modalGlobal);
+
+        const modalTitulo = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const btnSave = document.getElementById('modalBtnSave');
+            
+        modalTitulo.textContent = titulo;
+        modalBody.innerHTML = contenido;
+
+        btnSave.textContent = textoBoton;
+        btnSave.className = `btn ${claseBoton}`;
+        
+        btnSave.onclick = () => {
+            if (onSubmit) {
+                onSubmit();
+            }
+        };
+
+        modal.show();
+    }
+
+function cerrarModal() {
+    const modalGlobal = document.getElementById('modalGlobal');
+    const modal = bootstrap.Modal.getInstance(modalGlobal) || new bootstrap.Modal(modalGlobal);
+    modal.hide();
+}

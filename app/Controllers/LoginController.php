@@ -16,8 +16,14 @@ class LoginController {
             session_start();
         }
 
-        $email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
+        $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
+
+        if ($email && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error = "Email no válido.";
+            require_once ROOT_PATH . '/app/views/admin/login.php';
+            return;
+        }
 
         if (!$email || !$password) {
             $error = "Debes ingresar email y contraseña.";

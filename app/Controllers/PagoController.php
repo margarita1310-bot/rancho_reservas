@@ -19,9 +19,8 @@ class PagoController {
         $this->paypal = new PayPalService();
     }
         
-    private function json($data, $code=200) {
+    private function json($data) {
         header('Content-Type: application/json; charset=utf-8');
-        http_response_code($code);
         echo json_encode($data);
         exit;
     }
@@ -31,23 +30,35 @@ class PagoController {
         $id_reserva = $_POST['id_reserva'] ?? null;
 
         if (!$id_reserva) {
-            $this->json(["status" => "error", "msg" => "Reserva no válida"], 400);
+            $this->json([
+                'status' => 'error',
+                'msg' => 'Reserva no válida'
+            ]);
         }
 
         $reserva = $this->reservaModel->getByIdReserva($id_reserva);
 
         if (!$reserva) {
-            $this->json(["status" => "error", "msg" => "Reserva no encontrada"], 404);
+            $this->json([
+                'status' => 'error',
+                'msg' => 'Reserva no encontrada'
+            ]);
         }
 
         if ($reserva['estado'] === 'confirmada') {
-            $this->json(["status" => "error", "msg" => "La reserva ya fue pagada"], 400);
+            $this->json([
+                'status' => 'error',
+                'msg' => 'La reserva ya fue pagada'
+            ]);
         }
 
         $evento = $this->eventoModel->getByIdEvento($reserva['id_evento']);
 
         if ($evento['mesas_disponibles'] <= 0) {
-            $this->json(["status" => "error", "msg" => "Ya no hay mesas disponibles"], 400);
+            $this->json([
+                'status' => 'error',
+                'msg' => 'Ya no hay mesas disponibles'
+            ]);
         }
 
         $monto = $reserva['total'];
@@ -55,7 +66,10 @@ class PagoController {
         $orden = $this->paypal->createOrder($monto);
 
         if (!isset($orden['id'])) {
-            $this->json(["status" => "error", "msg" => "Error creando orden PayPal"], 500);
+            $this->json([
+                'status' => 'error',
+                'msg' => 'Error creando orden PayPal'
+            ]);
         }
 
         $this->pagoModel->crearPago(
@@ -68,8 +82,8 @@ class PagoController {
         );
 
         $this->json([
-            "status" => "ok",
-            "orderID" => $orden['id']
+            'status' => 'ok',
+            'orderID' => $orden['id']
         ]);        
     }
 
@@ -78,23 +92,35 @@ class PagoController {
         $paypal_order_id = $_POST['orderID'] ?? null;
 
         if (!$paypal_order_id) {
-            $this->json(["status" => "error", "msg" => "orderID requerido"], 400);
+            $this->json([
+                'status' => 'error',
+                'msg' => 'orderID requerido'
+            ]);
         }
 
         $pago = $this->pagoModel->getByOrderIdPago($paypal_order_id);
 
         if (!$pago) {
-            $this->json(["status" => "error", "msg" => "Pago no encontrado"], 404);
+            $this->json([
+                'status' => 'error',
+                'msg' => 'Pago no encontrado'
+            ]);
         }
 
         if ($pago['estado'] === "COMPLETED") {
-            $this->json(["status" => "ok", "msg" => "Pago ya procesado"], 200);
+            $this->json([
+                'status' => 'error',
+                'msg' => 'Pago ya procesado'
+            ]);
         }
 
         $resultado = $this->paypal->captureOrder($paypal_order_id);
 
         if (!isset($resultado['status']) || $resultado['status'] !== "COMPLETED") {
-            $this->json(["status" => "error", "respuesta" => $resultado], 500);
+            $this->json([
+                'status' => 'error',
+                'respuesta' => $resultado
+            ]);
         }
         
         $paypal_transaction_id = 
@@ -108,8 +134,8 @@ class PagoController {
         );
 
         $this->json([
-            "status" => "ok",
-            "paypal_transaction_id" => $paypal_transaction_id
+            'status' => 'ok',
+            'paypal_transaction_id' => $paypal_transaction_id
         ]);
     }
 }

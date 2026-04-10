@@ -6,7 +6,7 @@
 
             <div class="row text-center text-md-start text-black">
 
-                <div class="col-12 col-md-4 mb-4">
+                <div class="col-12 col-md-6">
 
                     <h3>Contacto</h3>
 
@@ -26,37 +26,29 @@
 
                 </div>
 
-                <div class="col-12 col-md-4 mb-4">
+                <div class="col-12 col-md-6">
 
-                    <h3>Horarios</h3>
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <h3>Horarios</h3>
+        
+                            <ul class="list-unstyled footer-horario">
+                                <li><strong>Lunes a Viernes</strong> 11:00 AM - 11:00 PM</li>
+                                <li><strong>Sábados y Domingos</strong> 12:00 PM - 11:00 PM</li>
+                            </ul>
+                        </div>
 
-                    <ul class="list-unstyled footer-horario">
-                        <li><strong>Lunes - Jueves</strong> </li>
-                        <li><strong>Viernes</strong> </li>
-                        <li><strong>Sabado</strong> </li>
-                        <li><strong>Domingo</strong> </li>
-                    </ul>
+                        <div class="col-12">
+                            <h3>Síguenos</h3>
 
-                </div>
-
-                <div class="col-12 col-md-4 mb-4 text-center">
-
-                    <h3>Siguenos</h3>
-
-                    <div class="social-icons d-flex justify-content-center gap-3">
-
-                        <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="social-icon"><i class="bi bi-whatsapp"></i></a>
-                    
+                            <div class="social-icons">
+                                <a href="https://www.facebook.com/share/1GrEGJM7ZT/" class="social-icon"><i class="bi bi-facebook"></i></a>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
   
     <div class="footer-bottom text-center text-white py-4">

@@ -1,4 +1,4 @@
-<div class="modal fade" id="reservasClienteModal" tabindex="-1">
+<div class="modal fade" id="modalReservasCliente" tabindex="-1">
 
     <div class="modal-dialog modal-dialog-centered">
 
@@ -23,7 +23,7 @@
 
                     <?php foreach ($reservasCliente as $rc): ?>
 
-                        <div class="card mb-3 shadow-sm rounded">
+                        <div class=" card mb-3 shadow-sm rounded">
 
                             <div class="card-body">
 

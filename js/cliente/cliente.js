@@ -1,22 +1,45 @@
-//Función para abrir el modal y ingresar datos del cliente nuevo en datosModal
-function abrirDatosModal() {
-    const loginModal = document.getElementById('loginModal');
-    const modalLogin = bootstrap.Modal.getInstance(loginModal) || new bootstrap.Modal(loginModal);
-    modalLogin.hide();
-    
-    const datosModal = document.getElementById('datosModal');
-    const modalDatos = bootstrap.Modal.getInstance(datosModal) || new bootstrap.Modal(datosModal);
-    modalDatos.show();
+function abrirDatosCliente() {
+    const modalDatosCliente = document.getElementById('modalDatosCliente');
+    const modal = bootstrap.Modal.getInstance(modalDatosCliente) || new bootstrap.Modal(modalDatosCliente);
+    modal.show();
 }
 
-//Función para guardar los datos del cliente del modal datosModal
-function guardarDatosCliente() {
-    const nombre = document.getElementById('nombre').value.trim();
-    const telefono = document.getElementById('telefono').value.trim();
+function cerrarDatosCliente() {
+    const modalDatosCliente = document.getElementById('modalDatosCliente');
+    const modal = bootstrap.Modal.getInstance(modalDatosCliente) || new bootstrap.Modal(modalDatosCliente);
+    modal.hide();
+}
 
-    if (!nombre || !telefono) {
-        alert("Completa todos los campos.");
-        return;
+function guardarDatosCliente() {
+    const nombre = document.getElementById('nombreCliente').value.trim();
+    const telefono = document.getElementById('telefonoCliente').value.trim();
+
+    const errorTelefono = document.getElementById('errorTelefonoCliente');
+    const errorNombre = document.getElementById('errorNombreCliente');
+
+    errorTelefono.textContent = '';
+    errorNombre.textContent = '';
+
+    let error = false;
+
+    if (!/^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre)) {
+        errorNombre.textContent = 'El nombre solo puede contener letras y espacios.';
+        error = true;
+    }
+
+    if (!nombre) {
+        errorNombre.textContent = 'El nombre es obligatorio.';
+        error = true;
+    }
+
+    if (!/^[0-9]{10}$/.test(telefono)) {
+        errorTelefono.textContent = 'El teléfono debe tener 10 dígitos.';
+        error = true;
+    }
+
+    if (!telefono) {
+        errorTelefono.textContent = 'El teléfono es obligatorio.';
+        error = true;
     }
 
     const formData = new FormData();
@@ -28,90 +51,105 @@ function guardarDatosCliente() {
         method: 'POST',
         body: formData
     })
-    .then(r => r.json())
-    .then(r => {
-        if (r.success) {
-            sessionStorage.setItem('nombre', nombre);
-            sessionStorage.setItem('telefono', telefono);
-
-            const datosModal = document.getElementById('datosModal');
-            const modal = bootstrap.Modal.getInstance(datosModal) || new bootstrap.Modal(datosModal);
-            modal.hide();
-
-            alert("Inicio de sesión exitoso.");
-
-            actualizarNavbar();
-
+    .then(res => res.json())
+    .then(data => {
+        if (data.success && data.cliente) {
+            cerrarDatosCliente();
+            successLogin(data.cliente);
         } else {
-            alert("Error al guardar datos");
+            mostrarToast(data.msg || 'Error al guardar datos.', 'error');
         }
     })
-    .catch(() => alert("Error en la petición"));
+    .catch(() => mostrarToast('Error en la petición.', 'error'));
 }
 
-//Función para abrir el modal para visualizar datos del cliente perfilModal
-function abrirPerfil() {
-    document.getElementById('clienteNombre').value = sessionStorage.getItem('nombre') ?? '';
-    document.getElementById('clienteEmail').value = sessionStorage.getItem('email') ?? '';
-    document.getElementById('clienteTelefono').value = sessionStorage.getItem('telefono') ?? '';
-
-    const perfilModal = document.getElementById('perfilModal');
-    const modal = bootstrap.Modal.getInstance(perfilModal) || new bootstrap.Modal(perfilModal);
+function abrirReservasCliente() {
+    const modalReservasCliente = document.getElementById('modalReservasCliente');
+    const modal = bootstrap.Modal.getInstance(modalReservasCliente) || new bootstrap.Modal(modalReservasCliente);
     modal.show();
 }
 
-//Función para habilitar los inputs de los datos del cliente al editar perfilModal
+function cerrarReservasCliente() {
+    const modalReservasCliente = document.getElementById('modalReservasCliente');
+    const modal = bootstrap.Modal.getInstance(modalReservasCliente) || new bootstrap.Modal(modalReservasCliente);
+    modal.hide();
+}
+
+function abrirPerfilCliente() {
+    document.getElementById('emailPerfil').value = sessionStorage.getItem('email_cliente') ?? '';
+    document.getElementById('nombrePerfil').value = sessionStorage.getItem('nombre_cliente') ?? '';
+    document.getElementById('telefonoPerfil').value = sessionStorage.getItem('telefono_cliente') ?? '';
+
+    const modalPerfilCliente = document.getElementById('modalPerfilCliente');
+    const modal = bootstrap.Modal.getInstance(modalPerfilCliente) || new bootstrap.Modal(modalPerfilCliente);
+    modal.show();
+}
+
 function habilitarDatosCliente() {
-    document.getElementById('clienteNombre').disabled = false;
-    document.getElementById('clienteTelefono').disabled = false;
+    document.getElementById('nombrePerfil').disabled = false;
+    document.getElementById('telefonoPerfil').disabled = false;
     document.getElementById('btn-actualizar').classList.remove('d-none');
     document.getElementById('btn-habilitar').classList.add('d-none');
 }
 
-//Función para actualizar los datos del cliente perfilModal
 function actualizarDatosCliente() {
-    const nombre = document.getElementById('clienteNombre').value.trim();
-    const telefono = document.getElementById('clienteTelefono').value.trim();
-    
-    if (!nombre || !telefono) {
-        alert("Completa todos los campos.");
-        return;
+    const nombre = document.getElementById('nombrePerfil').value.trim();
+    const telefono = document.getElementById('telefonoPerfil').value.trim();
+
+    const errorTelefono = document.getElementById('errorTelefonoPerfil');
+    const errorNombre = document.getElementById('errorNombrePerfil');
+
+    errorTelefono.textContent = '';
+    errorNombre.textContent = '';
+
+    let error = false;
+
+    if (!/^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre)) {
+        errorNombre.textContent = 'El nombre solo puede contener letras y espacios.';
+        error = true;
+    }
+
+    if (!nombre) {
+        errorNombre.textContent = 'El nombre es obligatorio.';
+        error = true;
+    }
+
+    if (!/^[0-9]{10}$/.test(telefono)) {
+        errorTelefono.textContent = 'El teléfono debe tener 10 dígitos.';
+        error = true;
+    }
+
+    if (!telefono) {
+        errorTelefono.textContent = 'El teléfono es obligatorio.';
+        error = true;
     }
 
     const formData = new FormData();
 
     formData.append('nombre', nombre);
     formData.append('telefono', telefono);
-    formData.append('id_cliente', sessionStorage.getItem('id_cliente'));
 
-    fetch(BASE_URL + 'cliente?action=guardarDatosCliente', {
+    fetch(BASE_URL + 'cliente?action=actualizarDatosCliente', {
         method: 'POST',
         body: formData
     })
-    .then(r => r.json())
-    .then(r => {
-        if (r.success) {
-            sessionStorage.setItem('nombre', nombre);
-            sessionStorage.setItem('telefono', telefono);
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            sessionStorage.setItem('nombre_cliente', nombre);
+            sessionStorage.setItem('telefono_cliente', telefono);
 
             actualizarNavbar();
 
-            alert("Perfil actualizado.");
+            mostrarToast('Perfil actualizado.', 'success');
 
-            const perfilModal = document.getElementById('perfilModal');
-            const modal = bootstrap.Modal.getInstance(perfilModal) || new bootstrap.Modal(perfilModal);
+            const modalPerfilCliente = document.getElementById('modalPerfilCliente');
+            const modal = bootstrap.Modal.getInstance(modalPerfilCliente) || new bootstrap.Modal(modalPerfilCliente);
             modal.hide();
 
         } else {
-            alert("Error al actualizar perfil.");
+            mostrarToast(data.msg || 'Error al actualizar perfil.', 'error');
         }
     })
-    .catch(() => alert("Error en la petición."));
-}
-
-//Función para visualizar las reservas del cliente modal reservasClienteModal
-function abrirReservas() {
-    const reservasClienteModal = document.getElementById('reservasClienteModal');
-    const modal = bootstrap.Modal.getInstance(reservasClienteModal) || new bootstrap.Modal(reservasClienteModal);
-    modal.show();
+    .catch(() => mostrarToast('Error en la petición.', 'error'));
 }

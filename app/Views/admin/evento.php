@@ -87,7 +87,8 @@
                         <?php if (!empty($eventos)): ?>
 
                             <?php foreach ($eventos as $ev): ?>
-
+                                <?php $bloqueado = ((int)$ev['tiene_reservas'] > 0); ?>
+                                
                                 <tr data-estado="<?= strtolower($ev['estado']) ?>">
 
                                     <td>
@@ -97,6 +98,13 @@
                                         <small class="text-muted">
                                             <?= htmlspecialchars($ev['descripcion']) ?>
                                         </small>
+                                        <br>
+                                        <?php if ($bloqueado): ?>
+                                            <span class="badge bg-danger mb-1" title="No se puede editar ni borrar">
+                                                <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                                                Este evento tiene reservas.
+                                            </span>
+                                        <?php endif; ?>
                                     </td>
 
                                     <td>
@@ -133,16 +141,12 @@
 
                                     <td class="text-center">
 
-                                        <?php $bloqueado = ((int)$ev['tiene_reservas'] > 0); ?>
-
                                         <div class="btn-group btn-group-sm">
 
                                             <?php if ($bloqueado): ?>
-                                                <span title="No se puede editar, tiene reservas">
-                                                    <button class="btn btn-outline-primary btn-update" disabled>
-                                                        <i class="bi bi-pencil"></i>
-                                                    </button>
-                                                </span>
+                                                <button class="btn btn-outline-secondary btn-update" disabled>
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
                                             <?php else: ?>
                                                 <button class="btn btn-outline-primary btn-update"
                                                         data-id="<?= $ev['id_evento'] ?>"
@@ -153,11 +157,9 @@
                                             <?php endif; ?>
 
                                             <?php if ($bloqueado): ?>
-                                                <span title="No se puede borrar, tiene reservas">
-                                                    <button class="btn btn-outline-danger btn-delete" disabled>
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </span>
+                                                <button class="btn btn-outline-secondary btn-delete" disabled>
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
                                             <?php else: ?>
                                                 <button class="btn btn-outline-danger btn-delete"
                                                         data-id="<?= $ev['id_evento'] ?>"

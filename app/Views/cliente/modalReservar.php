@@ -1,4 +1,4 @@
-<div class="modal fade" id="reservaModal" tabindex="-1">
+<div class="modal fade" id="modalReservar" tabindex="-1">
 
     <div class="modal-dialog modal-dialog-centered">
 
@@ -38,29 +38,33 @@
 
                     <div class="mb-3">
                         <label class="form-label">Evento</label>
-                        <input type="text" class="form-control" id="eventoNombre" disabled>
+                        <input type="text" class="form-control" id="nombreEvento" disabled>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Fecha</label>
-                        <input class="form-control" id="eventoFecha" disabled>
+                        <input class="form-control" id="fechaEvento" disabled>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Precio</label>
-                        <input class="form-control" id="eventoPrecio" disabled>
+                        <input class="form-control" id="precioEvento" disabled>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Hora de llegada</label>
-                        <input type="time" class="form-control" id="eventoHora">
+                        <input type="time" class="form-control mb-1" id="horaEvento">
                         <small id="info-hora" class="text-muted"></small>
+                        <br>
+                        <span id="errorHoraEvento" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Número de personas</label>
-                        <input type="number" class="form-control" id="eventoPersonas" min="1" max="20">
+                        <input type="number" class="form-control mb-1" id="personasEvento" min="1" max="20" autocomplete="off">
                         <small id="info-personas" class="text-muted"></small>
+                        <br>
+                        <span id="errorPersonasEvento" class="text-danger"></span>
                     </div>
 
                     <button type="button" class="btn btn-primary w-100" onclick="guardarDatosReserva()">Siguiente</button>
@@ -128,7 +132,7 @@
         
                 <div id="step3" class="step d-none">
 
-                    <div id="paypal-button"></div>
+                    <div id="paypal-button" class="mb-3"></div>
                     <button type="button" class="btn btn-outline-secondary" onclick="goToStep(2)">Atrás</button>
 
                 </div>

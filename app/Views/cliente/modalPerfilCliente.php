@@ -1,4 +1,4 @@
-<div class="modal fade" id="perfilModal" tabindex="-1">
+<div class="modal fade" id="modalPerfilCliente" tabindex="-1">
 
     <div class="modal-dialog modal-dialog-centered">
 
@@ -17,17 +17,20 @@
                 
                 <div class="mb-3">
                     <label class="form-label">Correo</label>
-                    <input type="email" class="form-control" id="clienteEmail" disabled>
+                    <input type="email" class="form-control mb-1" id="emailPerfil" disabled>
+                    <span id="errorEmailPerfil" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="clienteNombre" disabled>
+                    <input type="text" class="form-control mb-1" id="nombrePerfil" disabled>
+                    <span id="errorNombrePerfil" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Teléfono</label>
-                    <input type="text" class="form-control" id="clienteTelefono" disabled>
+                    <input type="text" maxlength="10" class="form-control mb-1" id="telefonoPerfil" disabled>
+                    <span id="errorTelefonoPerfil" class="text-danger"></span>
                 </div>
             
                 <button id="btn-habilitar" class="btn btn-primary w-100" onclick="habilitarDatosCliente()">Editar</button>

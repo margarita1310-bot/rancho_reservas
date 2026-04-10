@@ -17,13 +17,13 @@ function renderPayPal() {
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 body: `orderID=${data.orderID}&id_reserva=${id_reserva}`
             })
-            .then(r => r.json())
-            .then(r => {
-                if (r.status === "ok") {
-                    alert("Pago completado.");
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "ok") {
+                    mostrarToast('Pago completado.', 'success');
                     location.reload();
                 } else {
-                    alert("Error en el pago");
+                    mostrarToast(data.msg || 'Error en el pago.', 'error');
                 }
             });
         }
@@ -37,13 +37,13 @@ function crearOrdenPaypal(id_reserva) {
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: 'id_reserva=' + id_reserva
     })
-    .then(r => r.json())
-    .then(r => {
-        if (r.status !== "ok") {
-            alert("Error creando orden.");
+    .then(res => res.json())
+    .then(data => {
+        if (data.status !== "ok") {
+            mostrarToast(data.msg || 'Error creando orden.', 'error');
             throw new Error("Orden invalida.");
         }
-        return r.orderID;
+        return data.orderID;
     });
 }
 
@@ -52,15 +52,8 @@ function pagarReserva(id_reserva) {
     const paypalDiv = document.getElementById('paypal-button');
     paypalDiv.dataset.reserva = id_reserva;
 
-    const reservasClienteModal = document.getElementById('reservasClienteModal');
-    const modalReservas = bootstrap.Modal.getInstance(reservasClienteModal) || new bootstrap.Modal(reservasClienteModal);
-    modalReservas.hide();
-    
-    const reservaModal = document.getElementById('reservaModal');
-    const modalPago = bootstrap.Modal.getInstance(reservaModal) || new bootstrap.Modal(reservaModal);
-    modalPago.show();
-
+    cerrarReservasCliente();
+    abrirDatosReserva();
     goToStep(3);
-
     renderPayPal();
 }

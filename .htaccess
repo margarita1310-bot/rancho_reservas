@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Admin
+RewriteRule ^admin/?$ admin/index.php [L]
+RewriteRule ^admin/(.*)$ admin/index.php?url=$1 [QSA,L]
+
+# Cliente
+RewriteRule ^cliente/?$ cliente/index.php [L]
+RewriteRule ^cliente/(.*)$ cliente/index.php?url=$1 [QSA,L]

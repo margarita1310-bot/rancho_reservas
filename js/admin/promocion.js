@@ -1,80 +1,128 @@
-//Carga del form al crear una promocion
 document.getElementById('btn-create-promocion')?.addEventListener('click', () => {
     abrirModal({
         titulo: 'Nueva Promoción',
         textoBoton: 'Crear',
         claseBoton: 'btn-success',
         contenido: `
-            <div class="mb-3">
-                <label class="form-label">Titulo</label>
-                <input type="text" id="titulo" class="form-control">
+        <div class="row">
+            <div class="mb-3 col-12">
+                <label class="form-label">Titulo <span class="text-danger">*</span></label>
+                <input type="text" id="titulo" class="form-control mb-1">
+                <span id="errorTituloPromocion" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Descripción</label>
-                <textarea id="descripcion" class="form-control" rows="3"></textarea>
+            <div class="mb-3 col-12">
+                <label class="form-label">Descripción <span class="text-danger">*</span></label>
+                <textarea id="descripcion" class="form-control mb-1" rows="3"></textarea>
+                <span id="errorDescripcionPromocion" class="text-danger"></span>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Fecha inicio</label>
-                <input type="date" id="fecha_inicio" class="form-control">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Fecha inicio <span class="text-danger">*</span></label>
+                <input type="date" id="fecha_inicio" class="form-control mb-1">
+                <span id="errorFechaInicioPromocion" class="text-danger"></span>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Fecha fin</label>
-                <input type="date" id="fecha_fin" class="form-control">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Fecha fin <span class="text-danger">*</span></label>
+                <input type="date" id="fecha_fin" class="form-control mb-1">
+                <span id="errorFechaFinPromocion" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Imagen de la promoción</label>
-                <input type="file" id="imagen" class="form-control" accept="image/png, image/jpeg">
+            <div class="mb-3 col-12">
+                <label class="form-label">Imagen de la promoción <span class="text-danger">*</span></label>
+                <input type="file" id="imagen" class="form-control mb-1" accept="image/png, image/jpeg">
+                <span id="errorImagenPromocion" class="text-danger"></span>
             </div>
+        </div>
         `,
         onSubmit: crearPromocion
     });
 
-    setTimeout(configurarFechasPromocion, 50);
+    setTimeout(configurarFechasPromocion, 100);
 });
 
-//Función para crear una promocion
 function crearPromocion () {
-    const titulo = document.getElementById('titulo');
-    const fecha_inicio = document.getElementById('fecha_inicio');
-    const fecha_fin = document.getElementById('fecha_fin');
-    
-    if (!titulo.value.trim() || !fecha_inicio.value || !fecha_fin.value) {
-        alert('Completa los campos obligatorios');
-        return;
+    const titulo = document.getElementById('titulo').value.trim();
+    const descripcion = document.getElementById('descripcion').value.trim();
+    const fecha_inicio = document.getElementById('fecha_inicio').value;
+    const fecha_fin = document.getElementById('fecha_fin').value;
+
+    const errorTitulo = document.getElementById('errorTituloPromocion');
+    const errorDescripcion = document.getElementById('errorDescripcionPromocion');
+    const errorFechaInicio = document.getElementById('errorFechaInicioPromocion');
+    const errorFechaFin = document.getElementById('errorFechaFinPromocion');
+    const errorImagen = document.getElementById('errorImagenPromocion');
+
+    errorTitulo.textContent = '';
+    errorDescripcion.textContent = '';
+    errorFechaInicio.textContent = '';
+    errorFechaFin.textContent = '';
+    errorImagen.textContent = '';
+
+    let error = false;
+
+    if (!titulo) {
+        errorTitulo.textContent = 'El titulo es obligatorio.';
+        error = true;
+    }
+
+    if (!descripcion) {
+        errorDescripcion.textContent = 'La descripción es obligatoria.';
+        error = true;
+    }
+
+    if (!fecha_inicio) {
+        errorFechaInicio.textContent = 'La fecha de inicio es obligatoria.';
+        error = true;
+    }
+
+    if (!fecha_fin) {
+        errorFechaFin.textContent = 'La fecha de fin es obligatoria.';
+        error = true;
+    }
+
+    if (fecha_inicio && fecha_fin && fecha_inicio > fecha_fin) {
+        errorFechaFin.textContent = 'La fecha de fin debe ser posterior a la fecha de inicio.';
+        error = true;
     }
     
     const imagen = document.getElementById('imagen').files[0];
     
     if (!imagen) {
-        alert('Selecciona una imagen');
+        errorImagen.textContent = 'La imagen es obligatoria.';
+        error = true;
+    }
+
+    if (error) {
+        mostrarToast('Completa los campos correctamente.', 'error');
         return;
     }
 
     const formData = new FormData();
     
-    formData.append('titulo', titulo.value.trim());
-    formData.append('descripcion', document.getElementById('descripcion').value.trim());
-    formData.append('fecha_inicio', fecha_inicio.value);
-    formData.append('fecha_fin', fecha_fin.value);
+    formData.append('titulo', titulo);
+    formData.append('descripcion', descripcion);
+    formData.append('fecha_inicio', fecha_inicio);
+    formData.append('fecha_fin', fecha_fin);
     formData.append('imagen', imagen);
 
     fetch(BASE_URL + 'admin?action=guardarPromocion', {
         method: 'POST',
         body: formData
     })
-    .then(r => r.json())
-    .then(r => {
-        if (r.status === 'ok') location.reload();
-        else alert("Error al guardar.");
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            cerrarModal();
+            location.reload();
+        } else {
+            mostrarToast(data.msg || "Error al guardar la promoción.", 'error');
+        }
     })
-    .catch(() => alert("Error en la petición."));
+    .catch(() => mostrarToast("Error en la petición.", 'error'));
 }
 
-//Carga del form al actualizar promocion
 document.addEventListener('click', async e => {
     const btn = e.target.closest('.btn-update');
 
@@ -94,49 +142,101 @@ document.addEventListener('click', async e => {
         textoBoton: 'Actualizar',
         claseBoton: 'btn-success',
         contenido: `
+        <div class="row">
         <input type="hidden" id="id_promocion" value="${pr.id_promocion}">
-            <div class="mb-3">
-                <label class="form-label">Titulo</label>
-                <input type="text" id="titulo" class="form-control" value="${pr.titulo}">
+            <div class="mb-3 col-12">
+                <label class="form-label">Titulo <span class="text-danger">*</span></label>
+                <input type="text" id="titulo" class="form-control mb-1" value="${pr.titulo}">
+                <span id="errorTituloPromocion" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Descripción</label>
-                <textarea id="descripcion" class="form-control" rows="3">${pr.descripcion}</textarea>
+            <div class="mb-3 col-12">
+                <label class="form-label">Descripción <span class="text-danger">*</span></label>
+                <textarea id="descripcion" class="form-control mb-1" rows="3">${pr.descripcion}</textarea>
+                <span id="errorDescripcionPromocion" class="text-danger"></span>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Fecha inicio</label>
-                <input type="date" id="fecha_inicio" class="form-control" value="${pr.fecha_inicio}">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Fecha inicio <span class="text-danger">*</span></label>
+                <input type="date" id="fecha_inicio" class="form-control mb-1" value="${pr.fecha_inicio}">
+                <span id="errorFechaInicioPromocion" class="text-danger"></span>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Fecha fin</label>
-                <input type="date" id="fecha_fin" class="form-control" value="${pr.fecha_fin}">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Fecha fin <span class="text-danger">*</span></label>
+                <input type="date" id="fecha_fin" class="form-control mb-1" value="${pr.fecha_fin}">
+                <span id="errorFechaFinPromocion" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Cambiar imagen (opcional)</label>
+            <div class="mb-3 col-12">
+                <label class="form-label">Cambiar imagen <span class="text-muted">(opcional)</span></label>
                 <input type="file" id="imagen" class="form-control" accept="image/png, image/jpeg">
             </div>
         `,
         onSubmit: actualizarPromocion
     });
 
-    setTimeout(configurarFechasPromocion, 50);
+    setTimeout(configurarFechasPromocion, 100);
 });
 
 //Función para actualizar una promocion
 function actualizarPromocion () {
-    const body = document.getElementById('modal-body');
+    const body = document.getElementById('modalBody');
+
+    const titulo = body.querySelector('#titulo').value.trim();
+    const descripcion = body.querySelector('#descripcion').value.trim();
+    const fecha_inicio = body.querySelector('#fecha_inicio').value;
+    const fecha_fin = body.querySelector('#fecha_fin').value;
     
+    const errorTitulo = body.querySelector('#errorTituloPromocion');
+    const errorDescripcion = body.querySelector('#errorDescripcionPromocion');
+    const errorFechaInicio = body.querySelector('#errorFechaInicioPromocion');
+    const errorFechaFin = body.querySelector('#errorFechaFinPromocion');
+
+    errorTitulo.textContent = '';
+    errorDescripcion.textContent = '';
+    errorFechaInicio.textContent = '';
+    errorFechaFin.textContent = '';
+
+    let error = false;
+
+    if (!titulo) {
+        errorTitulo.textContent = 'El titulo es obligatorio.';
+        error = true;
+    }
+
+    if (!descripcion) {
+        errorDescripcion.textContent = 'La descripción es obligatoria.';
+        error = true;
+    }
+
+    if (!fecha_inicio) {
+        errorFechaInicio.textContent = 'La fecha de inicio es obligatoria.';
+        error = true;
+    }
+
+    if (!fecha_fin) {
+        errorFechaFin.textContent = 'La fecha de fin es obligatoria.';
+        error = true;
+    }
+
+    if (fecha_inicio && fecha_fin && fecha_inicio > fecha_fin) {
+        errorFechaFin.textContent = 'La fecha de fin debe ser posterior a la fecha de inicio.';
+        error = true;
+    }
+
+    if (error) {
+        mostrarToast('Completa los campos correctamente.', 'error');
+        return;
+    }
+
     const data = new FormData();
 
     data.append('id', body.querySelector('#id_promocion').value);
-    data.append('titulo', body.querySelector('#titulo').value.trim());
-    data.append('descripcion', body.querySelector('#descripcion').value.trim());
-    data.append('fecha_inicio', body.querySelector('#fecha_inicio').value);
-    data.append('fecha_fin', body.querySelector('#fecha_fin').value);
+    data.append('titulo', titulo);
+    data.append('descripcion', descripcion);
+    data.append('fecha_inicio', fecha_inicio);
+    data.append('fecha_fin', fecha_fin);
 
     const imagen = body.querySelector('#imagen').files[0];
 
@@ -148,15 +248,18 @@ function actualizarPromocion () {
         method: 'POST',
         body: data
     })
-    .then(r => r.json())
-    .then(r => {
-        if (r.status === 'ok') location.reload();
-        else alert("Error al actualizar.");
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            cerrarModal();
+            location.reload();
+        } else {
+            mostrarToast(data.msg || "Error al actualizar la promoción.", 'error');
+        }
     })
-    .catch(() => alert("Error en la petición."));
+    .catch(() => mostrarToast("Error en la petición.", 'error'));
 }
 
-//Carga del modal borrar promocion
 document.addEventListener('click', e => {
     const btn = e.target.closest('.btn-delete');
 
@@ -171,7 +274,6 @@ document.addEventListener('click', e => {
     });
 });
 
-//Función para eliminar una promocion
 function eliminarPromocion(btn) {
     const data = new FormData();
 
@@ -181,13 +283,12 @@ function eliminarPromocion(btn) {
         method: 'POST',
         body: data
     })
-    .then(r => r.json())
-    .then(r => {
-        if (r.status === 'ok') {
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
             btn.closest('tr').remove();
         }
-
-        document.getElementById('modal-global').classList.add('d-none');
+        cerrarModal();
     })
-    .catch(() => alert("Error en la petición."));
+    .catch(() => mostrarToast("Error en la petición.", 'error'));
 }

@@ -28,19 +28,28 @@ class Cliente {
             
             $stmt = $this->db->prepare(
                 "INSERT INTO clientes (nombre, email, telefono, created_at)
-                 VALUES (?, ?, ?, NOW())"
+                VALUES (?, ?, ?, NOW())"
             );
     
             $stmt->execute([$nombre, $email, $telefono]);
 
+            $id = $this->db->lastInsertId();
             $this->db->commit();
 
-            return $this->db->lastInsertId();
+            return $id;
 
         } catch (Exception $e) {
             $this->db->rollBack();
             return false;
         }
+    }
+
+    public function actualizarCliente($id, $nombre, $telefono) {
+        $stmt = $this->db->prepare(
+            "UPDATE clientes SET nombre = ?, telefono = ? WHERE id_cliente = ?"
+        );
+
+        return $stmt->execute([$nombre, $telefono, $id]);
     }
 
     //Obtener reservas del cliente

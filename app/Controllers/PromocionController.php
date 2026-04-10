@@ -13,9 +13,8 @@ class PromocionController {
         $this->uploadDir = ROOT_PATH . '/public_html/images/promocion/';
     }
         
-    private function json($data, $code = 200) {
+    private function json($data) {
         header('Content-Type: application/json; charset=utf-8');
-        http_response_code($code);
         echo json_encode($data);
         exit;
     }
@@ -46,25 +45,34 @@ class PromocionController {
         $fecha_inicio = $_POST['fecha_inicio'] ?? '';
         $fecha_fin = $_POST['fecha_fin'] ?? '';
 
-        if (!$titulo || !$fecha_inicio || !$fecha_fin) {
-            $this->json(['status' => 'error', 'msg' => 'Faltan campos'], 400);
+        if (!$titulo || !$descripcion || !$fecha_inicio || !$fecha_fin) {
+            $this->json([
+                'status' => 'error',
+                'msg' => 'Todos los campos son obligatorios'
+            ]);
         }
 
         $inicio = strtotime(str_replace('/', '-', $fecha_inicio));
         $fin = strtotime(str_replace('/', '-', $fecha_fin));
 
         if ($fin < $inicio) {
-            $this->json(['status' => 'error', 'msg' => 'La fecha de fin no puede ser menor a la fecha de inicio'], 400);
+            $this->json([
+                'status' => 'error',
+                'msg' => 'La fecha de fin no puede ser menor a la fecha de inicio'
+            ]);
         }
 
         if (empty($_FILES['imagen']) || $_FILES['imagen']['error'] !== UPLOAD_ERR_OK) {
-            $this->json(['status' => 'error', 'msg' => 'Imagen requerida'], 400);
+            $this->json([
+                'status' => 'error',
+                'msg' => 'Imagen requerida'
+            ]);
         }
 
         $id = $this->model->crearPromocion($titulo, $descripcion, $fecha_inicio, $fecha_fin);
         
         if (!$id) {
-            $this->json(['status' => 'error'], 500);
+            $this->json(['status' => 'error']);
         }
 
         $this->guardarImagen($id);
@@ -80,13 +88,13 @@ class PromocionController {
         $id = $_POST['id'] ?? null;
 
         if (!$id) {
-            $this->json(['status' => 'error'], 400);
+            $this->json(['status' => 'error']);
         }
         
         $promocion = $this->model->getByIdPromocion($id);
         
         if (!$promocion) {
-            $this->json(['status' => 'error'], 404);
+            $this->json(['status' => 'error']);
         }
 
         $promocion['imagen'] = $this->obtenerImagen($id);
@@ -109,7 +117,10 @@ class PromocionController {
         $fin = strtotime(str_replace('/', '-', $fecha_fin));
 
         if ($fin < $inicio) {
-            $this->json(['status' => 'error', 'msg' => 'La fecha de fin no puede ser menor a la fecha de inicio'], 400);
+            $this->json([
+                'status' => 'error',
+                'msg' => 'La fecha de fin no puede ser menor a la fecha de inicio'
+            ]);
         }
 
         $ok = $this->model->actualizarPromocion(
@@ -121,7 +132,7 @@ class PromocionController {
         );
 
         if (!$ok) {
-            $this->json(['status' => 'error'], 500);
+            $this->json(['status' => 'error']);
         }
 
         $this->guardarImagen($id);
@@ -134,11 +145,14 @@ class PromocionController {
         $id = $_POST['id'] ?? null;
 
         if (!$id) {
-            $this->json(['status' => 'error', 'msg' => 'ID requerido'], 400);
+            $this->json([
+                'status' => 'error',
+                'msg' => 'ID requerido'
+            ]);
         }
 
         if (!$this->model->borrarPromocion($id)) {
-            $this->json(['status' => 'error'], 500);
+            $this->json(['status' => 'error']);
         }
         
         foreach ($this->allowedExtensions as $ext) {

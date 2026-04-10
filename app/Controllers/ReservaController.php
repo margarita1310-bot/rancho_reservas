@@ -10,9 +10,8 @@ class ReservaController {
         $this->model = new Reserva();
     }
 
-    private function json($data, $code = 200) {
+    private function json($data) {
         header('Content-Type: application/json; charset=utf-8');
-        http_response_code($code);
         echo json_encode($data);
         exit;
     }
@@ -23,15 +22,45 @@ class ReservaController {
     }
 
     public function guardar() {
-        
-        $id_cliente = $_POST['id_cliente'] ?? null;
+        $id_cliente = $_SESSION['cliente'] ?? null;
         $id_evento = $_POST['id_evento'] ?? null;
-        $mesas_reservadas = $_POST['mesas_reservadas'] ?? 0;
-        $personas = $_POST['personas'] ?? 0;
-        $total = $_POST['total'] ?? 0;
+        $mesas_reservadas = (int) ($_POST['mesas_reservadas'] ?? 0);
+        $personas = (int) ($_POST['personas'] ?? 0);
+        $total = (float) ($_POST['total'] ?? 0);
 
-        if (!$id_cliente || !$id_evento || $mesas_reservadas <= 0 || $personas <= 0) {
-            $this->json(['status' => 'error', 'msg' => 'Faltan campos requeridos'], 400);
+        if (!isset($_SESSION['cliente'])) {
+            $this->json([
+                'status' => 'error',
+                'msg' => 'No autenticado'
+            ]);
+        }
+
+        if (!$id_evento) {
+            $this->json([
+                'status' => 'error',
+                'msg' => 'Evento inválido'
+            ]);
+        }
+
+        if (!is_numeric($mesas_reservadas) || !is_numeric($personas) || !is_numeric($total)) {
+            $this->json([
+                'status' => 'error',
+                'msg' => 'Campos numéricos inválidos'
+            ]);
+        }
+
+        if ($mesas_reservadas <= 0 || $personas <= 0 || $total <= 0) {
+            $this->json([
+                'status' => 'error',
+                'msg' => 'Los valores deben ser mayores a cero'
+            ]);
+        }
+
+        if (!$mesas_reservadas || !$personas || !$total) {
+            $this->json([
+                'status' => 'error',
+                'msg' => 'Todos los campos son obligatorios'
+            ]);
         }
 
         $id = $this->model->crearReserva(
@@ -43,7 +72,7 @@ class ReservaController {
         );
 
         if (!$id) {
-            $this->json(['status' => 'error'], 500);
+            $this->json(['status' => 'error']);
         }
 
         $this->json([
@@ -52,25 +81,7 @@ class ReservaController {
         ]);
     }
 
-    public function obtener() {
-        
-        $id = $_POST['id'] ?? null;
-
-        if (!$id) {
-            $this->json(['status' => 'error', 'msg' => 'ID requerido'], 400);
-        }
-
-        $reserva = $this->model->getByIdReserva($id);
-
-        if (!$reserva) {
-            $this->json(['status' => 'error', 'msg' => 'Reserva no encontrada'], 404);
-        }
-
-        $this->json($reserva);
-    }
-
     public function cancelar() {
-
         $id_reserva = $_POST['id_reserva'] ?? null;
 
         if (!$id_reserva) {
@@ -104,7 +115,6 @@ class ReservaController {
     }
 
     public function comprobante() {
-
         $id_reserva = $_GET['id_reserva'] ?? null;
 
         if (!$id_reserva) {
