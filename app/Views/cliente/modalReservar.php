@@ -1,16 +1,12 @@
 <div class="modal fade" id="modalReservar" tabindex="-1">
-
     <div class="modal-dialog modal-dialog-centered">
-
         <div class="modal-content">
 
             <div class="modal-header p-0 align-items-center">
-
                 <h4 class="modal-title">Reserva tu evento</h4>
                 <button type="button" class="btn p-0 text-black ms-auto" data-bs-dismiss="modal">
                     <i class="bi bi-x-lg fs-4"></i>
                 </button>
-
             </div>
 
             <div class="d-flex justify-content-between align-items-center mt-3 px-3">
@@ -33,7 +29,6 @@
             </div>
             
             <div class="modal-body px-0">
-        
                 <div id="step1" class="step d-none">
 
                     <div class="mb-3">
@@ -52,7 +47,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Hora de llegada</label>
+                        <label class="form-label">Hora de llegada <span class="text-danger">*</span></label>
                         <input type="time" class="form-control mb-1" id="horaEvento">
                         <small id="info-hora" class="text-muted"></small>
                         <br>
@@ -60,8 +55,8 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Número de personas</label>
-                        <input type="number" class="form-control mb-1" id="personasEvento" min="1" max="20" autocomplete="off">
+                        <label class="form-label">Número de personas <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control mb-1" id="personasEvento" min="1" max="20" step="1" inputmode="numeric" autocomplete="off">
                         <small id="info-personas" class="text-muted"></small>
                         <br>
                         <span id="errorPersonasEvento" class="text-danger"></span>
@@ -72,7 +67,6 @@
                 </div>
         
                 <div id="step2" class="step d-none">
-
                     <div class="body-datos p-2 border rounded">
 
                         <p class="fw-bold mb-3 text-center">

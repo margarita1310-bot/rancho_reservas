@@ -22,6 +22,7 @@ function renderPayPal() {
                 if (data.status === "ok") {
                     mostrarToast('Pago completado.', 'success');
                     location.reload();
+                    mostrarToast('Para visualizar tu reserva, ve a "Mis Reservas".', 'info');
                 } else {
                     mostrarToast(data.msg || 'Error en el pago.', 'error');
                 }

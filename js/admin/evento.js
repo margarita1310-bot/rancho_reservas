@@ -31,9 +31,16 @@ document.getElementById('btn-create-evento')?.addEventListener('click', () => {
             </div>
 
             <div class="mb-3 col-md-6">
-                <label class="form-label">Hora de terminación <span class="text-danger">*</span></label>
-                <input type="time" id="hora_fin" class="form-control mb-1">
-                <span id="errorHoraFinEvento" class="text-danger"></span>
+                <label class="form-label">Duración <span class="text-muted">(en horas)</span> <span class="text-danger">*</span></label>
+                <input type="number" id="duracion" class="form-control mb-1"  min="1" max="10">
+                <small class="text-muted">La duración debe ser de 1 a 10 horas.</small>
+                <br>
+                <span id="errorDuracionEvento" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3 col-12">
+                <label class="form-label">Hora de terminación</label>
+                <input type="time" id="hora_fin" class="form-control" readonly>
             </div>
 
             <div class="mb-3 col-md-6">
@@ -50,7 +57,9 @@ document.getElementById('btn-create-evento')?.addEventListener('click', () => {
 
             <div class="mb-3 col-12">
                 <label class="form-label">Imagen del evento <span class="text-danger">*</span></label>
-                <input type="file" id="imagen" class="form-control mb-1" accept="image/png, image/jpeg">
+                <input type="file" id="imagen" class="form-control mb-1" accept="image/png, image/jpeg, image/jpg">
+                <span class="text-muted">Solo se permiten archivos JPG, JPEG y PNG.</span>
+                <br>
                 <span id="errorImagenEvento" class="text-danger"></span>
             </div>
         </div>
@@ -66,7 +75,8 @@ function crearEvento () {
     const descripcion = document.getElementById('descripcion').value.trim();
     const fecha = document.getElementById('fecha').value;
     const hora = document.getElementById('hora').value;
-    const hora_fin = document.getElementById('hora_fin').value;
+    const duracion = document.getElementById('duracion').value;
+    const horaFin = document.getElementById('hora_fin').value;
     const mesasDisponibles = document.getElementById('mesas_disponibles').value;
     const precioMesa = document.getElementById('precio_mesa').value;
 
@@ -74,7 +84,7 @@ function crearEvento () {
     const errorDescripcion = document.getElementById('errorDescripcionEvento');
     const errorFecha = document.getElementById('errorFechaEvento');
     const errorHora = document.getElementById('errorHoraEvento');
-    const errorHoraFin = document.getElementById('errorHoraFinEvento');
+    const errorDuracion = document.getElementById('errorDuracionEvento');
     const errorMesasDisponibles = document.getElementById('errorMesasDisponiblesEvento');
     const errorPrecioMesa = document.getElementById('errorPrecioMesaEvento');
     const errorImagen = document.getElementById('errorImagenEvento');
@@ -83,7 +93,7 @@ function crearEvento () {
     errorDescripcion.textContent = '';
     errorFecha.textContent = '';
     errorHora.textContent = '';
-    errorHoraFin.textContent = '';
+    errorDuracion.textContent = '';
     errorMesasDisponibles.textContent = '';
     errorPrecioMesa.textContent = '';
     errorImagen.textContent = '';
@@ -110,13 +120,18 @@ function crearEvento () {
         error = true;
     }
 
-    if (!hora_fin) {
-        errorHoraFin.textContent = 'La hora de terminación es obligatoria.';
+    if (!duracion) {
+        errorDuracion.textContent = 'La duración es obligatoria.';
         error = true;
     }
 
-    if (hora && hora_fin && hora >= hora_fin) {
-        errorHoraFin.textContent = 'La hora de terminación debe ser mayor a la hora de inicio.';
+    if (duracion <= 0) {
+        errorDuracion.textContent = 'La duración debe ser mayor a 0.';
+        error = true;
+    }
+
+    if (duracion > 10) {
+        errorDuracion.textContent = 'La duración no puede ser mayor a 10 horas.';
         error = true;
     }
 
@@ -148,7 +163,7 @@ function crearEvento () {
     formData.append('descripcion', descripcion);
     formData.append('fecha', fecha);
     formData.append('hora', hora);
-    formData.append('hora_fin', hora_fin);
+    formData.append('hora_fin', horaFin);
     formData.append('mesas_disponibles', mesasDisponibles);
     formData.append('precio_mesa', precioMesa);
     formData.append('imagen', imagen);
@@ -160,8 +175,9 @@ function crearEvento () {
     .then(res => res.json())
     .then(data => {
         if (data.status === 'ok') {
-            cerrarModal();
+            cerrarModal();  
             location.reload();
+            mostrarToast('Evento creado correctamente.', 'success');
         } else {
             mostrarToast(data.msg || "Error al guardar el evento.", 'error');
         } 
@@ -188,7 +204,7 @@ document.addEventListener('click', async e => {
         textoBoton: 'Actualizar',
         claseBoton: 'btn-success',
         contenido: `
-        <p class="text-muted">Una vez reservado el evento, no podrá ser modificado. Verifique la información antes de crear el evento.</p>
+        <p class="text-muted">Una vez reservado el evento, no podrá ser modificado. Verifique la información antes de actualizar el evento.</p>
         <div class="row">
             <input type="hidden" id="id_evento" value="${ev.id_evento}">
             <div class="mb-3 col-12">
@@ -216,9 +232,14 @@ document.addEventListener('click', async e => {
             </div>
 
             <div class="mb-3 col-md-6">
-                <label class="form-label">Hora de terminación <span class="text-danger">*</span> </label>
-                <input type="time" id="hora_fin" class="form-control mb-1" value="${ev.hora_fin}">
-                <span id="errorHoraFinEvento" class="text-danger"></span>
+                <label class="form-label">Duración <span class="text-muted">(en horas)</span> <span class="text-danger">*</span></label>
+                <input type="number" id="duracion" class="form-control mb-1"  min="1" max="10">
+                <span id="errorDuracionEvento" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3 col-12">
+                <label class="form-label">Hora de terminación</label>
+                <input type="time" id="hora_fin" class="form-control" value="${ev.hora_fin}" readonly>
             </div>
 
             <div class="mb-3 col-md-6">
@@ -235,7 +256,8 @@ document.addEventListener('click', async e => {
 
             <div class="mb-3 col-12">
                 <label class="form-label">Cambiar imagen <span class="text-muted">(opcional)</span></label>
-                <input type="file" id="imagen" class="form-control" accept="image/png, image/jpeg">
+                <input type="file" id="imagen" class="form-control" accept="image/png, image/jpeg, image/jpg">
+                <span class="text-muted">Solo se permiten archivos JPG, JPEG y PNG.</span>
             </div>
         </div>
         `,
@@ -252,6 +274,7 @@ function actualizarEvento() {
     const descripcion = body.querySelector('#descripcion').value.trim();
     const fecha = body.querySelector('#fecha').value;
     const hora = body.querySelector('#hora').value;
+    const duracion = body.querySelector('#duracion').value;
     const hora_fin = body.querySelector('#hora_fin').value;
     const mesasDisponibles = body.querySelector('#mesas_disponibles').value;
     const precioMesa = body.querySelector('#precio_mesa').value;
@@ -260,7 +283,7 @@ function actualizarEvento() {
     const errorDescripcion = body.querySelector('#errorDescripcionEvento');
     const errorFecha = body.querySelector('#errorFechaEvento');
     const errorHora = body.querySelector('#errorHoraEvento');
-    const errorHoraFin = body.querySelector('#errorHoraFinEvento');
+    const errorDuracion = body.querySelector('#errorDuracionEvento');
     const errorMesasDisponibles = body.querySelector('#errorMesasDisponiblesEvento');
     const errorPrecioMesa = body.querySelector('#errorPrecioMesaEvento');
 
@@ -268,7 +291,7 @@ function actualizarEvento() {
     errorDescripcion.textContent = '';
     errorFecha.textContent = '';
     errorHora.textContent = '';
-    errorHoraFin.textContent = '';
+    errorDuracion.textContent = '';
     errorMesasDisponibles.textContent = '';
     errorPrecioMesa.textContent = '';
 
@@ -294,13 +317,18 @@ function actualizarEvento() {
         error = true;
     }
 
-    if (!hora_fin) {
-        errorHoraFin.textContent = 'La hora de terminación es obligatoria.';
+    if (!duracion) {
+        errorDuracion.textContent = 'La duración es obligatoria.';
         error = true;
     }
 
-    if (hora && hora_fin && hora >= hora_fin) {
-        errorHoraFin.textContent = 'La hora de terminación debe ser mayor a la hora de inicio.';
+    if (duracion <= 0) {
+        errorDuracion.textContent = 'La duración debe ser mayor a 0.';
+        error = true;
+    }
+
+    if (duracion > 10) {
+        errorDuracion.textContent = 'La duración no puede ser mayor a 10 horas.';
         error = true;
     }
 
@@ -345,6 +373,7 @@ function actualizarEvento() {
         if (data.status === 'ok') {
             cerrarModal();
             location.reload();
+            mostrarToast('Evento actualizado correctamente.', 'success');
         } else {
             mostrarToast(data.msg || "Error al actualizar el evento.", 'error');
         }

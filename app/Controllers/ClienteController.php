@@ -25,7 +25,7 @@ class ClienteController {
         foreach ($items as &$item) {
             $item['imagen'] = null;
 
-            foreach (['jpg', 'png'] as $ext) {
+            foreach (['jpg', 'jpeg', 'png'] as $ext) {
                 $ruta = $dir . $item[$idField] . '.' . $ext;
 
                 if(is_file($ruta)) {

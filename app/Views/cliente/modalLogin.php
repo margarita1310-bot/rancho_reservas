@@ -1,16 +1,12 @@
 <div class="modal fade" id="modalLogin" tabindex="-1">
-
     <div class="modal-dialog modal-dialog-centered">
-
         <div class="modal-content">
 
             <div class="modal-header p-0 align-items-center">
-
                 <h4 class="modal-title">Iniciar Sesión</h4>
                 <button type="button" class="btn p-0 text-black ms-auto" data-bs-dismiss="modal">
                     <i class="bi bi-x-lg fs-4"></i>
                 </button>
-
             </div>
             
             <div class="modal-body px-0">

@@ -6,7 +6,7 @@ class EventoController {
 
     private $model;
     private $uploadDir;
-    private $allowedExtensions = ['jpg', 'png'];
+    private $allowedExtensions = ['jpg', 'jpeg', 'png'];
 
     public function __construct() {
         $this->model = new Evento();
@@ -83,20 +83,6 @@ class EventoController {
                 'status' => 'error',
                 'msg' => 'Todos los campos son obligatorios'
             ]);
-        }
-
-        $inicio = strtotime($hora);
-        $fin = strtotime($hora_fin);
-
-        if ($fin <= $inicio) {
-            $fin = strtotime($hora_fin) + 86400;
-
-            if ($fin <= $inicio) {
-                $this->json([
-                    'status' => 'error',
-                    'msg' => 'La hora de fin no puede ser menor a la hora de inicio'
-                ]);
-            }
         }
 
         if (empty($_FILES['imagen']) || $_FILES['imagen']['error'] !== UPLOAD_ERR_OK) {

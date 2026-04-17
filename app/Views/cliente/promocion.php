@@ -17,7 +17,7 @@
                         <div class="card promocion-card h-100 shadow-sm">
 
                             <img
-                                src="../images/promocion/<?= $pr['imagen'] ?>" 
+                                src="<?= BASE_URL ?>images/promocion/<?= $pr['imagen'] ?>" 
                                 class="card-img-top" 
                                 alt="Promoción <?= $pr['id_promocion'] ?>">
                             

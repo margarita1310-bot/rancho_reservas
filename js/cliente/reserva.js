@@ -79,6 +79,7 @@ function cargarDatosEvento() {
 function guardarDatosReserva() {
     const hora = document.getElementById('horaEvento').value;
     const personas = document.getElementById('personasEvento').value;
+    const personasInt = Number(personas);
 
     const fechaEvento = sessionStorage.getItem('fecha_evento');
     const horaEvento = sessionStorage.getItem('hora_evento');
@@ -136,17 +137,18 @@ function guardarDatosReserva() {
         error = true;
     }
 
-    if (personas < 1 || personas > 20) {
+    if (!Number.isInteger(personasInt) || personasInt < 1 || personasInt > 20) {
         errorPersonasEvento.textContent = 'El número de personas es incorrecto.';
         error = true;
     }
     
-    if (!hora || !personas || personas < 1 || personas > 20) {
+    if (error) {
         mostrarToast('Completa los campos correctamente.', 'error');
         return;
+
     } else {     
         sessionStorage.setItem('hora_evento', hora);
-        sessionStorage.setItem('personas_evento', personas);
+        sessionStorage.setItem('personas_evento', personasInt);
 
         cargarDatosReserva();
         goToStep(2);

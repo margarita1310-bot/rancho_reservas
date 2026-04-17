@@ -13,7 +13,7 @@
                      <div class="row g-0 align-items-center">
                         <div class="col-md-5">
                            <img
-                              src="../images/evento/<?= $ev['imagen'] ?>"
+                              src="<?= BASE_URL ?>images/evento/<?= $ev['imagen'] ?>"
                               class="evento-img"
                               alt="Evento <?= $ev['id_evento'] ?>">
                         </div>

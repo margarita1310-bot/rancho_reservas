@@ -60,7 +60,7 @@ class Cliente {
                     e.fecha AS fecha_evento,
                     e.hora,
                     e.hora_fin,
-                    r.mesas_reservadas,
+                    r.fecha_reserva,
                     r.personas,
                     r.total,
                     r.estado AS estado_reserva,

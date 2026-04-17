@@ -16,19 +16,19 @@
             <div class="modal-body px-0">
                 
                 <div class="mb-3">
-                    <label class="form-label">Correo</label>
+                    <label class="form-label">Correo electrónico <span class="text-danger">*</span></label>
                     <input type="email" class="form-control mb-1" id="emailPerfil" disabled>
                     <span id="errorEmailPerfil" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Nombre</label>
+                    <label class="form-label">Nombre <span class="text-danger">*</span></label>
                     <input type="text" class="form-control mb-1" id="nombrePerfil" disabled>
                     <span id="errorNombrePerfil" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Teléfono</label>
+                    <label class="form-label">Teléfono <span class="text-danger">*</span></label>
                     <input type="text" maxlength="10" class="form-control mb-1" id="telefonoPerfil" disabled>
                     <span id="errorTelefonoPerfil" class="text-danger"></span>
                 </div>

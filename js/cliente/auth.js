@@ -1,36 +1,3 @@
-document.addEventListener('DOMContentLoaded', () => {
-    if (typeof google !== "undefined") {
-        google.accounts.id.initialize({
-            client_id: GOOGLE_CLIENT_ID,
-            callback: handleCredentialResponse
-        });
-
-        const googleBtn = document.getElementById("googleLogin");
-
-        if (googleBtn) {
-            google.accounts.id.renderButton(googleBtn, {
-                    theme: "outline",
-                    size: "large",
-                    text: "continue_with",
-                    width: "100%"
-            });
-        }
-    }
-
-    const id = sessionStorage.getItem('id_cliente');
-    window.clienteLogueado = !!id;
-
-    actualizarNavbar();
-
-    const modalReservar = document.getElementById('modalReservar');
-
-    if (modalReservar) {
-        modalReservar.addEventListener('show.bs.modal', () => {
-            goToStep(1);
-        });
-    }
-});
-
 function abrirLogin() {
     if (window.clienteLogueado) return;
 

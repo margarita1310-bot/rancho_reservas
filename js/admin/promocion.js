@@ -6,7 +6,7 @@ document.getElementById('btn-create-promocion')?.addEventListener('click', () =>
         contenido: `
         <div class="row">
             <div class="mb-3 col-12">
-                <label class="form-label">Titulo <span class="text-danger">*</span></label>
+                <label class="form-label">Título <span class="text-danger">*</span></label>
                 <input type="text" id="titulo" class="form-control mb-1">
                 <span id="errorTituloPromocion" class="text-danger"></span>
             </div>
@@ -31,7 +31,9 @@ document.getElementById('btn-create-promocion')?.addEventListener('click', () =>
 
             <div class="mb-3 col-12">
                 <label class="form-label">Imagen de la promoción <span class="text-danger">*</span></label>
-                <input type="file" id="imagen" class="form-control mb-1" accept="image/png, image/jpeg">
+                <input type="file" id="imagen" class="form-control mb-1" accept="image/png, image/jpeg, image/jpg">
+                <span class="text-muted">Solo se permiten archivos JPG, JPEG y PNG.</span>
+                <br>
                 <span id="errorImagenPromocion" class="text-danger"></span>
             </div>
         </div>
@@ -116,6 +118,7 @@ function crearPromocion () {
         if (data.status === 'ok') {
             cerrarModal();
             location.reload();
+            mostrarToast('Promoción creada correctamente.', 'success');
         } else {
             mostrarToast(data.msg || "Error al guardar la promoción.", 'error');
         }
@@ -145,7 +148,7 @@ document.addEventListener('click', async e => {
         <div class="row">
         <input type="hidden" id="id_promocion" value="${pr.id_promocion}">
             <div class="mb-3 col-12">
-                <label class="form-label">Titulo <span class="text-danger">*</span></label>
+                <label class="form-label">Título <span class="text-danger">*</span></label>
                 <input type="text" id="titulo" class="form-control mb-1" value="${pr.titulo}">
                 <span id="errorTituloPromocion" class="text-danger"></span>
             </div>
@@ -170,7 +173,8 @@ document.addEventListener('click', async e => {
 
             <div class="mb-3 col-12">
                 <label class="form-label">Cambiar imagen <span class="text-muted">(opcional)</span></label>
-                <input type="file" id="imagen" class="form-control" accept="image/png, image/jpeg">
+                <input type="file" id="imagen" class="form-control" accept="image/png, image/jpeg, image/jpg">
+                <span class="text-muted">Solo se permiten archivos JPG, JPEG y PNG.</span>
             </div>
         `,
         onSubmit: actualizarPromocion
@@ -253,6 +257,7 @@ function actualizarPromocion () {
         if (data.status === 'ok') {
             cerrarModal();
             location.reload();
+            mostrarToast('Promoción actualizada correctamente.', 'success');
         } else {
             mostrarToast(data.msg || "Error al actualizar la promoción.", 'error');
         }

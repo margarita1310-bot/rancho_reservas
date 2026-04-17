@@ -38,6 +38,7 @@
     <script>const GOOGLE_CLIENT_ID = "<?php echo $_ENV['GOOGLE_CLIENT_ID']; ?>";</script>
     <script>const BASE_URL = "<?= BASE_URL ?>"</script>
     <script src="<?= BASE_URL ?>js/cliente/ui.js"></script>
+    <script src="<?= BASE_URL ?>js/cliente/app.js"></script>
     <script src="<?= BASE_URL ?>js/cliente/auth.js"></script>
     <script src="<?= BASE_URL ?>js/cliente/cliente.js"></script>
     <script src="<?= BASE_URL ?>js/cliente/reserva.js"></script>

@@ -6,7 +6,7 @@ class PromocionController {
 
     private $model;
     private $uploadDir;
-    private $allowedExtensions = ['jpg', 'png'];
+    private $allowedExtensions = ['jpg', 'jpeg', 'png'];
 
     public function __construct() {
         $this->model = new Promocion();

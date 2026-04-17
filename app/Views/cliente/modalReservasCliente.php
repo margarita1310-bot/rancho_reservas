@@ -14,6 +14,7 @@
             </div>
             
             <div class="modal-body px-0">
+                <small class="text-muted">¿No ves tu reserva? Recarga la página para actualizar la información.</small>
 
                 <?php require_once __DIR__ . '/../../helpers/format.php' ?>
                 
@@ -23,7 +24,7 @@
 
                     <?php foreach ($reservasCliente as $rc): ?>
 
-                        <div class=" card mb-3 shadow-sm rounded">
+                        <div class="card mt-3 mb-3 shadow-sm rounded">
 
                             <div class="card-body">
 
@@ -42,9 +43,6 @@
                                             <span class = "badge bg-success">Pagado</span>
                                         <?php elseif ($rc['estado_reserva'] === 'pendiente'): ?>
                                             <span class = "badge bg-warning">Pendiente</span>
-                                            <small class="text-danger fw-semibold">
-                                                Tienes 30 minutos para completar tu pago.
-                                            </small>
                                         <?php elseif ($rc['estado_reserva'] === 'cancelada'): ?>
                                             <span class = "badge bg-danger">Cancelada</span>
                                         <?php endif; ?>
@@ -56,18 +54,23 @@
                                 <hr class="my-2">
 
                                 <div class="row text-center mb-3">
+                                    <?php if ($rc['estado_reserva'] === 'pendiente'): ?>
+                                        <small class="text-end text-danger fw-semibold mb-2">
+                                            Tienes 30 minutos para completar tu pago.
+                                        </small>
+                                    <?php endif; ?>
 
                                     <div class="col">
 
-                                        <small class="text-muted d-block">Personas</small>
-                                        <strong><?= $rc['personas'] ?></strong>
+                                        <small class="text-muted d-block">Fecha</small>
+                                        <strong><?= formatearFecha($rc['fecha_reserva']) ?></strong>
 
                                     </div>
 
                                     <div class="col">
 
-                                        <small class="text-muted d-block">Mesas</small>
-                                        <strong><?= $rc['mesas_reservadas'] ?></strong>
+                                        <small class="text-muted d-block">Personas</small>
+                                        <strong><?= $rc['personas'] ?></strong>
 
                                     </div>
 
