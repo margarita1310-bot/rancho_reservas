@@ -25,9 +25,9 @@ function abrirDatosReserva() {
     const id_cliente = sessionStorage.getItem('id_cliente');
     const nombre = sessionStorage.getItem('nombre_cliente');
     const telefono = sessionStorage.getItem('telefono_cliente');
-    sessionStorage.setItem('accion_post', 'reservar');
 
     if(!id_cliente) {
+        sessionStorage.setItem('accion_post', 'reservar');
         abrirLogin();
         return;
     } else if (!nombre || !telefono) {

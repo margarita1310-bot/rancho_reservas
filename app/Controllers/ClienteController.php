@@ -1,20 +1,29 @@
 <?php
 
-require_once ROOT_PATH . '/app/models/Promocion.php';
+require_once ROOT_PATH . '/app/models/Producto.php';
+require_once ROOT_PATH . '/app/models/CategoriaProducto.php';
 require_once ROOT_PATH . '/app/models/Evento.php';
+require_once ROOT_PATH . '/app/models/EventoFinalizado.php';
+require_once ROOT_PATH . '/app/models/Promocion.php';
 require_once ROOT_PATH . '/app/models/Cliente.php';
 
 class ClienteController {
 
-    private $promocionModel;
+    private $productoModel;
+    private $categoriaProductoModel;
     private $eventoModel;
+    private $eventoFinalizadoModel;
+    private $promocionModel;
     private $clienteModel;
     private $uploadDirEvento;
     private $uploadDirPromocion;
 
     public function __construct() {
-        $this->promocionModel = new Promocion();
+        $this->productoModel = new Producto();
+        $this->categoriaProductoModel = new CategoriaProducto();
         $this->eventoModel = new Evento();
+        $this->eventoFinalizadoModel = new EventoFinalizado();
+        $this->promocionModel = new Promocion();
         $this->clienteModel = new Cliente();
 
         $this->uploadDirEvento = ROOT_PATH . '/public_html/images/evento/';
@@ -37,9 +46,28 @@ class ClienteController {
     }
 
     public function index() {
+        $productos = $this->productoModel->getAllProductos();
+        $categoriasProductos = $this->categoriaProductoModel->getAllCategoriasProductos();
+
         $eventos = $this->eventoModel->getEventosDisponibles();
         $this->asignarImagen($eventos, $this->uploadDirEvento, 'id_evento');
         
+        $eventosFinalizados = $this->eventoFinalizadoModel->getAllEventosFinalizados();
+
+        foreach ($eventosFinalizados as $index => $ef) {
+            $imagenes = $this->eventoFinalizadoModel
+            ->getImagenesEvento($ef['id_evento']);
+        
+            $eventosFinalizados[$index]['imagenes'] = [];
+            if (!empty($imagenes)) {
+                foreach ($imagenes as $img) {
+                    $eventosFinalizados[$index]['imagenes'][] = [
+                        'url' => BASE_URL . "/public/images/eventoFinalizado/{$ef['id_evento']}/" . $img['nombre_imagen']
+                    ];
+                }
+            }
+        }
+
         $promociones = $this->promocionModel->getPromocionesDisponibles();
         $this->asignarImagen($promociones, $this->uploadDirPromocion, 'id_promocion');
 

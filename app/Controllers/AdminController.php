@@ -1,18 +1,27 @@
 <?php
 
-require_once ROOT_PATH . '/app/models/Promocion.php';
+require_once ROOT_PATH . '/app/models/Producto.php';
+require_once ROOT_PATH . '/app/models/CategoriaProducto.php';
 require_once ROOT_PATH . '/app/models/Evento.php';
+require_once ROOT_PATH . '/app/models/EventoFinalizado.php';
+require_once ROOT_PATH . '/app/models/Promocion.php';
 require_once ROOT_PATH . '/app/models/Reserva.php';
 
 class AdminController {
 
-    private $promocionModel;
+    private $productoModel;
+    private $categoriaProductoModel;
     private $eventoModel;
+    private $eventoFinalizadoModel;
+    private $promocionModel;
     private $reservaModel;
 
     public function __construct() {
-        $this->promocionModel = new Promocion();
+        $this->productoModel = new Producto();
+        $this->categoriaProductoModel = new CategoriaProducto();
         $this->eventoModel = new Evento();
+        $this->eventoFinalizadoModel = new EventoFinalizado();
+        $this->promocionModel = new Promocion();
         $this->reservaModel = new Reserva();
     }
 
@@ -45,12 +54,23 @@ class AdminController {
         ]);
     }
     
-    public function promocion() {
-        $promociones = $this->promocionModel->getAllPromociones();
+    public function producto() {
+        $categoriasProductos = $this->categoriaProductoModel->getAllCategoriasProductos();
+        $productos = $this->productoModel->getAllProductos();
 
-        $vista =  ROOT_PATH . '/app/views/admin/promocion.php';
+        $vista = ROOT_PATH . '/app/views/admin/producto.php';
         $this->render($vista, [
-            'promociones' => $promociones
+            'categoriasProductos' => $categoriasProductos,
+            'productos' => $productos
+        ]);
+    }
+
+    public function categoriaProducto() {
+        $categoriasProductos = $this->categoriaProductoModel->getAllCategoriasProductos();
+
+        $vista = ROOT_PATH . '/app/views/admin/categoriaProducto.php';
+        $this->render($vista, [
+            'categoriasProductos' => $categoriasProductos
         ]);
     }
     
@@ -60,6 +80,38 @@ class AdminController {
         $vista = ROOT_PATH . '/app/views/admin/evento.php';
         $this->render($vista, [
             'eventos' => $eventos
+        ]);
+    }
+
+    public function eventoFinalizado() {
+        $eventosFinalizados = $this->eventoFinalizadoModel->getAllEventosFinalizados();
+
+        foreach ($eventosFinalizados as &$ef) {
+            $imagenes = $this->eventoFinalizadoModel
+            ->getImagenesEvento($ef['id_evento']);
+        
+            $ef['imagenes'] = [];
+            foreach ($imagenes as $img) {
+                $ef['imagenes'][] = [
+                    'id' => $img['id'],
+                    'url' => BASE_URL . "/public/images/eventoFinalizado/{$ef['id_evento']}/" . $img['nombre_imagen'],
+                    'nombre' => $img['nombre_imagen']
+                ];
+            }
+        }
+
+        $vista = ROOT_PATH . '/app/views/admin/eventoFinalizado.php';
+        $this->render($vista, [
+            'eventosFinalizados' => $eventosFinalizados
+        ]);
+    }
+
+    public function promocion() {
+        $promociones = $this->promocionModel->getAllPromociones();
+
+        $vista =  ROOT_PATH . '/app/views/admin/promocion.php';
+        $this->render($vista, [
+            'promociones' => $promociones
         ]);
     }
 

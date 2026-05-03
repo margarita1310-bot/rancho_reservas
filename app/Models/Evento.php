@@ -17,7 +17,6 @@ class Evento {
         );
     
         $stmt->execute([$id]);
-    
         return $stmt->fetch();
     }
 
@@ -36,6 +35,7 @@ class Evento {
                     obtener_estado_evento(e.fecha, e.hora, e.hora_fin) AS estado
                 FROM eventos e
                 LEFT JOIN reservas r ON e.id_evento = r.id_evento
+                WHERE obtener_estado_evento(e.fecha, e.hora, e.hora_fin) IN ('proximo', 'activo')
                 GROUP BY e.id_evento
                 ORDER BY id_evento DESC";
 
@@ -187,6 +187,16 @@ class Evento {
         );
 
         return $stmt->execute([$id]);
+    }
+
+    public function actualizarMesasEvento($id, $mesas_totales) {
+        $sql = "UPDATE eventos
+                SET mesas_disponibles=?
+                WHERE id_evento=?";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([$mesas_totales, $id]);
     }
 
     //Verificar si un evento tiene reservas

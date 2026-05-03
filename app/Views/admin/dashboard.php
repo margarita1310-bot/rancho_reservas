@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Rye&family=Zain:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="icon" href="<?= BASE_URL ?>images/logo.jpg">
     <link rel="stylesheet" href="<?= BASE_URL ?>css/admin.css">
 
 </head>
@@ -56,7 +57,11 @@
     <script src="<?= BASE_URL ?>js/admin/helpers.js"></script>
     <script src="<?= BASE_URL ?>js/admin/sidebar.js"></script>
     <script src="<?= BASE_URL ?>js/admin/modal.js"></script>
+    <script src="<?= BASE_URL ?>js/admin/categoriaProducto.js"></script>
+    <script>const categorias = <?= json_encode($categoriasProductos ?? []) ?>;</script>
+    <script src="<?= BASE_URL ?>js/admin/producto.js"></script>
     <script src="<?= BASE_URL ?>js/admin/evento.js"></script>
+    <script src="<?= BASE_URL ?>js/admin/eventoFinalizado.js"></script>
     <script src="<?= BASE_URL ?>js/admin/promocion.js"></script>
 
 </body>

@@ -70,7 +70,7 @@ document.getElementById('btn-create-evento')?.addEventListener('click', () => {
     setTimeout(configurarFechaEvento, 100);
 });
 
-function crearEvento () {
+function crearEvento() {
     const nombre = document.getElementById('nombre').value.trim();
     const descripcion = document.getElementById('descripcion').value.trim();
     const fecha = document.getElementById('fecha').value;
@@ -410,6 +410,70 @@ function eliminarEvento(btn) {
             btn.closest('tr').remove();
         }
         cerrarModal();
+    })
+    .catch(() => mostrarToast("Error en la petición.", 'error'));
+}
+
+document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.btn-update-mesas');
+
+    if (!btn) return;
+
+    const id = btn.dataset.id;
+
+    abrirModal({
+        titulo: 'Agregar Mesas',
+        textoBoton: 'Guardar',
+        claseBoton: 'btn-success',
+        contenido: `
+        <p class="text-muted">Asegúrate de ingresar correctamente el número de mesas, ya que este valor no podrá modificarse posteriormente.</p>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Mesas nuevas <span class="text-danger">*</span></label>
+                <input type="number" id="mesas_nuevas" class="form-control mb-1">
+                <span id="errorMesasNuevasEvento" class="text-danger"></span>
+            </div>
+        </div>
+        `,
+        onSubmit: () => actualizarMesas(id)
+    });
+});
+
+function actualizarMesas(id) {
+    const mesasNuevas = document.getElementById('mesas_nuevas').value;
+    
+    const errorMesasNuevas = document.getElementById('errorMesasNuevasEvento');
+    errorMesasNuevas.textContent = '';
+
+    let error = false;
+
+    if (!/^[0-9]+$/.test(mesasNuevas) || mesasNuevas < 1) {
+        errorMesasNuevas.textContent = 'El número de mesas nuevas es incorrecto.';
+        error = true;
+    }
+
+    if (error) {
+        mostrarToast('Completa el campo correctamente.', 'error');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('id', id);
+    formData.append('mesas_nuevas', mesasNuevas);
+
+    fetch(BASE_URL + 'admin?action=actualizarMesasEvento', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            cerrarModal();  
+            location.reload();
+            mostrarToast('Mesas agregadas correctamente.', 'success');
+        } else {
+            mostrarToast(data.msg || "Error al guardar cantidad de mesas.", 'error');
+        } 
     })
     .catch(() => mostrarToast("Error en la petición.", 'error'));
 }

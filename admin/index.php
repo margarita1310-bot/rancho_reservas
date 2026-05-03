@@ -8,13 +8,19 @@ require_once ROOT_PATH . '/app/config/env.php';
 
 require_once ROOT_PATH . '/app/controllers/LoginController.php';
 require_once ROOT_PATH . '/app/controllers/AdminController.php';
-require_once ROOT_PATH . '/app/controllers/PromocionController.php';
+require_once ROOT_PATH . '/app/controllers/ProductoController.php';
+require_once ROOT_PATH . '/app/controllers/CategoriaProductoController.php';
 require_once ROOT_PATH . '/app/controllers/EventoController.php';
+require_once ROOT_PATH . '/app/controllers/EventoFinalizadoController.php';
+require_once ROOT_PATH . '/app/controllers/PromocionController.php';
 
 $loginController = new LoginController();
 $adminController = new AdminController();
-$promocionController = new PromocionController();
+$productoController = new ProductoController();
+$categoriaProductoController = new CategoriaProductoController();
 $eventoController = new EventoController();
+$eventoFinalizadoController = new EventoFinalizadoController();
+$promocionController = new PromocionController();
 
 $action = $_GET['action'] ?? 'login';
 
@@ -40,20 +46,28 @@ switch ($action) {
         $adminController->logout();
         break;
 
-    case 'guardarPromocion':
-        $promocionController->guardar();
+    case 'guardarProducto':
+        $productoController->guardar();
         break;
 
-    case 'obtenerPromocion':
-        $promocionController->obtener();
+    case 'obtenerProducto':
+        $productoController->obtener();
         break;
 
-    case 'actualizarPromocion':
-        $promocionController->actualizar();
+    case 'actualizarProducto':
+        $productoController->actualizar();
         break;
 
-    case 'eliminarPromocion':
-        $promocionController->eliminar();
+    case 'eliminarProducto':
+        $productoController->eliminar();
+        break;
+
+    case 'guardarCategoriaProducto':
+        $categoriaProductoController->guardar();
+        break;
+
+    case 'eliminarCategoriaProducto':
+        $categoriaProductoController->eliminar();
         break;
 
     case 'guardarEvento':
@@ -72,8 +86,32 @@ switch ($action) {
         $eventoController->eliminar();
         break;
 
-    case 'cancelarEvento':
-        $eventoController->cancelarEvento();
+    case 'actualizarMesasEvento':
+        $eventoController->actualizarMesas();
+        break;
+
+    case 'subirImagenesEvento':
+        $eventoFinalizadoController->subirImagenesEvento();
+        break;
+
+    case 'eliminarImagenesEvento':
+        $eventoFinalizadoController->eliminarImagenesEvento();
+        break;
+
+    case 'guardarPromocion':
+        $promocionController->guardar();
+        break;
+
+    case 'obtenerPromocion':
+        $promocionController->obtener();
+        break;
+
+    case 'actualizarPromocion':
+        $promocionController->actualizar();
+        break;
+
+    case 'eliminarPromocion':
+        $promocionController->eliminar();
         break;
 
     default:

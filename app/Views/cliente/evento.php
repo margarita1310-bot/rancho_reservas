@@ -13,13 +13,13 @@
                      <div class="row g-0 align-items-center">
                         <div class="col-md-5">
                            <img
-                              src="<?= BASE_URL ?>images/evento/<?= $ev['imagen'] ?>"
+                              src="<?= BASE_URL ?>public_html/images/evento/<?= $ev['imagen'] ?>"
                               class="evento-img"
                               alt="Evento <?= $ev['id_evento'] ?>">
                         </div>
                         
                         <div class="col-md-7">
-                           <div class="evento-info">
+                           <div class="evento-info p-4">
                               <h4 class="card-title mb-1"><?= $ev['nombre'] ?></h4>
                               <p class="evento-descripcion">
                                  <?= $ev['descripcion'] ?>
@@ -64,12 +64,11 @@
          </div>
       </div>
    </section>
-
 <?php else: ?>
    <section id="evento-section" class="evento-section py-4">
       <div class="container">
          <div class="row justify-content-center">
-            <div class="col-md-6 text-center text-white">
+            <div class="col-md-6 text-center text-black">
                <h2>No hay eventos disponibles</h2>
                <p>Pronto tendremos nuevos eventos para ti. ¡Mantente atento!</p>
             </div>

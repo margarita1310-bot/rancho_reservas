@@ -1,80 +1,65 @@
 <div class="container-fluid">
-
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-
-        <div>
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div class="flex-grow-1">
             <h2 class="fw-bold mb-1">
                 <i class="bi bi-journal-check me-2"></i>
                 Panel de Reservas
             </h2>
             <p class="text-muted mb-0">
-                Consulta y administra las reservaciones
+                Consulta y gestiona las reservas realizadas por los clientes. Visualiza información importante como fecha, horario, datos de contacto y estado de la reserva para garantizar una atención organizada y eficiente.
             </p>
         </div>
 
-        <div class="d-flex align-items-center gap-2">
-
+        <div class="d-flex align-items-center gap-2 flex-shrink-0">
             <label for="filtro-fecha-reserva" class="form-label mb-0 fw-semibold">
                 Fecha:
             </label>
 
             <input type="date"
-                   id="filtro-fecha-reserva"
-                   class="form-control form-control-sm"
-                   style="max-width: 180px;">
-
+            class="form-control form-control-sm"
+            style="max-width: 180px;"
+            id="filtro-fecha-reserva">
         </div>
-
     </div>
 
     <div class="card shadow-sm mb-4">
-
         <div class="card-body">
-
             <div class="btn-group flex-wrap" role="group">
-
                 <button type="button"
-                        class="btn btn-outline-dark active"
-                        data-filter="todos">
+                class="btn btn-outline-dark active"
+                data-filter="todos">
                     <i class="bi bi-list-ul me-1"></i>
                     Todas
                 </button>
 
                 <button type="button"
-                        class="btn btn-outline-warning"
-                        data-filter="pendiente">
+                class="btn btn-outline-warning"
+                data-filter="pendiente">
                     <i class="bi bi-hourglass-split me-1"></i>
                     Pendientes
                 </button>
 
                 <button type="button"
-                        class="btn btn-outline-success"
-                        data-filter="confirmada">
+                class="btn btn-outline-success"
+                data-filter="confirmada">
                     <i class="bi bi-check-circle-fill me-1"></i>
                     Confirmadas
                 </button>
 
                 <button type="button"
-                        class="btn btn-outline-danger"
-                        data-filter="cancelada">
+                class="btn btn-outline-danger"
+                data-filter="cancelada">
                     <i class="bi bi-x-circle-fill me-1"></i>
                     Canceladas
                 </button>
-
             </div>
-
         </div>
-
     </div>
 
     <div class="card shadow-sm">
-
         <div class="card-body p-0">
-
             <div class="table-responsive rounded">
-
                 <table class="table table-hover align-middle mb-0">
-
                     <thead class="table-light">
                         <tr>
                             <th>Reserva</th>
@@ -89,19 +74,14 @@
                     </thead>
 
                     <tbody>
-
                         <?php require_once ROOT_PATH . '/app/helpers/format.php' ?>
                         <?php require_once ROOT_PATH . '/app/helpers/estado.php' ?>
-                        
                         <?php $reservas = $reservas ?? []; ?>
-                        
                         <?php if (!empty($reservas)): ?>
-
                             <?php foreach ($reservas as $re): ?>
-
                                 <tr data-estado="<?= strtolower($re['estado']) ?>"
-                                    data-fecha="<?= date('Y-m-d', strtotime($re['fecha_reserva'])) ?>">
-
+                                    data-fecha="<?= date('Y-m-d', strtotime($re['fecha_reserva'])) ?>"
+                                >
                                     <td>
                                         <?= htmlspecialchars($re['id_reserva']) ?>
                                     </td>
@@ -114,6 +94,7 @@
                                         <div class="fw-semibold">
                                             <?= htmlspecialchars($re['cliente']) ?>
                                         </div>
+
                                         <small class="text-muted">
                                             <?= htmlspecialchars($re['telefono']) ?>
                                         </small>
@@ -123,6 +104,7 @@
                                         <div class="fw-semibold">
                                             <?= htmlspecialchars($re['evento']) ?>
                                         </div>
+
                                         <small class="text-muted">
                                             <?= htmlspecialchars(formatearFecha($re['fecha'])) ?>
                                         </small>
@@ -147,20 +129,15 @@
                                             <?= textoPago($re['estado_pago']) ?>
                                         </span>
                                     </td>
-
                                 </tr>
-                            
                             <?php endforeach; ?>
-                        
                         <?php else: ?>
-
                             <tr>
                                 <td colspan="8" class="text-center py-5 text-muted">
                                     <i class="bi bi-inbox-fill fs-3 d-block mb-2"></i>
                                     No hay reservas registradas
                                 </td>
                             </tr>
-
                         <?php endif; ?>
                     </tbody>
                 </table>

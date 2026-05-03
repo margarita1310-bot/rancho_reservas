@@ -176,6 +176,7 @@ document.addEventListener('click', async e => {
                 <input type="file" id="imagen" class="form-control" accept="image/png, image/jpeg, image/jpg">
                 <span class="text-muted">Solo se permiten archivos JPG, JPEG y PNG.</span>
             </div>
+        </div>
         `,
         onSubmit: actualizarPromocion
     });

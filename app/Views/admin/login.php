@@ -7,13 +7,14 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Rye&family=Zain:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="icon" href="<?= BASE_URL ?>images/logo.jpg">
     <link rel="stylesheet" href="<?= BASE_URL ?>css/login.css">
 
 </head>
-<body class="bg-dark d-flex align-items-center justify-content-center min-vh-100">
-    <main class="container">
-        <section class="row g-0 rounded-4 overflow-hidden shadow login-container w-100">
-        
+<body>
+    <main class="bg-dark d-flex align-items-center justify-content-center min-vh-100">
+        <section class="row g-0 rounded-4 overflow-hidden shadow login-container">
+            
             <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center bg-dark">
                 <img src="<?= BASE_URL ?>images/logo.jpg" class="img-fluid w-100 h-100 object-fit-cover" alt="Logo">
             </div>

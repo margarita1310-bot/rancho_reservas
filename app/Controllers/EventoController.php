@@ -39,7 +39,6 @@ class EventoController {
     }
 
     public function verificarMesas() {
-
         $id_evento = $_GET['id_evento'];
 
         $evento = $this->model->getByIdEvento($id_evento);
@@ -55,7 +54,6 @@ class EventoController {
     }
 
     public function guardar() {
-        
         $nombre = trim($_POST['nombre'] ?? '');
         $descripcion = trim($_POST['descripcion'] ?? '');
         $fecha = $_POST['fecha'] ?? '';
@@ -107,7 +105,6 @@ class EventoController {
     }
 
     public function obtener() {
-        
         $id = $_POST['id'] ?? null;
 
         if (!$id) {
@@ -128,7 +125,6 @@ class EventoController {
     }
 
     public function actualizar() {
-        
         $id = $_POST['id'] ?? null;
 
         if (!$id) {
@@ -208,6 +204,37 @@ class EventoController {
         }
         
         $this->json(['status' => 'ok']);
+    }
+
+    public function actualizarMesas() {
+        $id = $_POST['id'] ?? null;
+        $mesas_nuevas = (int) ($_POST['mesas_nuevas'] ?? 0);
+
+        if (!$id || $mesas_nuevas <= 0) {
+            $this->json([
+                'status' => 'error',
+                'msg' => 'Datos inválidos'
+            ]);
+        }
+
+        $evento = $this->model->getByIdEvento($id);
+
+        if (!$evento) {
+            $this->json(['status' => 'error']);
+        }
+
+        $mesas_totales = $evento['mesas_disponibles'] + $mesas_nuevas;
+
+        $ok = $this->model->actualizarMesasEvento($id, $mesas_totales);
+
+        if (!$ok) {
+            $this->json(['status' => 'error']);
+        }
+
+        $this->json([
+            'status' => 'ok',
+            'mesas_totales' => $mesas_totales
+        ]);
     }
     
     private function guardarImagen($id) {
