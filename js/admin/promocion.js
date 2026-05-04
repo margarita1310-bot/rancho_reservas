@@ -184,7 +184,6 @@ document.addEventListener('click', async e => {
     setTimeout(configurarFechasPromocion, 100);
 });
 
-//Función para actualizar una promocion
 function actualizarPromocion () {
     const body = document.getElementById('modalBody');
 

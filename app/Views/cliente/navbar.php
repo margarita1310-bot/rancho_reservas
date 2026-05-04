@@ -7,7 +7,7 @@
 
             <div class="d-flex align-items-center gap-3 order-lg-3">
                 <div id="navLogin">
-                    <button class="btn btn-login" onclick="abrirLogin()">
+                    <button class="btn btn-login" onclick="abrirAdP()">
                         Iniciar sesión
                     </button>
                 </div>

@@ -10,7 +10,6 @@ class Evento {
         $this->db = Conexion::conectar();
     }
 
-    //Obtener evento por su id
     public function getByIdEvento($id) {
         $stmt = $this->db->prepare(
             "SELECT * FROM eventos WHERE id_evento = ? LIMIT 1"
@@ -20,7 +19,6 @@ class Evento {
         return $stmt->fetch();
     }
 
-    //Obtener todos los eventos se hace uso de la funcion obtener_estado_evento
     public function getAllEventos() {
         $sql = "SELECT
                     e.id_evento,
@@ -45,7 +43,6 @@ class Evento {
         return $stmt->fetchAll();
     }
 
-    //Obtener eventos que esten disponibles se hace uso de la funcion obtener_estado_evento
     public function getEventosDisponibles() {
         $sql = "SELECT
                     e.id_evento,
@@ -76,7 +73,6 @@ class Evento {
         return $stmt->fetchAll();
     }
 
-    //Obtener eventos para el panel de inicio
     public function getEventosInicio() {
         $sql = "SELECT nombre, fecha, hora
                 FROM eventos
@@ -88,7 +84,6 @@ class Evento {
         return $stmt->fetchAll();
     }
 
-    //Obtener los eventos activos
     public function getEventosActivos() {
         $sql = "SELECT COUNT(*) AS total
                 FROM eventos
@@ -107,7 +102,6 @@ class Evento {
         return $stmt->fetch();
     }
 
-    //Obtener eventos proximos
     public function getEventosProximos() {
         $sql = "SELECT COUNT(*) AS total
                 FROM eventos
@@ -119,7 +113,6 @@ class Evento {
         return $stmt->fetch();
     }
 
-    //Obtener la cantidad de mesas disponibles de cada evento
     public function getMesasDisponiblesEventos() {
         $sql = "SELECT nombre, mesas_disponibles
                 FROM eventos
@@ -138,7 +131,6 @@ class Evento {
         return $stmt->fetchAll();
     }
 
-    //Creacion de un evento
     public function crearEvento($nombre, $descripcion, $fecha, $hora, $hora_fin, $mesas_disponibles, $precio_mesa) {
         $sql = "INSERT INTO eventos
                 (nombre, descripcion, fecha, hora, hora_fin, mesas_disponibles, precio_mesa)
@@ -160,7 +152,6 @@ class Evento {
         return (int) $this->db->lastInsertId();
     }
 
-    //Actualizar un evento
     public function actualizarEvento($id, $nombre, $descripcion, $fecha, $hora, $hora_fin, $mesas_disponibles, $precio_mesa) {
         $sql = "UPDATE eventos
                 SET nombre=?, descripcion=?, fecha=?, hora=?, hora_fin=?, mesas_disponibles=?, precio_mesa=?
@@ -180,7 +171,6 @@ class Evento {
         ]);
     }
 
-    //Borrar un evento
     public function borrarEvento($id) {
         $stmt = $this->db->prepare(
             "DELETE FROM eventos WHERE id_evento=?"
@@ -199,7 +189,6 @@ class Evento {
         return $stmt->execute([$mesas_totales, $id]);
     }
 
-    //Verificar si un evento tiene reservas
     public function tieneReservas($id_evento) {
         $sql = "SELECT COUNT(*) as total FROM reservas WHERE id_evento = ?";
 

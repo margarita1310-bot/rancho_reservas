@@ -10,7 +10,6 @@ class Pago {
         $this->db = Conexion::conectar();
     }
     
-    //Obtener un pago por su id
     public function getByOrderIdPago($paypal_order_id) {
         $sql = "SELECT * FROM pagos WHERE paypal_order_id = ? LIMIT 1";
         
@@ -20,7 +19,6 @@ class Pago {
         return $stmt->fetch();
     }
     
-    //Creacion de un pago
     public function crearPago($id_reserva, $paypal_order_id, $monto, $moneda, $estado, $respuesta_api) { 
         $sql = "INSERT INTO pagos
                 (id_reserva, paypal_order_id, monto, moneda, estado, respuesta_api, fecha_creacion)
@@ -38,7 +36,6 @@ class Pago {
         ]);
     }
 
-    //Transaccion para actualizar el pago
     public function actualizarPago($paypal_order_id, $paypal_transaction_id, $estado, $respuesta_api) {
         try {
             $this->db->beginTransaction();

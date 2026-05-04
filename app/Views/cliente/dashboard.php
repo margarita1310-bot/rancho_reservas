@@ -29,8 +29,10 @@
     
     </main>
 
+    <?php include __DIR__ . '/modalAdP.php'; ?>
     <?php include __DIR__ . '/modalLogin.php'; ?>
     <?php include __DIR__ . '/modalDatosCliente.php'; ?>
+    <?php include __DIR__ . '/modalTyC.php'; ?>
     <?php include __DIR__ . '/modalReservar.php'; ?>
     <?php include __DIR__ . '/modalPerfilCliente.php'; ?>
     <?php include __DIR__ . '/modalReservasCliente.php'; ?>

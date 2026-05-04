@@ -8,7 +8,7 @@ try {
     $sql = "UPDATE reservas 
             SET estado = 'cancelada'
             WHERE estado = 'pendiente' 
-            AND fecha_creacion <= NOW() - INTERVAL 30 MINUTE
+            AND fecha_creacion <= NOW() - INTERVAL 15 MINUTE
             AND (estado_pago IS NULL OR estado_pago = 'CREATED')
             ";
 

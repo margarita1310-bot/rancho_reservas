@@ -90,6 +90,7 @@ function habilitarDatosCliente() {
     document.getElementById('telefonoPerfil').disabled = false;
     document.getElementById('btn-actualizar').classList.remove('d-none');
     document.getElementById('btn-habilitar').classList.add('d-none');
+    document.getElementById('btn-eliminar').classList.add('d-none');
 }
 
 function actualizarDatosCliente() {
@@ -149,6 +150,41 @@ function actualizarDatosCliente() {
 
         } else {
             mostrarToast(data.msg || 'Error al actualizar perfil.', 'error');
+        }
+    })
+    .catch(() => mostrarToast('Error en la petición.', 'error'));
+}
+
+function eliminarDatosCliente() {
+    if (!confirm('¿Estás seguro de eliminar tu cuenta? Esta acción no se puede deshacer.')) {
+        return;
+    }
+
+    const formData = new FormData();
+
+    formData.append('id_cliente', sessionStorage.getItem('id_cliente'));
+    
+    fetch(BASE_URL + 'cliente?action=eliminarDatosCliente', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            sessionStorage.removeItem('id_cliente');
+            sessionStorage.removeItem('email_cliente');
+            sessionStorage.removeItem('nombre_cliente');
+            sessionStorage.removeItem('telefono_cliente');
+
+            actualizarNavbar();
+
+            mostrarToast('Cuenta eliminada.', 'success');
+
+            const modalPerfilCliente = document.getElementById('modalPerfilCliente');
+            const modal = bootstrap.Modal.getInstance(modalPerfilCliente) || new bootstrap.Modal(modalPerfilCliente);
+            modal.hide();
+        } else {
+            mostrarToast(data.msg || 'Error al eliminar cuenta.', 'error');
         }
     })
     .catch(() => mostrarToast('Error en la petición.', 'error'));

@@ -84,6 +84,7 @@ function limpiarModalPerfil() {
     modalPerfil.querySelector('#telefonoPerfil').disabled = true;
 
     modalPerfil.querySelector('#btn-habilitar').classList.remove('d-none');
+    modalPerfil.querySelector('#btn-eliminar').classList.remove('d-none');
     modalPerfil.querySelector('#btn-actualizar').classList.add('d-none');
 }
 

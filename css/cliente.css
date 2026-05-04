@@ -363,7 +363,17 @@ section {
 
 .social-icon:hover {
     color: var(--color-primario);
-} 
+}
+
+.correo-link {
+    color: var(--color-secundario);
+    font-weight: 700;
+    transition: .3s;
+}
+
+.correo-link:hover {
+    color: var(--color-primario);
+}
 
 .footer-bottom {
     background-image:
@@ -379,6 +389,11 @@ section {
 
 .footer-logo {
     max-width: 120px;
+}
+
+.modal h5 {
+    font-family: "Playfair Display", serif;
+    font-weight: 600;
 }
 
 .modal-overlay {
@@ -422,6 +437,14 @@ section {
 .form-control:focus {
     border-color: var(--color-secundario);
     box-shadow: 0 0 0 0.2rem rgba(133, 69, 7, 0.25);
+}
+
+details summary {
+    list-style: none;
+}
+
+details summary::-webkit-details-marker {
+    display: none;
 }
 
 .step-indicator {

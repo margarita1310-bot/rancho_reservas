@@ -33,7 +33,8 @@
                     <span id="errorTelefonoPerfil" class="text-danger"></span>
                 </div>
             
-                <button id="btn-habilitar" class="btn btn-primary w-100" onclick="habilitarDatosCliente()">Editar</button>
+                <button id="btn-habilitar" class="btn btn-primary w-100 mb-2" onclick="habilitarDatosCliente()">Editar</button>
+                <button id="btn-eliminar" class="btn btn-danger w-100" onclick="eliminarDatosCliente()">Eliminar</button>
                 <button id="btn-actualizar" class="btn btn-success d-none w-100" onclick="actualizarDatosCliente()">Guardar</button>
             </div>
         </div>

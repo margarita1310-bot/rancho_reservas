@@ -123,12 +123,4 @@ class AdminController {
             'reservas' => $reservas
         ]);
     }
-
-    public function logout() {
-        session_unset();
-        session_destroy();
-        
-        header("Location: ". BASE_URL . "admin?action=login");
-        exit;
-    }
 }

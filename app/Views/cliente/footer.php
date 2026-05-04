@@ -18,10 +18,10 @@
                     </div>
 
                     <p><i class="bi bi-geo-alt me-2"></i>Gral. Lázaro Cárdenas, Col. La Joya, 42325 Ixmiquilpan, Hgo.</p>
-                    <p><i class="bi bi-phone me-2"></i>+1 234 567 890</p>
+                    <p><i class="bi bi-phone me-2"></i>772 749 8150</p>
                     <p>
                         <i class="bi bi-envelope me-2"></i>
-                        <a href="mailto:info@rancho-lajoya.com">info@rancho-lajoya.com</a>
+                        <a href="mailto:lajoyaelrancho@gmail.com" class="correo-link">lajoyaelrancho@gmail.com</a>
                     </p>
 
                 </div>
@@ -43,6 +43,7 @@
 
                             <div class="social-icons">
                                 <a href="https://www.facebook.com/share/1GrEGJM7ZT/" class="social-icon"><i class="bi bi-facebook"></i></a>
+                                <a href="https://wa.me/527727498150" class="social-icon"><i class="bi bi-whatsapp"></i></a>
                             </div>
                         </div>
                     </div>

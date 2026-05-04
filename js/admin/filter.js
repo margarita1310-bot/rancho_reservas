@@ -5,7 +5,7 @@ document.addEventListener('click', function (e) {
     const filtro = btn.dataset.filter;
 
     const contenedor = btn.closest('.filtros-container') || btn.parentElement;
-    const tabla = document.querySelector('table'); // si solo tienes una tabla
+    const tabla = document.querySelector('table');
 
     if (!tabla) return;
     

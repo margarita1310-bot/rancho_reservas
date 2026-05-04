@@ -70,6 +70,7 @@
                             <th>Total</th>
                             <th>Estado</th>
                             <th>Pago</th>
+                            <th class="text-center">Cancelar</th>
                         </tr>
                     </thead>
 
@@ -128,6 +129,12 @@
                                         <span class="badge <?= badgePago($re['estado_pago']) ?>">
                                             <?= textoPago($re['estado_pago']) ?>
                                         </span>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-danger btn-sm" onclick="cancelarReserva(<?= $re['id_reserva'] ?>)">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

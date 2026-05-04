@@ -95,11 +95,13 @@
 
         <hr class="border-secondary">
 
-        <a href="admin?action=logout"
-            class="btn btn-primary w-100 mt-auto mb-2">
+
+        <button class="btn btn-primary w-100 mt-auto mb-2"
+        data-bs-toggle="modal"
+        data-bs-target="#modalPerfil">
             <i class="bi bi-person-circle me-2"></i>
             Perfil
-        </a>
+        </button>
 
         <a href="admin?action=logout"
             class="btn btn-danger w-100">

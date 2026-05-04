@@ -10,7 +10,6 @@ class Promocion {
         $this->db = Conexion::conectar();
     }
 
-    //Obtener promocion por su id
     public function getByIdPromocion($id) {
         $stmt = $this->db->prepare(
             "SELECT * FROM promociones WHERE id_promocion = ? LIMIT 1"
@@ -21,7 +20,6 @@ class Promocion {
         return $stmt->fetch();
     }
 
-    //Obtener todas las promociones se hace uso de la funcion obtener_estado_promocion
     public function getAllPromociones() {
         $sql = "SELECT id_promocion, titulo, descripcion, fecha_inicio, fecha_fin,
                 obtener_estado_promocion(fecha_inicio, fecha_fin) AS estado
@@ -34,7 +32,6 @@ class Promocion {
         return $stmt->fetchAll();
     }
 
-    //Obtener solo las promociones disponibles se hace uso de la funcion obtener_estado_promocion
     public function getPromocionesDisponibles() {
         $sql = "SELECT id_promocion, titulo, descripcion, fecha_inicio, fecha_fin,
                 obtener_estado_promocion(fecha_inicio, fecha_fin) AS estado
@@ -53,7 +50,6 @@ class Promocion {
         return $stmt->fetchAll();
     }
 
-    //Obtener promociones que estan activas
     public function getPromocionesActivas() {
 
         $sql = "SELECT COUNT(*) AS total
@@ -66,7 +62,6 @@ class Promocion {
         return $stmt->fetch();
     }
 
-    //Creacion de una promocion
     public function crearPromocion($titulo, $descripcion, $fecha_inicio, $fecha_fin) {
         $sql = "INSERT INTO promociones
                 (titulo, descripcion, fecha_inicio, fecha_fin)
@@ -85,7 +80,6 @@ class Promocion {
         return (int) $this->db->lastInsertId();
     }
 
-    //Actualizar una promocion
     public function actualizarPromocion($id, $titulo, $descripcion, $fecha_inicio, $fecha_fin) {
         $sql = "UPDATE promociones
                 SET titulo=?, descripcion=?, fecha_inicio=?, fecha_fin=?
@@ -102,7 +96,6 @@ class Promocion {
         ]);
     }
 
-    //Borrar una promocion
     public function borrarPromocion($id) {
         $stmt = $this->db->prepare(
             "DELETE FROM promociones WHERE id_promocion=?"

@@ -17,18 +17,31 @@ function botonReservar(btn) {
         sessionStorage.setItem('hora_fin_evento', btn.dataset.hora_fin);
         sessionStorage.setItem('precio_evento', btn.dataset.precio);
 
-        abrirDatosReserva();
+        abrirTyC();
     });
 }
 
+function abrirTyC() {
+    const modalTyC = document.getElementById('modalTyC');
+    const modal = bootstrap.Modal.getInstance(modalTyC) || new bootstrap.Modal(modalTyC);
+    modal.show();
+}
+
+function cerrarTyC() {
+    const modalTyC = document.getElementById('modalTyC');
+    const modal = bootstrap.Modal.getInstance(modalTyC) || new bootstrap.Modal(modalTyC);
+    modal.hide();
+}
+
 function abrirDatosReserva() {
+    cerrarTyC();
     const id_cliente = sessionStorage.getItem('id_cliente');
     const nombre = sessionStorage.getItem('nombre_cliente');
     const telefono = sessionStorage.getItem('telefono_cliente');
 
     if(!id_cliente) {
         sessionStorage.setItem('accion_post', 'reservar');
-        abrirLogin();
+        abrirAdP();
         return;
     } else if (!nombre || !telefono) {
         abrirDatosCliente();
@@ -63,8 +76,8 @@ function cargarDatosEvento() {
         eventoFin += 24 * 60;
     }
 
-    const inicioLlegada = eventoInicio - (2 * 60);
-    const finLlegada = eventoFin - (2 * 60);
+    const inicioLlegada = eventoInicio - (4 * 60);
+    const finLlegada = eventoInicio;
 
     const inicioHora = minutosAHora(inicioLlegada);
     const finHora = minutosAHora(finLlegada);
@@ -73,7 +86,7 @@ function cargarDatosEvento() {
     const infoPersonas = document.getElementById('info-personas');
 
     infoHora.innerHTML = `Puedes llegar entre ${inicioHora} y ${finHora}`;
-    infoPersonas.innerHTML = `Ingrese de 1 a 20 personas.`;
+    infoPersonas.innerHTML = `Ingrese de 4 a 10 personas.`;
 }
 
 function guardarDatosReserva() {
@@ -102,8 +115,8 @@ function guardarDatosReserva() {
         eventoFinAjustado += 24 * 60;
     }
     
-    const inicioLlegada = eventoInicio - (2 * 60);
-    const finLlegada = eventoFinAjustado - (2 * 60);
+    const inicioLlegada = eventoInicio - (4 * 60);
+    const finLlegada = eventoInicio;
 
     let llegadaAjustada = llegada;
 
@@ -137,7 +150,7 @@ function guardarDatosReserva() {
         error = true;
     }
 
-    if (!Number.isInteger(personasInt) || personasInt < 1 || personasInt > 20) {
+    if (!Number.isInteger(personasInt) || personasInt < 4 || personasInt > 10) {
         errorPersonasEvento.textContent = 'El número de personas es incorrecto.';
         error = true;
     }

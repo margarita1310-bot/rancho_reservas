@@ -12,7 +12,6 @@ require_once ROOT_PATH . '/app/libraries/PHPMailer/src/PHPMailer.php';
 require_once ROOT_PATH . '/app/libraries/PHPMailer/src/SMTP.php';
 
 class AuthController {
-
     private $model;
 
     public function __construct() {
@@ -325,6 +324,23 @@ class AuthController {
         }
 
         $this->model->actualizarCliente($id, $nombre, $telefono);
+
+        $this->json(['success' => true]);
+    }
+
+    public function eliminarDatosCliente() {
+        if (!isset($_SESSION['cliente'])) {
+            $this->json([
+                'success' => false,
+                'msg' => 'No autenticado'
+            ]);
+        }
+
+        $id = $_SESSION['cliente'];
+
+        $this->model->eliminarCliente($id);
+
+        session_destroy();
 
         $this->json(['success' => true]);
     }

@@ -1,4 +1,17 @@
+function abrirAdP() {
+    const modalAdP = document.getElementById('modalAdP');
+    const modal = bootstrap.Modal.getInstance(modalAdP) || new bootstrap.Modal(modalAdP);
+    modal.show();
+}
+
+function cerrarAdP() {
+    const modalAdP = document.getElementById('modalAdP');
+    const modal = bootstrap.Modal.getInstance(modalAdP) || new bootstrap.Modal(modalAdP);
+    modal.hide();
+}
+
 function abrirLogin() {
+    cerrarAdP();
     if (window.clienteLogueado) return;
 
     document.getElementById('emailLogin').disabled = false;

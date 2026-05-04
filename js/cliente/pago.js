@@ -1,4 +1,3 @@
-//Función para crear y capturar una orden de pago desde el boton de PayPal
 function renderPayPal() {
     const paypalDiv = document.getElementById('paypal-button');
     const id_reserva = paypalDiv.dataset.reserva;
@@ -31,7 +30,6 @@ function renderPayPal() {
     }).render('#paypal-button');
 }
 
-//Funcion para crear la orden de pago
 function crearOrdenPaypal(id_reserva) {
     return fetch(BASE_URL + "cliente?action=crearOrden", {
         method:"POST",
@@ -48,7 +46,6 @@ function crearOrdenPaypal(id_reserva) {
     });
 }
 
-//Función para pagar una reserva en caso de fallo
 function pagarReserva(id_reserva) {
     const paypalDiv = document.getElementById('paypal-button');
     paypalDiv.dataset.reserva = id_reserva;

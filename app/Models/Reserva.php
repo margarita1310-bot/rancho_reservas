@@ -10,7 +10,6 @@ class Reserva {
         $this->db = Conexion::conectar();
     }
 
-    //Obtener reserva por su id
     public function getByIdReserva($id) {
         $stmt = $this->db->prepare(
             "SELECT * FROM reservas WHERE id_reserva = ? LIMIT 1"
@@ -21,7 +20,6 @@ class Reserva {
         return $stmt->fetch();
     }
 
-    //Obtener todas las reservas
     public function getAllReservas() {
         $sql = "SELECT 
                     r.id_reserva,
@@ -53,7 +51,6 @@ class Reserva {
         return $stmt->fetchAll();
     }
 
-    //Obtener datos de la reserva
     public function getDetallesReserva($id) {
         $sql = "SELECT 
                     r.id_reserva,
@@ -77,7 +74,6 @@ class Reserva {
         return $stmt->fetch();
     }
 
-    //Obtener las ultimas 5 reservas realizadas
     public function getReservasInicio() {
         $sql = "SELECT
                     c.nombre AS cliente,
@@ -94,7 +90,6 @@ class Reserva {
         return $stmt->fetchAll();
     }
 
-    //Obtener las reservas del dia actual
     public function getReservasHoy() {
         $sql = "SELECT COUNT(*) AS total
                 FROM reservas
@@ -106,7 +101,6 @@ class Reserva {
         return $stmt->fetch();
     }
 
-    //Obtener las reservas que no se han pagado o pendientes
     public function getReservasSinPago() {
         $sql = "SELECT *
                 FROM reservas r
@@ -123,12 +117,10 @@ class Reserva {
         return $stmt->fetchAll();
     }
 
-    //Transaccion para crear una reserva
     public function crearReserva($id_cliente, $id_evento, $mesas_reservadas, $personas, $total) {
         try {
             $this->db->beginTransaction();
 
-            //Verificar mesas disponibles
             $stmt = $this->db->prepare(
                 "SELECT mesas_disponibles
                 FROM eventos
@@ -144,7 +136,6 @@ class Reserva {
                 return false;
             }
 
-            //Insertar reserva
             $stmt = $this->db->prepare(
                 "INSERT INTO reservas
                 (id_cliente, id_evento, mesas_reservadas, personas, total, estado, fecha_reserva)
@@ -160,7 +151,6 @@ class Reserva {
             ]);
 
             $id = $this->db->lastInsertId();
-            //Confirmar
             $this->db->commit();
             return $id;
 
@@ -170,7 +160,6 @@ class Reserva {
         }
     }
 
-    //Cancelar la reserva
     public function cancelarReserva($id_reserva) {
         $stmt = $this->db->prepare(
             "UPDATE reservas

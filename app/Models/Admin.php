@@ -10,7 +10,6 @@ class Admin {
         $this->db = Conexion::conectar();
     }
 
-    //Obtener administrador por email
     public function getByEmailAdmin($email) {
         $stmt = $this->db->prepare(
             "SELECT * FROM administrador WHERE email = ? LIMIT 1"
@@ -20,8 +19,25 @@ class Admin {
 
         return $stmt->fetch();
     }
+
+    public function getById($id) {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM administrador WHERE id_admin = ? LIMIT 1"
+        );
+
+        $stmt->execute([$id]);
+
+        return $stmt->fetch();
+    }
+
+    public function actualizarPerfil($id, $email, $password) {
+        $stmt = $this->db->prepare(
+            "UPDATE administrador SET email = ?, password = ? WHERE id_admin = ?"
+        );
+
+        return $stmt->execute([$email, $password, $id]);
+    }
     
-    //Verificar admin
     public function verificarAdmin($email, $password) {
         $admin = $this->getByEmailAdmin($email);
 

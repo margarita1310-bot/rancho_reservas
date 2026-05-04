@@ -2,7 +2,7 @@
 
 session_start();
 
-define('ROOT_PATH', dirname(__DIR__, 1));
+define('ROOT_PATH', dirname(__DIR__, 2));
 
 require_once ROOT_PATH . '/app/config/env.php';
 
@@ -13,6 +13,7 @@ require_once ROOT_PATH . '/app/controllers/CategoriaProductoController.php';
 require_once ROOT_PATH . '/app/controllers/EventoController.php';
 require_once ROOT_PATH . '/app/controllers/EventoFinalizadoController.php';
 require_once ROOT_PATH . '/app/controllers/PromocionController.php';
+require_once ROOT_PATH . '/app/controllers/ReservaController.php';
 
 $loginController = new LoginController();
 $adminController = new AdminController();
@@ -21,6 +22,7 @@ $categoriaProductoController = new CategoriaProductoController();
 $eventoController = new EventoController();
 $eventoFinalizadoController = new EventoFinalizadoController();
 $promocionController = new PromocionController();
+$reservaController = new ReservaController();
 
 $action = $_GET['action'] ?? 'login';
 
@@ -42,8 +44,16 @@ switch ($action) {
         $loginController->autenticar();
         break;
         
+    case 'perfil':
+        $loginController->getPerfil();
+        break;
+
+    case 'actualizarPerfil':
+        $loginController->actualizarPerfil();
+        break;
+
     case 'logout':
-        $adminController->logout();
+        $loginController->logout();
         break;
 
     case 'guardarProducto':
@@ -112,6 +122,10 @@ switch ($action) {
 
     case 'eliminarPromocion':
         $promocionController->eliminar();
+        break;
+    
+    case 'cancelarReserva':
+        $reservaController->cancelar();
         break;
 
     default:

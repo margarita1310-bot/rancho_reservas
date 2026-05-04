@@ -10,7 +10,6 @@ class Cliente {
         $this->db = Conexion::conectar();
     }
 
-    //Obtener cliente por su correo
     public function getByEmailCliente($email) {
         $stmt = $this->db->prepare(
             "SELECT * FROM clientes WHERE email = ? LIMIT 1"
@@ -21,7 +20,6 @@ class Cliente {
         return $stmt->fetch();
     }
 
-    //Transacción al crear un cliente
     public function crearCliente($nombre, $email, $telefono) {
         try {
             $this->db->beginTransaction();
@@ -52,7 +50,14 @@ class Cliente {
         return $stmt->execute([$nombre, $telefono, $id]);
     }
 
-    //Obtener reservas del cliente
+    public function eliminarCliente($id) {
+        $stmt = $this->db->prepare(
+            "DELETE FROM clientes WHERE id_cliente = ?"
+        );
+
+        return $stmt->execute([$id]);
+    }
+
     public function getReservasCliente($id) {
         $sql = "SELECT
                     r.id_reserva,

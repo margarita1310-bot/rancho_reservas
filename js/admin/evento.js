@@ -428,7 +428,7 @@ document.addEventListener('click', function(e) {
         contenido: `
         <p class="text-muted">Asegúrate de ingresar correctamente el número de mesas, ya que este valor no podrá modificarse posteriormente.</p>
         <div class="row">
-            <div class="mb-3 col-md-6">
+            <div class="mb-3 col-md-12">
                 <label class="form-label">Mesas nuevas <span class="text-danger">*</span></label>
                 <input type="number" id="mesas_nuevas" class="form-control mb-1">
                 <span id="errorMesasNuevasEvento" class="text-danger"></span>

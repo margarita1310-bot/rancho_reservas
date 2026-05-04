@@ -44,6 +44,7 @@
             
             </main>
             
+            <?php include __DIR__ . '/modalPerfil.php'; ?>
             <?php include __DIR__ . '/modal.php'; ?>
         
         </div>
@@ -63,6 +64,7 @@
     <script src="<?= BASE_URL ?>js/admin/evento.js"></script>
     <script src="<?= BASE_URL ?>js/admin/eventoFinalizado.js"></script>
     <script src="<?= BASE_URL ?>js/admin/promocion.js"></script>
+    <script src="<?= BASE_URL ?>js/admin/reserva.js"></script>
 
 </body>
 </html>
